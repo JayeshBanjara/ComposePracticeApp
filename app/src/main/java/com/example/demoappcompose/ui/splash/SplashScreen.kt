@@ -1,6 +1,5 @@
 package com.example.demoappcompose.ui.splash
 
-import android.view.animation.OvershootInterpolator
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -15,19 +14,19 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.example.demoappcompose.R
+import com.example.demoappcompose.ui.components.popUpToTop
 import com.example.demoappcompose.ui.navigation.Screens
-import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(navController: NavController) {
 
     val scale = remember {
-        Animatable(0f)
+        Animatable(0.1f)
     }
 
     LaunchedEffect(key1 = true) {
         scale.animateTo(
-            targetValue = 1f,
+            targetValue = 0.7f,
             animationSpec = tween(
                 durationMillis = 3000/*,
                 easing = {
@@ -36,7 +35,9 @@ fun SplashScreen(navController: NavController) {
             )
         )
         //delay(3000L)
-        navController.navigate(Screens.LoginScreen.withArgs("Jayesh"))
+        navController.navigate(Screens.LoginScreen.route) {
+            popUpToTop(navController = navController)
+        }
     }
 
     Box(
@@ -45,7 +46,7 @@ fun SplashScreen(navController: NavController) {
     ) {
         Image(
             painter = painterResource(
-                id = R.drawable.app_logo
+                id = R.drawable.ic_app_logo
             ),
             contentDescription = "Logo",
             modifier = Modifier.scale(scale.value)

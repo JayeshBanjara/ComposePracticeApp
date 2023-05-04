@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">DemoAppCompose</string>
+    <string name="app_name">Ravi Education</string>
+    <string name="btn_submit">SUBMIT</string>
 </resources>
