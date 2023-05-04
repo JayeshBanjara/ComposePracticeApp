@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.example.demoappcompose.R
+import com.example.demoappcompose.ui.components.popUpToTop
 import com.example.demoappcompose.ui.navigation.Screens
 import kotlinx.coroutines.delay
 
@@ -22,7 +23,7 @@ import kotlinx.coroutines.delay
 fun SplashScreen(navController: NavController) {
 
     val scale = remember {
-        Animatable(0f)
+        Animatable(0.4f)
     }
 
     LaunchedEffect(key1 = true) {
@@ -36,7 +37,9 @@ fun SplashScreen(navController: NavController) {
             )
         )
         //delay(3000L)
-        navController.navigate(Screens.LoginScreen.withArgs("Jayesh"))
+        navController.navigate(Screens.LoginScreen.withArgs("Jayesh")) {
+            popUpToTop(navController = navController)
+        }
     }
 
     Box(

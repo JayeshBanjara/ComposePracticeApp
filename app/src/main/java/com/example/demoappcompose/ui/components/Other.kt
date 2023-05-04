@@ -13,6 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavOptionsBuilder
 
 /**
  * Create a [Spacer] of given width in [dp]
@@ -44,5 +46,14 @@ fun LoadingIndicator(
             color = color,
             strokeWidth = strokeWidth
         )
+    }
+}
+
+/**
+ * Clear back stack of routes and set current screen at top
+ */
+fun NavOptionsBuilder.popUpToTop(navController: NavController) {
+    popUpTo(navController.currentBackStackEntry?.destination?.route ?: return) {
+        inclusive =  true
     }
 }
