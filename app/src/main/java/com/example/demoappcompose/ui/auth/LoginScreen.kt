@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedButton
@@ -42,11 +43,13 @@ fun LoginScreen(name: String?) {
             var mobileNum by remember { mutableStateOf("") }
             var emptyNumError by remember { mutableStateOf(false) }
 
-            VerticalSpacer(size = 20)
+            VerticalSpacer(size = 30)
             Image(
-                painter = painterResource(id = R.drawable.app_logo), contentDescription = ""
+                painter = painterResource(id = R.drawable.ic_app_logo),
+                contentDescription = "",
+                modifier = Modifier.size(120.dp)
             )
-            VerticalSpacer(size = 40)
+            VerticalSpacer(size = 50)
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -71,12 +74,12 @@ fun LoginScreen(name: String?) {
                 }
             }
 
-            VerticalSpacer(size = 60)
+            VerticalSpacer(size = 70)
 
             OutlinedButton(onClick = {
                 emptyNumError = mobileNum.isEmpty() or (mobileNum.length < 10)
             }) {
-                Text(text = "Submit")
+                Text(text = "SUBMIT")
             }
         }
     }

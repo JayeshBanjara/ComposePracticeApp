@@ -28,7 +28,7 @@ fun SplashScreen(navController: NavController) {
 
     LaunchedEffect(key1 = true) {
         scale.animateTo(
-            targetValue = 1f,
+            targetValue = 0.8f,
             animationSpec = tween(
                 durationMillis = 3000/*,
                 easing = {
@@ -48,7 +48,7 @@ fun SplashScreen(navController: NavController) {
     ) {
         Image(
             painter = painterResource(
-                id = R.drawable.app_logo
+                id = R.drawable.ic_app_logo
             ),
             contentDescription = "Logo",
             modifier = Modifier.scale(scale.value)
