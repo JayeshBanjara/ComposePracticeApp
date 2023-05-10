@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -28,20 +28,21 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.demoappcompose.R
-import com.example.demoappcompose.ui.components.CustomTopAppBar
 import com.example.demoappcompose.ui.components.VerticalSpacer
+import com.example.demoappcompose.ui.components.WhiteTopAppBar
 import com.example.demoappcompose.ui.navigation.Screens
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(navController: NavController) {
     Scaffold(modifier = Modifier, topBar = {
-        CustomTopAppBar(title = "Login")
+        WhiteTopAppBar(title = stringResource(R.string.login))
     }) { contentPadding ->
         Column(
             modifier = Modifier
@@ -60,12 +61,15 @@ fun LoginScreen(navController: NavController) {
             val localFocusManager = LocalFocusManager.current
 
             VerticalSpacer(size = 30)
+
             Image(
-                painter = painterResource(id = R.drawable.ic_app_logo),
+                painter = painterResource(id = R.drawable.ic_login_top),
                 contentDescription = "",
-                modifier = Modifier.size(120.dp)
+                modifier = Modifier
+                    .width(255.dp)
+                    .height(200.dp)
             )
-            VerticalSpacer(size = 50)
+            VerticalSpacer(size = 30)
             Column(
                 modifier = Modifier
                     .fillMaxWidth()

@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Ravi Education</string>
     <string name="btn_submit">SUBMIT</string>
+    <string name="login">Login</string>
 </resources>
