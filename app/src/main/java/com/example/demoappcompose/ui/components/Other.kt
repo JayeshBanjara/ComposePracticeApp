@@ -54,6 +54,9 @@ fun LoadingIndicator(
  */
 fun NavOptionsBuilder.popUpToTop(navController: NavController) {
     popUpTo(navController.currentBackStackEntry?.destination?.route ?: return) {
-        inclusive =  true
+        inclusive = true
     }
 }
+
+fun screenPadding(): Dp = 15.dp
+

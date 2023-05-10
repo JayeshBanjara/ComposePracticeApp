@@ -2,4 +2,7 @@
     <string name="app_name">Ravi Education</string>
     <string name="btn_submit">SUBMIT</string>
     <string name="login">Login</string>
+    <string name="enter_mobile_number">Enter Mobile Number</string>
+    <string name="enter_your_mobile_number">Enter your mobile number</string>
+    <string name="please_enter_valid_mobile_number">Please enter valid mobile number</string>
 </resources>
