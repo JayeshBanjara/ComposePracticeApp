@@ -2,7 +2,9 @@ package com.example.demoappcompose.ui.auth.login
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,14 +15,18 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester.Companion.createRefs
 import androidx.compose.ui.graphics.Color
@@ -101,6 +107,8 @@ fun LoginScreen(navController: NavController) {
                 )
             )
 
+            RoundedShapeTextField()
+
             CustomTextField(modifier = Modifier
                 .fillMaxWidth(),
                 text = mobileNum,
@@ -175,55 +183,28 @@ fun LoginScreen(navController: NavController) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyScreen() {
-    ConstraintLayout(
-        modifier = Modifier.fillMaxSize()
+fun RoundedShapeTextField() {
+    val textState = remember { mutableStateOf("") }
+
+    val textFieldColors = TextFieldDefaults.textFieldColors(
+        containerColor = Color.LightGray, // Background color
+        focusedIndicatorColor = Color.Transparent, // Transparent underline when focused
+        unfocusedIndicatorColor = Color.Transparent // Transparent underline when unfocused
+    )
+
+    Box(
+        modifier = Modifier
+            .background(Color.LightGray) // Background color
+            .padding(8.dp) // Adjust padding as needed
+            .clip(MaterialTheme.shapes.medium) // Rounded shape
     ) {
-        val (image, text, textField, button) = createRefs()
-
-        Image(
-            painter = painterResource(R.drawable.your_image_resource),
-            contentDescription = "Your Image",
-            modifier = Modifier
-                .fillMaxWidth()
-                .constrainAs(image) {
-                    top.linkTo(parent.top)
-                },
-            contentScale = ContentScale.FillWidth
+        TextField(
+            value = textState.value,
+            onValueChange = { textState.value = it },
+            modifier = Modifier.padding(16.dp), // Adjust padding as needed
+            colors = textFieldColors
         )
-
-        Text(
-            text = "Your Text",
-            modifier = Modifier.constrainAs(text) {
-                top.linkTo(image.bottom, margin = 16.dp)
-            },
-            color = Color.Black
-        )
-
-        var textFieldValue by remember { mutableStateOf("") }
-        BasicTextField(
-            value = textFieldValue,
-            onValueChange = { textFieldValue = it },
-            modifier = Modifier
-                .fillMaxWidth()
-                .constrainAs(textField) {
-                    top.linkTo(text.bottom, margin = 16.dp)
-                }
-                .height(50.dp),
-            textStyle = TextStyle(color = Color.Black)
-        )
-
-        Button(
-            onClick = { /* Button click logic */ },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .constrainAs(button) {
-                    bottom.linkTo(parent.bottom, margin = 16.dp)
-                }
-        ) {
-            Text(text = "Button")
-        }
     }
 }
