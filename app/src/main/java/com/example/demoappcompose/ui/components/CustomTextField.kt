@@ -38,6 +38,7 @@ fun CustomTextField(
     keyboardType: KeyboardType,
     capitalization: KeyboardCapitalization = KeyboardCapitalization.None,
     imeAction: ImeAction,
+    readOnly: Boolean = false,
     isError: Boolean,
     errorText: String,
     onNext: () -> Unit,
@@ -60,6 +61,7 @@ fun CustomTextField(
                     .fillMaxWidth()
                     .background(colorResource(id = R.color.light_grey)),
                 value = text,
+                readOnly = readOnly,
                 onValueChange = onValueChange,
                 textStyle = TextStyle(
                     color = colorResource(id = R.color.text_hint_color)
@@ -89,7 +91,7 @@ fun CustomTextField(
         if (isError) {
             Text(
                 text = errorText, color = Color.Red,
-                modifier = modifier,
+                modifier = Modifier.fillMaxWidth(),
             )
         }
     }

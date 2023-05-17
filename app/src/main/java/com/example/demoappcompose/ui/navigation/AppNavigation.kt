@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.demoappcompose.ui.auth.login.LoginScreen
 import com.example.demoappcompose.ui.auth.register.RegisterScreen
+import com.example.demoappcompose.ui.home.dashboard.DashboardScreen
 import com.example.demoappcompose.ui.splash.SplashScreen
 
 @Composable
@@ -15,7 +16,7 @@ fun AppNavigation(
     navController: NavHostController
 ) {
 
-    NavHost(navController = navController, startDestination = Screens.RegisterScreen.route) {
+    NavHost(navController = navController, startDestination = Screens.SplashScreen.route) {
         composable(route = Screens.SplashScreen.route) {
             SplashScreen(navController = navController)
         }
@@ -26,6 +27,10 @@ fun AppNavigation(
 
         composable(route = Screens.RegisterScreen.route) {
             RegisterScreen(navController = navController)
+        }
+
+        composable(route = Screens.DashboardScreen.route) {
+            DashboardScreen(navController = navController)
         }
     }
 }
