@@ -7,7 +7,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.demoappcompose.ui.auth.login.LoginScreen
 import com.example.demoappcompose.ui.auth.register.RegisterScreen
-import com.example.demoappcompose.ui.home.dashboard.DashboardScreen
+import com.example.demoappcompose.ui.dashboard.Dashboard
+import com.example.demoappcompose.ui.dashboard.home.HomeScreen
 import com.example.demoappcompose.ui.splash.SplashScreen
 
 @Composable
@@ -29,8 +30,8 @@ fun AppNavigation(
             RegisterScreen(navController = navController)
         }
 
-        composable(route = Screens.DashboardScreen.route) {
-            DashboardScreen(navController = navController)
+        composable(route = Screens.Dashboard.route) {
+            Dashboard(navController = navController)
         }
     }
 }

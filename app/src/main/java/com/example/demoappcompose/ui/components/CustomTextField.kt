@@ -29,6 +29,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.demoappcompose.R
+import com.example.demoappcompose.ui.theme.GreyLight
+import com.example.demoappcompose.ui.theme.HintColor
+import com.example.demoappcompose.ui.theme.TitleColor
 
 @Composable
 fun CustomTextField(
@@ -52,19 +55,22 @@ fun CustomTextField(
                 .fillMaxWidth()
                 .height(52.dp)
                 .clip(RoundedCornerShape(corner = CornerSize(8.dp)))
-                .background(colorResource(id = R.color.light_grey))
+                .background(GreyLight)
                 .padding(8.dp),
             contentAlignment = Alignment.Center
         ) {
             BasicTextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(colorResource(id = R.color.light_grey)),
+                    .background(GreyLight),
                 value = text,
                 readOnly = readOnly,
                 onValueChange = onValueChange,
                 textStyle = TextStyle(
-                    color = colorResource(id = R.color.text_hint_color)
+                    color = TitleColor,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.W500,
+                    fontFamily = FontFamily(Font(R.font.quicksand_medium))
                 ),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = keyboardType,
@@ -76,7 +82,7 @@ fun CustomTextField(
                         if (text.isEmpty()) {
                             Text(
                                 text = placeholderText,
-                                color = colorResource(id = R.color.text_hint_color),
+                                color = HintColor,
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.W400,
                                 fontFamily = FontFamily(Font(R.font.quicksand_medium))

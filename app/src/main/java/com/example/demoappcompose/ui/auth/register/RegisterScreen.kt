@@ -253,7 +253,7 @@ fun RegisterScreen(navController: NavController) {
                 postError  = mSelectedText.isEmpty()
 
                 if (nameError.not() and emailError.not() and cityError.not() and postError.not()) {
-                    navController.navigate(Screens.DashboardScreen.route)
+                    navController.navigate(Screens.Dashboard.route)
                 }
             }
         }

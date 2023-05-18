@@ -4,7 +4,7 @@ sealed class Screens(val route: String) {
     object SplashScreen: Screens("splash_screen")
     object LoginScreen: Screens("login_screen")
     object RegisterScreen: Screens("register_screen")
-    object DashboardScreen: Screens("dashboard_screen")
+    object Dashboard: Screens("dashboard")
 
     /**
      * Use this function to pass arguments to navigation destination

@@ -1,11 +1,10 @@
 package com.example.demoappcompose.ui.auth.login
 
+import PinView
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,27 +12,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -53,6 +43,8 @@ import com.example.demoappcompose.ui.components.VerticalSpacer
 import com.example.demoappcompose.ui.components.WhiteTopAppBar
 import com.example.demoappcompose.ui.components.screenPadding
 import com.example.demoappcompose.ui.navigation.Screens
+import com.example.demoappcompose.ui.theme.Blue
+import com.example.demoappcompose.ui.theme.TitleColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -80,87 +72,97 @@ fun LoginScreen(navController: NavController) {
 
             val localFocusManager = LocalFocusManager.current
 
-            Column(
-                modifier = Modifier.weight(1f)
+            VerticalSpacer(size = 50)
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
             ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_login_top),
+                    contentDescription = "",
+                    modifier = Modifier
+                        .width(255.dp)
+                        .height(200.dp)
+                )
+            }
 
-                VerticalSpacer(size = 30)
+            VerticalSpacer(size = 30)
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_login_top),
-                        contentDescription = "",
-                        modifier = Modifier
-                            .width(255.dp)
-                            .height(200.dp)
-                    )
-                }
+            TextFieldHeader(headerText = stringResource(R.string.enter_mobile_number))
 
-                VerticalSpacer(size = 30)
+            VerticalSpacer(size = 5)
 
-                TextFieldHeader(headerText = stringResource(R.string.enter_mobile_number))
+            CustomTextField(modifier = Modifier
+                .fillMaxWidth(),
+                text = mobileNum,
+                placeholderText = stringResource(R.string.enter_your_mobile_number),
+                keyboardType = KeyboardType.NumberPassword,
+                imeAction = ImeAction.Next,
+                isError = emptyNumError,
+                errorText = stringResource(R.string.please_enter_valid_mobile_number),
+                onNext = {
+                    if (mobileNum.length == 10) {
+                        emptyNumError = false
+                        showOTPView = true
+                        buttonLabel = "SUBMIT"
+                        localFocusManager.moveFocus(FocusDirection.Down)
+                    }
+                },
+                onValueChange = {
+                    if (it.length <= 10) mobileNum = it
+                })
 
-                VerticalSpacer(size = 5)
+            VerticalSpacer(size = 40)
 
-                CustomTextField(modifier = Modifier
-                    .fillMaxWidth(),
-                    text = mobileNum,
-                    placeholderText = stringResource(R.string.enter_your_mobile_number),
-                    keyboardType = KeyboardType.NumberPassword,
-                    imeAction = ImeAction.Next,
-                    isError = emptyNumError,
-                    errorText = stringResource(R.string.please_enter_valid_mobile_number),
-                    onNext = {
-                        if (mobileNum.length == 10) {
-                            emptyNumError = false
-                            showOTPView = true
-                            buttonLabel = "SUBMIT"
-                            localFocusManager.moveFocus(FocusDirection.Down)
-                        }
-                    },
-                    onValueChange = {
-                        if (it.length <= 10) mobileNum = it
-                    })
+            AnimatedVisibility(visible = showOTPView) {
 
-                VerticalSpacer(size = 20)
+                Column() {
 
-                AnimatedVisibility(visible = showOTPView) {
-
-                    Column {
-
-                        TextFieldHeader(headerText = stringResource(R.string.enter_otp))
-
-                        VerticalSpacer(size = 5)
-
-                        CustomTextField(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 20.dp),
-                            text = otp,
-                            placeholderText = "x x x x x",
-                            keyboardType = KeyboardType.NumberPassword,
-                            imeAction = ImeAction.Done,
-                            isError = otpError,
-                            errorText = stringResource(R.string.please_enter_valid_otp),
-                            onNext = {
-                                if (mobileNum.length == 5) {
-                                    otpError = false
-                                    localFocusManager.clearFocus()
-                                }
-                            },
-                            onValueChange = {
-                                if (it.length <= 5) otp = it
-                            }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = "Enter the OTP send to ",
+                            style = TextStyle(
+                                color = TitleColor,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.W600,
+                                fontFamily = FontFamily(Font(R.font.quicksand_medium))
+                            )
+                        )
+                        Text(
+                            text = "+91 $mobileNum",
+                            style = TextStyle(
+                                color = Blue,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.W700,
+                                fontFamily = FontFamily(Font(R.font.quicksand_medium))
+                            )
                         )
                     }
 
-                }
+                    VerticalSpacer(size = 30)
 
-                VerticalSpacer(size = 20)
+                    PinView(
+                        pinText = otp,
+                        onPinTextChange = {
+                            otp = it
+                        }
+                    )
+                    VerticalSpacer(size = 5)
+                    if (otpError) {
+                        Text(
+                            text = stringResource(id = R.string.please_enter_valid_otp),
+                            color = Color.Red,
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    }
+                }
             }
+
+            VerticalSpacer(size = 50)
 
             MainButton(
                 modifier = Modifier
@@ -170,15 +172,15 @@ fun LoginScreen(navController: NavController) {
             ) {
                 emptyNumError = mobileNum.length < 10
                 if (showOTPView) {
-                    otpError = otp.length < 5
+                    otpError = otp.length < 4
                 }
 
                 if (mobileNum.length == 10) {
                     showOTPView = true
-                    buttonLabel = "SUBMIT"
+                    buttonLabel = "Verify & Proceed"
                 }
 
-                if ((mobileNum.length == 10) and (otp.length == 5)) {
+                if ((mobileNum.length == 10) and (otp.length >= 4)) {
                     navController.navigate(Screens.RegisterScreen.route)
                 }
             }

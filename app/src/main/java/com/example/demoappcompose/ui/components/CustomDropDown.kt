@@ -37,6 +37,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import com.example.demoappcompose.R
+import com.example.demoappcompose.ui.theme.GreyLight
+import com.example.demoappcompose.ui.theme.HintColor
 
 @Composable
 fun CustomDropDown(
@@ -55,7 +57,7 @@ fun CustomDropDown(
             .fillMaxWidth()
             .height(52.dp)
             .clip(RoundedCornerShape(corner = CornerSize(8.dp)))
-            .background(colorResource(id = R.color.light_grey))
+            .background(GreyLight)
             .padding(8.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -63,7 +65,7 @@ fun CustomDropDown(
             modifier = Modifier
                 .clickable { onClick() }
                 .fillMaxWidth()
-                .background(colorResource(id = R.color.light_grey))
+                .background(GreyLight)
                 .onGloballyPositioned { coordinates ->
                     // This value is used to assign to
                     // the DropDown the same width
@@ -75,14 +77,14 @@ fun CustomDropDown(
 
             },
             textStyle = TextStyle(
-                color = colorResource(id = R.color.text_hint_color)
+                color = HintColor
             ),
             decorationBox = { innerTextField ->
                 Row(modifier = Modifier.fillMaxWidth().clickable { onClick() }) {
                     if (mSelectedText.isEmpty()) {
                         Text(
                             text = stringResource(id = R.string.select_your_post),
-                            color = colorResource(id = R.color.text_hint_color),
+                            color = HintColor,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.W400,
                             fontFamily = FontFamily(Font(R.font.quicksand_medium))

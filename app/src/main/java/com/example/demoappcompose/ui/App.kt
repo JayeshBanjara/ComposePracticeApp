@@ -12,7 +12,7 @@ import com.example.demoappcompose.ui.theme.AppTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun App() {
-    AppTheme {
+    AppTheme(darkTheme = false) {
         val navController = rememberNavController()
 
         Scaffold { innerPadding ->

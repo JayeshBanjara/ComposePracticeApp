@@ -16,6 +16,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.demoappcompose.R
+import com.example.demoappcompose.ui.theme.Blue
+import com.example.demoappcompose.ui.theme.TitleColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -23,11 +25,18 @@ fun CustomTopAppBar(title: String) {
     CenterAlignedTopAppBar(
         modifier = Modifier.fillMaxWidth(),
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primary,
+            containerColor = Blue,
             titleContentColor = Color.White,
         ),
         title = {
-            Text(text = title, color = Color.White)
+            Text(
+                text = title,
+                style = TextStyle(
+                    color = Color.White,
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.W700,
+                    fontFamily = FontFamily(Font(R.font.quicksand_medium))
+                ))
         }
     )
 }
@@ -39,13 +48,13 @@ fun WhiteTopAppBar(title: String) {
         modifier = Modifier.fillMaxWidth(),
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
             containerColor = Color.White,
-            titleContentColor = colorResource(id = R.color.text_Title_Color),
+            titleContentColor = TitleColor,
         ),
         title = {
             Text(
                 text = title,
                 style = TextStyle(
-                    color = colorResource(id = R.color.text_Title_Color),
+                    color = TitleColor,
                     fontSize = 26.sp,
                     fontWeight = FontWeight.W700,
                     fontFamily = FontFamily(Font(R.font.quicksand_medium))
