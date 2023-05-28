@@ -154,7 +154,7 @@ fun LoginScreenNew(navController: NavController) {
                     }
                 }
 
-                VerticalSpacer(size = 8)
+                /*VerticalSpacer(size = 8)
 
                 Text(
                     text = "or",
@@ -177,7 +177,7 @@ fun LoginScreenNew(navController: NavController) {
                 ) {
                     //Navigate to login with OTP screen
                 }
-
+*/
                 VerticalSpacer(size = 12)
 
                 Text(

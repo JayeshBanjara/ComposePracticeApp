@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.demoappcompose.R
@@ -16,7 +17,7 @@ import com.example.demoappcompose.ui.dashboard.bottom_nav.DashboardNavHost
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Dashboard() {
+fun Dashboard(mainNavController: NavController) {
     val navController: NavHostController = rememberNavController()
     Scaffold(
         topBar = {
@@ -30,6 +31,10 @@ fun Dashboard() {
         },
         bottomBar = { DashboardBottomNavigation(navController = navController) }
     ) { contentPadding ->
-        DashboardNavHost(navController = navController, modifier = Modifier.padding(contentPadding))
+        DashboardNavHost(
+            mainNavController = mainNavController,
+            navController = navController,
+            modifier = Modifier.padding(contentPadding)
+        )
     }
 }

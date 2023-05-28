@@ -9,10 +9,11 @@
     <string name="enter_your_mail">Enter your mail-id</string>
     <string name="enter_your_institute_caps">Enter Your Institute Name</string>
     <string name="enter_your_institute">Enter your institute name</string>
+    <string name="upload_institute_logo">Upload your institute logo</string>
     <string name="city">City</string>
     <string name="city_name">City name</string>
-    <string name="select_your_post_caps">Select Your Post</string>
-    <string name="select_your_post">Select your post</string>
+    <string name="select_your_post_caps">Select Your Role</string>
+    <string name="select_your_post">Select your role</string>
     <string name="enter_your_mobile_number">Enter your mobile number</string>
     <string name="please_enter_valid_mobile_number">Please enter valid mobile number</string>
     <string name="please_enter_password">Please enter password</string>

@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,7 +39,7 @@ fun HomeScreen(navController: NavController, modifier: Modifier) {
         val mediums: List<String> = listOf("Hindi Medium", "Gujarati Medium", "English Medium")
         var selectedMedium by remember { mutableStateOf(mediums[0]) }
         val classes: List<String> = listOf("12", "11", "10", "9", "8", "7", "6", "5", "4")
-        var openDialog by remember { mutableStateOf(true) }
+        var openDialog by remember { mutableStateOf(false) }
 
         if (openDialog) {
             ProfileDialog(
@@ -59,7 +57,7 @@ fun HomeScreen(navController: NavController, modifier: Modifier) {
             }
         )
 
-        ClassLayout(classes = classes)
+        ClassLayout(classes = classes, navController)
 
         VerticalSpacer(size = 10)
 
