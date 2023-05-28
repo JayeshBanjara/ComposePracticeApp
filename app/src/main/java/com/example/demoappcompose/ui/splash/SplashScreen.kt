@@ -14,7 +14,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.example.demoappcompose.R
-import com.example.demoappcompose.ui.components.popUpToTop
+import com.example.demoappcompose.ui.popUpToTop
 import com.example.demoappcompose.ui.navigation.Screens
 
 @Composable

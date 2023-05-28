@@ -15,7 +15,19 @@
     <string name="select_your_post">Select your post</string>
     <string name="enter_your_mobile_number">Enter your mobile number</string>
     <string name="please_enter_valid_mobile_number">Please enter valid mobile number</string>
-    <string name="enter_otp">Enter OTP</string>
+    <string name="please_enter_password">Please enter password</string>
+    <string name="enter_password">Enter password</string>
     <string name="please_enter_valid_otp">Please enter valid OTP</string>
-    <string name="submit">SUBMIT</string>
+    <string name="home">Home</string>
+    <string name="about_us">About Us</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="feedback">Feedback</string>
+    <string name="our_menus">Our Menus</string>
+    <string name="profile">Profile</string>
+    <string name="my_subscription">My Subscription</string>
+    <string name="my_paper_history">My Paper History</string>
+    <string name="register_to_purchase_the_book">Register to purchase the book</string>
+    <string name="rate_app">Rate App</string>
+    <string name="logout">Logout</string>
+    <string name="save">Save</string>
 </resources>

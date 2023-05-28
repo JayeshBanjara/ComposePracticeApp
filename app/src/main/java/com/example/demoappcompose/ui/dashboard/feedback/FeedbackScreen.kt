@@ -16,20 +16,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.demoappcompose.R
+import com.example.demoappcompose.ui.theme.TitleColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FeedbackScreen(navController: NavController) {
+fun FeedbackScreen(navController: NavController, modifier: Modifier) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(id = R.color.teal_700))
+            .background(color = Color.White)
             .wrapContentSize(Alignment.Center)
     ) {
         Text(
             text = "Feedback",
             fontWeight = FontWeight.Bold,
-            color = Color.White,
+            color = TitleColor,
             modifier = Modifier.align(Alignment.CenterHorizontally),
             textAlign = TextAlign.Center,
             fontSize = 20.sp

@@ -30,7 +30,7 @@ import com.example.demoappcompose.ui.theme.HintColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CustomTextField(
+fun CustomTextFieldDialog(
     modifier: Modifier,
     text: String,
     labelText: String = "",
@@ -47,7 +47,7 @@ fun CustomTextField(
         OutlinedTextField(
             modifier = modifier,
             value = text,
-            shape = RoundedCornerShape(50.dp),
+            shape = RoundedCornerShape(8.dp),
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = GreyLight,
                 unfocusedBorderColor = GreyLight,
@@ -61,7 +61,7 @@ fun CustomTextField(
                     text = placeholderText,
                     style = TextStyle(
                         color = HintColor,
-                        fontSize = 14.sp,
+                        fontSize = 12.sp,
                         fontWeight = FontWeight.W500,
                         fontFamily = FontFamily(Font(R.font.quicksand_medium))
                     )

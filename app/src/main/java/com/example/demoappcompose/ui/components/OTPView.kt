@@ -17,16 +17,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.demoappcompose.R
-import com.example.demoappcompose.ui.components.HorizontalSpacer
+import com.example.demoappcompose.ui.HorizontalSpacer
 import com.example.demoappcompose.ui.theme.TitleColor
 
 const val PIN_VIEW_TYPE_UNDERLINE = 0

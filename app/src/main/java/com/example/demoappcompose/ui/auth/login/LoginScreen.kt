@@ -1,7 +1,6 @@
 package com.example.demoappcompose.ui.auth.login
 
 import PinView
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -38,11 +37,11 @@ import androidx.navigation.NavController
 import com.example.demoappcompose.R
 import com.example.demoappcompose.ui.components.CustomTextField
 import com.example.demoappcompose.ui.components.MainButton
-import com.example.demoappcompose.ui.components.TextFieldHeader
-import com.example.demoappcompose.ui.components.VerticalSpacer
+import com.example.demoappcompose.ui.VerticalSpacer
 import com.example.demoappcompose.ui.components.WhiteTopAppBar
-import com.example.demoappcompose.ui.components.screenPadding
+import com.example.demoappcompose.ui.screenPadding
 import com.example.demoappcompose.ui.navigation.Screens
+import com.example.demoappcompose.ui.popUpToTop
 import com.example.demoappcompose.ui.theme.Blue
 import com.example.demoappcompose.ui.theme.TitleColor
 
@@ -88,10 +87,6 @@ fun LoginScreen(navController: NavController) {
             }
 
             VerticalSpacer(size = 30)
-
-            TextFieldHeader(headerText = stringResource(R.string.enter_mobile_number))
-
-            VerticalSpacer(size = 5)
 
             CustomTextField(modifier = Modifier
                 .fillMaxWidth(),
@@ -181,7 +176,9 @@ fun LoginScreen(navController: NavController) {
                 }
 
                 if ((mobileNum.length == 10) and (otp.length >= 4)) {
-                    navController.navigate(Screens.RegisterScreen.route)
+                    navController.navigate(Screens.RegisterScreen.route) {
+                        popUpToTop(navController)
+                    }
                 }
             }
         }

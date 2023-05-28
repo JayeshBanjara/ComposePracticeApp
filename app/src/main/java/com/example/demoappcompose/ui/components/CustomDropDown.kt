@@ -26,7 +26,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -37,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import com.example.demoappcompose.R
+import com.example.demoappcompose.ui.HorizontalSpacer
 import com.example.demoappcompose.ui.theme.GreyLight
 import com.example.demoappcompose.ui.theme.HintColor
 
@@ -56,9 +56,9 @@ fun CustomDropDown(
             .clickable { onClick() }
             .fillMaxWidth()
             .height(52.dp)
-            .clip(RoundedCornerShape(corner = CornerSize(8.dp)))
+            .clip(RoundedCornerShape(corner = CornerSize(25.dp)))
             .background(GreyLight)
-            .padding(8.dp),
+            .padding(15.dp),
         contentAlignment = Alignment.Center
     ) {
         BasicTextField(

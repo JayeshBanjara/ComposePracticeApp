@@ -17,3 +17,6 @@ val GreyLight = Color(0xFFD9D9D9)
 val GreyDark = Color(0xFF60626C)
 
 val Blue = Color(0XFF6C5CFF)
+val LightBlue = Color(0XFFEBE9FF)
+val White = Color(0XFFFFFFFF)
+val WhiteText = Color(0XFFDEDAFF)

@@ -5,11 +5,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.demoappcompose.ui.auth.login.LoginScreen
+import com.example.demoappcompose.ui.auth.login.LoginScreenNew
 import com.example.demoappcompose.ui.auth.register.RegisterScreen
 import com.example.demoappcompose.ui.dashboard.Dashboard
-import com.example.demoappcompose.ui.dashboard.home.HomeScreen
-import com.example.demoappcompose.ui.splash.SplashScreen
+import com.example.demoappcompose.ui.splash.SplashScreenNew
 
 @Composable
 fun AppNavigation(
@@ -17,13 +16,13 @@ fun AppNavigation(
     navController: NavHostController
 ) {
 
-    NavHost(navController = navController, startDestination = Screens.SplashScreen.route) {
+    NavHost(navController = navController, startDestination = Screens.Dashboard.route) {
         composable(route = Screens.SplashScreen.route) {
-            SplashScreen(navController = navController)
+            SplashScreenNew(navController = navController)
         }
 
         composable(route = Screens.LoginScreen.route) {
-            LoginScreen(navController = navController)
+            LoginScreenNew(navController = navController)
         }
 
         composable(route = Screens.RegisterScreen.route) {
@@ -31,7 +30,7 @@ fun AppNavigation(
         }
 
         composable(route = Screens.Dashboard.route) {
-            Dashboard(navController = navController)
+            Dashboard()
         }
     }
 }
