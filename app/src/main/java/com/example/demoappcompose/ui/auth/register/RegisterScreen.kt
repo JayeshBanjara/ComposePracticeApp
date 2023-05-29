@@ -83,6 +83,10 @@ fun RegisterScreen(navController: NavController) {
             var nameError by remember { mutableStateOf(false) }
             var email by remember { mutableStateOf("") }
             var emailError by remember { mutableStateOf(false) }
+            var password by remember { mutableStateOf("") }
+            var passwordError by remember { mutableStateOf(false) }
+            var cnfPwd by remember { mutableStateOf("") }
+            var cnfPwdError by remember { mutableStateOf(false) }
             var instituteName by remember { mutableStateOf("") }
             var instituteError by remember { mutableStateOf(false) }
             var instituteLogoName by remember { mutableStateOf("") }
@@ -90,8 +94,8 @@ fun RegisterScreen(navController: NavController) {
             var city by remember { mutableStateOf("") }
             var cityError by remember { mutableStateOf(false) }
             var mExpanded by remember { mutableStateOf(false) }
-            val items = listOf("Teacher"/*, "Student", "Principal"*/)
-            var mSelectedText by remember { mutableStateOf("") }
+            val items = listOf("Teacher")
+            var mSelectedText by remember { mutableStateOf(items[0]) }
             var postError by remember { mutableStateOf(false) }
             var isHindiChecked by remember { mutableStateOf(false) }
             var isGujaratiChecked by remember { mutableStateOf(false) }
@@ -200,6 +204,36 @@ fun RegisterScreen(navController: NavController) {
                             localFocusManager.moveFocus(FocusDirection.Down)
                         },
                         onValueChange = { if (it.length <= 50) email = it })
+
+                    VerticalSpacer(size = 15)
+
+                    CustomTextField(modifier = Modifier
+                        .fillMaxWidth(),
+                        text = password,
+                        keyboardType = KeyboardType.Password,
+                        imeAction = ImeAction.Next,
+                        isError = passwordError,
+                        errorText = "Please enter password",
+                        placeholderText = "Enter password",
+                        onNext = {
+                            localFocusManager.moveFocus(FocusDirection.Down)
+                        },
+                        onValueChange = { password = it })
+
+                    VerticalSpacer(size = 15)
+
+                    CustomTextField(modifier = Modifier
+                        .fillMaxWidth(),
+                        text = cnfPwd,
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Next,
+                        isError = cnfPwdError,
+                        errorText = "Password and confirm password does not match",
+                        placeholderText = "Enter confirm password",
+                        onNext = {
+                            localFocusManager.moveFocus(FocusDirection.Down)
+                        },
+                        onValueChange = { cnfPwd = it })
 
                     VerticalSpacer(size = 15)
 
@@ -360,6 +394,8 @@ fun RegisterScreen(navController: NavController) {
                         emptyNumError = mobileNum.length < 10
                         nameError = name.isEmpty()
                         emailError = email.isEmpty()
+                        passwordError = password.isEmpty()
+                        cnfPwdError = cnfPwd.isEmpty()
                         instituteError = instituteName.isEmpty()
                         instituteLogoError = instituteLogoName.isEmpty()
                         cityError = city.isEmpty()
@@ -367,7 +403,7 @@ fun RegisterScreen(navController: NavController) {
                         mediumError =
                             isEnglishChecked.not() and isGujaratiChecked.not() and isHindiChecked.not()
 
-                        if (emptyNumError.not() and nameError.not() and emailError.not() and instituteError.not() and instituteLogoError.not() and cityError.not() and postError.not() and mediumError.not()) {
+                        if (emptyNumError.not() and nameError.not() and emailError.not() and passwordError.not() and cnfPwdError.not() and instituteError.not() and instituteLogoError.not() and cityError.not() and postError.not() and mediumError.not()) {
                             navController.navigate(Screens.Dashboard.route)
                         }
                     }

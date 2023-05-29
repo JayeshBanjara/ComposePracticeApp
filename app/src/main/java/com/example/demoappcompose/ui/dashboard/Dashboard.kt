@@ -14,6 +14,7 @@ import com.example.demoappcompose.R
 import com.example.demoappcompose.ui.components.CustomTopAppBar
 import com.example.demoappcompose.ui.dashboard.bottom_nav.DashboardBottomNavigation
 import com.example.demoappcompose.ui.dashboard.bottom_nav.DashboardNavHost
+import com.example.demoappcompose.ui.navigation.Screens
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -25,7 +26,7 @@ fun Dashboard(mainNavController: NavController) {
                 title = stringResource(id = R.string.app_name),
                 actionIcon = painterResource(id = R.drawable.ic_user),
                 onIconClick = {
-
+                    mainNavController.navigate(Screens.EditProfile.route)
                 }
             )
         },

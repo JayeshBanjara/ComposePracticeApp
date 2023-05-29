@@ -26,7 +26,7 @@ import com.example.demoappcompose.ui.VerticalSpacer
 import com.example.demoappcompose.ui.dashboard.home.components.ChipGroup
 import com.example.demoappcompose.ui.dashboard.home.components.ClassLayout
 import com.example.demoappcompose.ui.dashboard.home.components.MenusLayout
-import com.example.demoappcompose.ui.dashboard.home.components.ProfileDialog
+import com.example.demoappcompose.ui.navigation.Screens
 import com.example.demoappcompose.ui.theme.TitleColor
 
 @Composable
@@ -39,15 +39,15 @@ fun HomeScreen(navController: NavController, modifier: Modifier) {
         val mediums: List<String> = listOf("Hindi Medium", "Gujarati Medium", "English Medium")
         var selectedMedium by remember { mutableStateOf(mediums[0]) }
         val classes: List<String> = listOf("12", "11", "10", "9", "8", "7", "6", "5", "4")
-        var openDialog by remember { mutableStateOf(false) }
+        //var openDialog by remember { mutableStateOf(false) }
 
-        if (openDialog) {
+        /*if (openDialog) {
             ProfileDialog(
                 onDismissRequest = {
                     openDialog = false
                 }
             )
-        }
+        }*/
 
         ChipGroup(
             mediums = mediums,
@@ -77,11 +77,13 @@ fun HomeScreen(navController: NavController, modifier: Modifier) {
         VerticalSpacer(size = 10)
 
         MenusLayout(
-            onItemClick = {menuTitle ->
-                when(menuTitle) {
+            onItemClick = { menuTitle ->
+                when (menuTitle) {
                     "Profile" -> {
-                        openDialog = true
+                        //openDialog = true
+                        navController.navigate(Screens.EditProfile.route)
                     }
+
                     "Logout" -> {
 
                     }

@@ -10,6 +10,7 @@ import androidx.navigation.navArgument
 import com.example.demoappcompose.ui.auth.login.LoginScreenNew
 import com.example.demoappcompose.ui.auth.register.RegisterScreen
 import com.example.demoappcompose.ui.dashboard.Dashboard
+import com.example.demoappcompose.ui.profile.EditProfile
 import com.example.demoappcompose.ui.splash.SplashScreenNew
 import com.example.demoappcompose.ui.subject.SubjectScreen
 
@@ -48,6 +49,10 @@ fun AppNavigation(
                 navController = navController,
                 std = entry.arguments?.getString("std") ?: ""
             )
+        }
+
+        composable(route = Screens.EditProfile.route) {
+            EditProfile(navController = navController)
         }
     }
 }
