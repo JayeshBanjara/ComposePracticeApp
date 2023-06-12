@@ -21,8 +21,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.UploadFile
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
@@ -301,7 +299,7 @@ fun RegisterScreen(navController: NavController) {
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
-                                imageVector = Icons.Filled.UploadFile,
+                                painter = painterResource(id = R.drawable.ic_upload),
                                 contentDescription = null,
                                 tint = Color.White
                             )
@@ -381,11 +379,9 @@ fun RegisterScreen(navController: NavController) {
                             modifier = Modifier.fillMaxWidth(),
                         )
                     }
-                }
 
-                Column(
-                    modifier = Modifier.padding(screenPadding())
-                ) {
+                    VerticalSpacer(size = 15)
+
                     MainButton(
                         modifier = Modifier
                             .fillMaxWidth(),
@@ -414,7 +410,7 @@ fun RegisterScreen(navController: NavController) {
                         text = "Already have an account?",
                         style = TextStyle(
                             color = HintColor,
-                            fontSize = 14.sp,
+                            fontSize = 15.sp,
                             fontWeight = FontWeight.W500,
                             fontFamily = FontFamily(Font(R.font.quicksand_medium)),
                             textAlign = TextAlign.Center
@@ -428,7 +424,7 @@ fun RegisterScreen(navController: NavController) {
                         text = "Login",
                         style = TextStyle(
                             color = Blue,
-                            fontSize = 14.sp,
+                            fontSize = 16.sp,
                             fontWeight = FontWeight.W700,
                             fontFamily = FontFamily(Font(R.font.quicksand_bold)),
                             textAlign = TextAlign.Center

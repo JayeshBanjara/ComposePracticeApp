@@ -44,7 +44,8 @@ fun HomeScreen(navController: NavController, modifier: Modifier) {
     ) {
         val mediums: List<String> = listOf("Hindi Medium", "Gujarati Medium", "English Medium")
         var selectedMedium by remember { mutableStateOf(mediums[0]) }
-        val classes: List<String> = listOf("12", "11", "10", "9", "8", "7", "6", "5", "4")
+        //val classes: List<String> = listOf("12", "11", "10", "9", "8", "7", "6", "5", "4")
+        val classes: List<String> = listOf("9", "10", "11", "12")
 
         // State variable to control logout popup visibility
         var showLogoutPopup by remember { mutableStateOf(false) }
@@ -87,8 +88,16 @@ fun HomeScreen(navController: NavController, modifier: Modifier) {
                         navController.navigate(Screens.EditProfile.route)
                     }
 
+                    "My Subscription" -> {
+                        navController.navigate(Screens.MySubscription.route)
+                    }
+
+                    "My Paper History" -> {
+                        navController.navigate(Screens.PaperHistory.route)
+                    }
+
                     "Register to purchase the book" -> {
-                        context.openUrl(url = "https://www.google.com/")
+                        navController.navigate(Screens.RegisterPurchaseBook.route)
                     }
 
                     "Logout" -> {

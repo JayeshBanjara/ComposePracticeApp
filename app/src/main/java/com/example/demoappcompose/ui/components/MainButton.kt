@@ -1,5 +1,6 @@
 package com.example.demoappcompose.ui.components
 
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -29,7 +30,7 @@ fun MainButton(
 ) {
     Button(
         onClick = { onClick() },
-        modifier = modifier,
+        modifier = modifier.height(45.dp),
         shape = RoundedCornerShape(corner = CornerSize(50.dp)),
         colors = ButtonDefaults.buttonColors(
             containerColor = Blue,

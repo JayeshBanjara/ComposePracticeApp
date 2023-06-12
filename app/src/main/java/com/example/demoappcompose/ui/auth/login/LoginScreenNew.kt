@@ -150,6 +150,9 @@ fun LoginScreenNew(navController: NavController) {
                     passwordError = password.isEmpty()
 
                     if ((!emptyNumError) and (password.isNotEmpty())) {
+
+                        ///Here call API for login
+
                         navController.navigate(Screens.Dashboard.route)
                     }
                 }
@@ -184,7 +187,7 @@ fun LoginScreenNew(navController: NavController) {
                     text = "Don’t have an account?",
                     style = TextStyle(
                         color = HintColor,
-                        fontSize = 14.sp,
+                        fontSize = 15.sp,
                         fontWeight = FontWeight.W500,
                         fontFamily = FontFamily(Font(R.font.quicksand_medium)),
                         textAlign = TextAlign.Center
@@ -198,7 +201,7 @@ fun LoginScreenNew(navController: NavController) {
                     text = "Sign Up",
                     style = TextStyle(
                         color = Blue,
-                        fontSize = 14.sp,
+                        fontSize = 16.sp,
                         fontWeight = FontWeight.W700,
                         fontFamily = FontFamily(Font(R.font.quicksand_bold)),
                         textAlign = TextAlign.Center

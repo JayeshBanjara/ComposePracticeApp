@@ -37,8 +37,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import com.example.demoappcompose.R
 import com.example.demoappcompose.ui.HorizontalSpacer
+import com.example.demoappcompose.ui.theme.GreyDark
 import com.example.demoappcompose.ui.theme.GreyLight
 import com.example.demoappcompose.ui.theme.HintColor
+import com.example.demoappcompose.ui.theme.TitleColor
 
 @Composable
 fun CustomDropDown(
@@ -77,7 +79,10 @@ fun CustomDropDown(
 
             },
             textStyle = TextStyle(
-                color = HintColor
+                color = TitleColor,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.W500,
+                fontFamily = FontFamily(Font(R.font.quicksand_medium))
             ),
             decorationBox = { innerTextField ->
                 Row(modifier = Modifier.fillMaxWidth().clickable { onClick() }) {

@@ -161,8 +161,7 @@ fun LoginScreen(navController: NavController) {
 
             MainButton(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp),
+                    .fillMaxWidth(),
                 text = buttonLabel
             ) {
                 emptyNumError = mobileNum.length < 10

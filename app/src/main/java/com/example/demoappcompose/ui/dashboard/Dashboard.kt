@@ -31,11 +31,11 @@ fun Dashboard(mainNavController: NavController) {
             )
         },
         bottomBar = { DashboardBottomNavigation(navController = navController) }
-    ) { contentPadding ->
+    ) { innerPadding ->
         DashboardNavHost(
             mainNavController = mainNavController,
             navController = navController,
-            modifier = Modifier.padding(contentPadding)
+            modifier = Modifier.padding(innerPadding)
         )
     }
 }

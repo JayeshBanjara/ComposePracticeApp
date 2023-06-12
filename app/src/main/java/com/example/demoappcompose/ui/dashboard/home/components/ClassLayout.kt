@@ -35,14 +35,14 @@ fun ClassLayout(
     navController: NavController
 ) {
     LazyVerticalGrid(
-        columns = GridCells.Fixed(3),
+        columns = GridCells.Fixed(2),
         contentPadding = PaddingValues(10.dp),
         content = {
             items(classes) {
                 Box(
                     modifier = Modifier
                         .padding(10.dp)
-                        .height(48.dp)
+                        .height(130.dp)
                         .fillMaxWidth()
                         .border(
                             BorderStroke(width = 1.dp, color = Blue),
@@ -58,9 +58,9 @@ fun ClassLayout(
                         text = it,
                         style = TextStyle(
                             color = Blue,
-                            fontSize = 17.sp,
-                            fontWeight = FontWeight.W700,
-                            fontFamily = FontFamily(Font(R.font.quicksand_bold))
+                            fontSize = 35.sp,
+                            fontWeight = FontWeight.W500,
+                            fontFamily = FontFamily(Font(R.font.quicksand_semi_bold))
                         )
                     )
                 }

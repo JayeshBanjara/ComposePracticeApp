@@ -31,7 +31,7 @@ fun TopImage() {
         Image(
             painter = painterResource(id = R.drawable.login_img),
             contentDescription = null,
-            modifier = Modifier.size(75.dp),
+            modifier = Modifier.size(80.dp),
             contentScale = ContentScale.FillBounds
         )
     }

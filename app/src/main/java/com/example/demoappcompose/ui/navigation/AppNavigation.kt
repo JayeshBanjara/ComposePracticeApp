@@ -9,8 +9,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.demoappcompose.ui.auth.login.LoginScreenNew
 import com.example.demoappcompose.ui.auth.register.RegisterScreen
+import com.example.demoappcompose.ui.create_question.ChapterList
+import com.example.demoappcompose.ui.create_question.CreateQuestion
+import com.example.demoappcompose.ui.create_question.QuestionList
 import com.example.demoappcompose.ui.dashboard.Dashboard
+import com.example.demoappcompose.ui.dashboard.my_subscription.MySubscription
+import com.example.demoappcompose.ui.paper_history.PaperHistory
+import com.example.demoappcompose.ui.print_settings.PrintSettings
 import com.example.demoappcompose.ui.profile.EditProfile
+import com.example.demoappcompose.ui.register_purchase_book.RegisterToPurchaseBook
 import com.example.demoappcompose.ui.splash.SplashScreenNew
 import com.example.demoappcompose.ui.subject.SubjectScreen
 
@@ -53,6 +60,64 @@ fun AppNavigation(
 
         composable(route = Screens.EditProfile.route) {
             EditProfile(navController = navController)
+        }
+
+        composable(route = Screens.MySubscription.route) {
+            MySubscription(navController = navController)
+        }
+
+        composable(route = Screens.RegisterPurchaseBook.route) {
+            RegisterToPurchaseBook(navController = navController)
+        }
+
+        composable(route = Screens.PaperHistory.route) {
+            PaperHistory(navController = navController)
+        }
+
+        composable(
+            route = Screens.CreateQuestion.route + "/{subjectName}",
+            arguments = listOf(
+                navArgument("subjectName") {
+                    type = NavType.StringType
+                }
+            )
+        ) { entry ->
+            CreateQuestion(
+                navController = navController,
+                subjectName = entry.arguments?.getString("subjectName") ?: ""
+            )
+        }
+
+        composable(route = Screens.PrintSettings.route) {
+            PrintSettings(navController = navController)
+        }
+
+        composable(
+            route = Screens.ChapterList.route + "/{subjectName}",
+            arguments = listOf(
+                navArgument("subjectName") {
+                    type = NavType.StringType
+                }
+            )
+        ) { entry ->
+            ChapterList(
+                navController = navController,
+                subjectName = entry.arguments?.getString("subjectName") ?: ""
+            )
+        }
+
+        composable(
+            route = Screens.QuestionList.route + "/{chapterName}",
+            arguments = listOf(
+                navArgument("chapterName") {
+                    type = NavType.StringType
+                }
+            )
+        ) { entry ->
+            QuestionList(
+                navController = navController,
+                chapterName = entry.arguments?.getString("chapterName") ?: ""
+            )
         }
     }
 }

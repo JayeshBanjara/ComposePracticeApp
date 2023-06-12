@@ -14,8 +14,10 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -30,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import com.example.demoappcompose.R
 import com.example.demoappcompose.ui.VerticalSpacer
 import com.example.demoappcompose.ui.theme.Blue
+import com.example.demoappcompose.ui.theme.NoRippleTheme
 import com.example.demoappcompose.ui.theme.WhiteText
 
 @Composable
@@ -69,27 +72,29 @@ fun MenusLayout(
 
 @Composable
 fun MenuItem(menuTitle: String, onItemClick: (menuTitle: String) -> Unit) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .padding(10.dp)
-            .clickable { onItemClick(menuTitle) }
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_menu),
-            contentDescription = null,
-            modifier = Modifier.size(50.dp)
-        )
-        VerticalSpacer(size = 5)
-        Text(
-            text = menuTitle,
-            style = TextStyle(
-                color = Blue,
-                fontSize = 10.sp,
-                fontWeight = FontWeight.W600,
-                fontFamily = FontFamily(Font(R.font.quicksand_semi_bold)),
-                textAlign = TextAlign.Center
+    CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .padding(10.dp)
+                .clickable { onItemClick(menuTitle) }
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_menu),
+                contentDescription = null,
+                modifier = Modifier.size(50.dp)
             )
-        )
+            VerticalSpacer(size = 5)
+            Text(
+                text = menuTitle,
+                style = TextStyle(
+                    color = Blue,
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.W600,
+                    fontFamily = FontFamily(Font(R.font.quicksand_semi_bold)),
+                    textAlign = TextAlign.Center
+                )
+            )
+        }
     }
 }

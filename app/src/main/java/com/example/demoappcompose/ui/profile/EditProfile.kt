@@ -23,8 +23,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.UploadFile
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -58,7 +56,7 @@ import com.example.demoappcompose.ui.VerticalSpacer
 import com.example.demoappcompose.ui.components.CustomTextFieldDialog
 import com.example.demoappcompose.ui.components.CustomTopAppBar
 import com.example.demoappcompose.ui.components.MainButton
-import com.example.demoappcompose.ui.dashboard.home.components.HeaderText
+import com.example.demoappcompose.ui.print_settings.HeaderText
 import com.example.demoappcompose.ui.screenPadding
 import com.example.demoappcompose.ui.theme.Blue
 import com.example.demoappcompose.ui.theme.TitleColor
@@ -229,7 +227,7 @@ fun EditProfile(navController: NavController) {
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
-                                imageVector = Icons.Filled.UploadFile,
+                                painter = painterResource(id = R.drawable.ic_upload),
                                 contentDescription = null,
                                 tint = Color.White
                             )

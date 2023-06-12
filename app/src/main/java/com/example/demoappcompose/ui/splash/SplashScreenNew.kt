@@ -97,8 +97,8 @@ fun SplashScreenNew(navController: NavController) {
                     painter = painterResource(id = R.drawable.login_img),
                     contentDescription = null,
                     modifier = Modifier
-                        .width(120.dp)
-                        .height(120.dp)
+                        .width(130.dp)
+                        .height(130.dp)
                 )
             }
             VerticalSpacer(size = 10)
@@ -116,12 +116,13 @@ fun SplashScreenNew(navController: NavController) {
                         contentColor = Blue// Change the text color here
                     ),
                     modifier = Modifier.fillMaxWidth()
+                        .height(45.dp)
                 ) {
                     Text(
                         text = "Sign Up",
                         style = TextStyle(
                             color = Blue,
-                            fontSize = 14.sp,
+                            fontSize = 16.sp,
                             fontWeight = FontWeight.W500,
                             fontFamily = FontFamily(Font(R.font.quicksand_medium))
                         )
@@ -134,7 +135,7 @@ fun SplashScreenNew(navController: NavController) {
                     text = "Already have an account?",
                     style = TextStyle(
                         color = WhiteText,
-                        fontSize = 14.sp,
+                        fontSize = 15.sp,
                         fontWeight = FontWeight.W500,
                         fontFamily = FontFamily(Font(R.font.quicksand_medium)),
                         textAlign = TextAlign.Center
@@ -148,7 +149,7 @@ fun SplashScreenNew(navController: NavController) {
                     text = "Login",
                     style = TextStyle(
                         color = White,
-                        fontSize = 14.sp,
+                        fontSize = 16.sp,
                         fontWeight = FontWeight.W700,
                         fontFamily = FontFamily(Font(R.font.quicksand_bold)),
                         textAlign = TextAlign.Center
