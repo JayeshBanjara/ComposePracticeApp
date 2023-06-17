@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
@@ -32,10 +33,12 @@ import com.example.demoappcompose.ui.theme.HintColor
 import com.example.demoappcompose.ui.theme.WhiteText
 
 @Composable
-fun QuestionItem(questionData: QuestionData, isSelected: Boolean, onSelect: () -> Unit) {
-
-    //val isSelected by remember { mutableStateOf(questionData.isSelected) }
-
+fun QuestionItem(
+    questionData: QuestionData,
+    isSelected: Boolean,
+    isMCQ: Boolean,
+    onSelect: () -> Unit
+) {
     Row(
         modifier = Modifier
             .border(
@@ -82,51 +85,56 @@ fun QuestionItem(questionData: QuestionData, isSelected: Boolean, onSelect: () -
                 )
             )
 
-            VerticalSpacer(size = 8)
+            if(isMCQ) {
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    VerticalSpacer(size = 8)
 
-            Text(
-                text = "A. Sucks beauty",
-                style = TextStyle(
-                    color = HintColor,
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.W500,
-                    fontFamily = FontFamily(Font(R.font.quicksand_medium))
-                )
-            )
-            VerticalSpacer(size = 2)
+                    Text(
+                        text = "A. Sucks beauty",
+                        style = TextStyle(
+                            color = HintColor,
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.W500,
+                            fontFamily = FontFamily(Font(R.font.quicksand_medium))
+                        )
+                    )
+                    VerticalSpacer(size = 2)
 
-            Text(
-                text = "B. reflects the beauty",
-                style = TextStyle(
-                    color = HintColor,
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.W500,
-                    fontFamily = FontFamily(Font(R.font.quicksand_medium))
-                )
-            )
-            VerticalSpacer(size = 2)
+                    Text(
+                        text = "B. reflects the beauty",
+                        style = TextStyle(
+                            color = HintColor,
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.W500,
+                            fontFamily = FontFamily(Font(R.font.quicksand_medium))
+                        )
+                    )
+                    VerticalSpacer(size = 2)
 
-            Text(
-                text = "C. welcomes beauty",
-                style = TextStyle(
-                    color = HintColor,
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.W500,
-                    fontFamily = FontFamily(Font(R.font.quicksand_medium))
-                )
-            )
-            VerticalSpacer(size = 2)
+                    Text(
+                        text = "C. welcomes beauty",
+                        style = TextStyle(
+                            color = HintColor,
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.W500,
+                            fontFamily = FontFamily(Font(R.font.quicksand_medium))
+                        )
+                    )
+                    VerticalSpacer(size = 2)
 
-            Text(
-                text = "D. rejects the beauty",
-                style = TextStyle(
-                    color = HintColor,
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.W500,
-                    fontFamily = FontFamily(Font(R.font.quicksand_medium))
-                )
-            )
-            VerticalSpacer(size = 2)
+                    Text(
+                        text = "D. rejects the beauty",
+                        style = TextStyle(
+                            color = HintColor,
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.W500,
+                            fontFamily = FontFamily(Font(R.font.quicksand_medium))
+                        )
+                    )
+
+                    VerticalSpacer(size = 2)
+                }
+            }
         }
     }
 }

@@ -39,6 +39,7 @@ fun QuestionList(navController: NavController, chapterName: String) {
         var mExpanded by remember { mutableStateOf(false) }
         val items = listOf("MCQs", "1 Mark", "2 Mark")
         var mSelectedText by remember { mutableStateOf(items[0]) }
+        var isMCQ by remember { mutableStateOf(mSelectedText == "MCQs")}
 
         val questionList = mutableListOf<QuestionData>()
         for (i in 1..10) {
@@ -72,6 +73,7 @@ fun QuestionList(navController: NavController, chapterName: String) {
                 onItemSelect = {
                     mSelectedText = it
                     mExpanded = false
+                    isMCQ = mSelectedText == "MCQs"
                 }
             )
 
@@ -82,9 +84,11 @@ fun QuestionList(navController: NavController, chapterName: String) {
                 content = {
                     items(questionList) {
                         var isSelected by remember { mutableStateOf(it.isSelected) }
+
                         QuestionItem(
                             questionData = it,
                             isSelected = isSelected,
+                            isMCQ = isMCQ,
                             onSelect = {
                                 isSelected = isSelected.not()
                             }

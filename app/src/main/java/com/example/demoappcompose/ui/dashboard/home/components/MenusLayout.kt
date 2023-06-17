@@ -1,5 +1,6 @@
 package com.example.demoappcompose.ui.dashboard.home.components
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,7 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.material3.Text
@@ -61,8 +62,8 @@ fun MenusLayout(
             columns = GridCells.Fixed(3),
             contentPadding = PaddingValues(10.dp),
         ) {
-            items(menus) {
-                MenuItem(menuTitle = it) { menuTitle ->
+            itemsIndexed(menus) { index, menu ->
+                MenuItem(menuTitle = menu, index) { menuTitle ->
                     onItemClick(menuTitle)
                 }
             }
@@ -71,7 +72,7 @@ fun MenusLayout(
 }
 
 @Composable
-fun MenuItem(menuTitle: String, onItemClick: (menuTitle: String) -> Unit) {
+fun MenuItem(menuTitle: String, index: Int, onItemClick: (menuTitle: String) -> Unit) {
     CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -80,7 +81,7 @@ fun MenuItem(menuTitle: String, onItemClick: (menuTitle: String) -> Unit) {
                 .clickable { onItemClick(menuTitle) }
         ) {
             Image(
-                painter = painterResource(id = R.drawable.ic_menu),
+                painter = painterResource(id = getMenuDrawable(index = index)),
                 contentDescription = null,
                 modifier = Modifier.size(50.dp)
             )
@@ -97,4 +98,19 @@ fun MenuItem(menuTitle: String, onItemClick: (menuTitle: String) -> Unit) {
             )
         }
     }
+}
+
+fun getMenuDrawable(index: Int): Int {
+    Log.e("TAG", "getMenuDrawable: $index", )
+    var menuDrawable: Int = R.drawable.ic_menu
+    when (index) {
+        0 -> menuDrawable = R.drawable.ic_profile_menu
+        1 -> menuDrawable = R.drawable.ic_subscription
+        2 -> menuDrawable = R.drawable.ic_paper_history
+        3 -> menuDrawable = R.drawable.ic_purchase_book
+        4 -> menuDrawable = R.drawable.ic_rate_us_menu
+        5 -> menuDrawable = R.drawable.ic_logout_menu
+        else -> R.drawable.ic_menu
+    }
+    return menuDrawable
 }

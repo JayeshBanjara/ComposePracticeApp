@@ -60,6 +60,7 @@ fun QuestionTitleDropDown(
     Box(
         modifier = modifier
             .clickable { onClick() }
+            .clip(shape = RoundedCornerShape(5.dp))
             .background(Color.White)
             .padding(10.dp),
         contentAlignment = Alignment.Center

@@ -27,7 +27,7 @@ fun AppNavigation(
     navController: NavHostController
 ) {
 
-    NavHost(navController = navController, startDestination = Screens.Dashboard.route) {
+    NavHost(navController = navController, startDestination = Screens.SplashScreen.route) {
         composable(route = Screens.SplashScreen.route) {
             SplashScreenNew(navController = navController)
         }

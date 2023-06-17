@@ -1,5 +1,6 @@
 package com.example.demoappcompose.ui.components
 
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -19,6 +20,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.demoappcompose.R
+import com.example.demoappcompose.ui.HorizontalSpacer
 import com.example.demoappcompose.ui.theme.Blue
 import com.example.demoappcompose.ui.theme.TitleColor
 import com.example.demoappcompose.ui.theme.WhiteText
@@ -30,7 +32,8 @@ fun CustomTopAppBar(
     showBack: Boolean = false,
     onBackClick: () -> Unit = {},
     actionIcon: Painter? = null,
-    onIconClick: () -> Unit = {}
+    onIconClick: () -> Unit = {},
+    questionCounts: Int? = null
 ) {
     CenterAlignedTopAppBar(
         modifier = Modifier.fillMaxWidth(),
@@ -68,6 +71,21 @@ fun CustomTopAppBar(
                         contentDescription = null,
                         tint = WhiteText
                     )
+                }
+            }
+
+            if(questionCounts != null) {
+                Row {
+                    Text(
+                        text = "( $questionCounts )",
+                        style = TextStyle(
+                            color = Color.White,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.W500,
+                            fontFamily = FontFamily(Font(R.font.quicksand_medium))
+                        )
+                    )
+                    HorizontalSpacer(size = 10)
                 }
             }
         }

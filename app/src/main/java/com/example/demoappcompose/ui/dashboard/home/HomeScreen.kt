@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.demoappcompose.R
 import com.example.demoappcompose.ui.VerticalSpacer
+import com.example.demoappcompose.ui.dashboard.home.components.ApplicationVisitor
 import com.example.demoappcompose.ui.dashboard.home.components.ChipGroup
 import com.example.demoappcompose.ui.dashboard.home.components.ClassLayout
 import com.example.demoappcompose.ui.dashboard.home.components.LogoutPopup
@@ -63,7 +64,7 @@ fun HomeScreen(navController: NavController, modifier: Modifier) {
 
         ClassLayout(classes = classes, navController)
 
-        VerticalSpacer(size = 10)
+        //VerticalSpacer(size = 10)
 
         Text(
             text = stringResource(R.string.our_menus),
@@ -106,6 +107,10 @@ fun HomeScreen(navController: NavController, modifier: Modifier) {
                 }
             }
         )
+
+        VerticalSpacer(size = 10)
+
+        ApplicationVisitor()
 
         // Show logout popup if the state variable is true
         if (showLogoutPopup) {
