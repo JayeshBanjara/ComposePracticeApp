@@ -93,172 +93,180 @@ fun EditProfile(navController: NavController) {
         )
         val logoImageSize = 150.dp
 
-        Column(
-            modifier = Modifier
-                .padding(
-                    start = screenPadding(),
-                    top = innerPadding.calculateTopPadding(),
-                    end = screenPadding(),
-                    bottom = screenPadding()
-                )
-                .fillMaxSize()
-        ) {
+        Box(modifier = Modifier.fillMaxSize()) {
 
-            val scrollState = rememberScrollState()
+            Image(
+                painter = painterResource(id = R.drawable.screen_bg),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize()
+            )
 
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .verticalScroll(scrollState)
-                    .background(color = Color.White)
+                    .padding(
+                        start = screenPadding(),
+                        top = innerPadding.calculateTopPadding(),
+                        end = screenPadding(),
+                        bottom = screenPadding()
+                    )
+                    .fillMaxSize()
             ) {
-                VerticalSpacer(size = 5)
-                HeaderText(text = "Enter Mobile Number")
-                VerticalSpacer(size = 5)
-                CustomTextFieldDialog(modifier = Modifier
-                    .fillMaxWidth(),
-                    text = mobileNum,
-                    placeholderText = stringResource(R.string.enter_your_mobile_number),
-                    keyboardType = KeyboardType.NumberPassword,
-                    imeAction = ImeAction.Next,
-                    isError = emptyNumError,
-                    errorText = stringResource(R.string.please_enter_valid_mobile_number),
-                    onNext = {
-                        localFocusManager.moveFocus(FocusDirection.Down)
-                    },
-                    onValueChange = {
-                        if (it.length <= 10) mobileNum = it
-                    })
-                VerticalSpacer(size = 8)
-                HeaderText(text = "Enter Your Name")
-                VerticalSpacer(size = 5)
-                CustomTextFieldDialog(modifier = Modifier
-                    .fillMaxWidth(),
-                    text = name,
-                    keyboardType = KeyboardType.Text,
-                    capitalization = KeyboardCapitalization.Words,
-                    imeAction = ImeAction.Next,
-                    isError = nameError,
-                    placeholderText = stringResource(id = R.string.enter_your_name),
-                    errorText = "Please enter name",
-                    onNext = {
-                        localFocusManager.moveFocus(FocusDirection.Down)
-                    },
-                    onValueChange = {
-                        if (it.length <= 50) name = it
-                    })
-                VerticalSpacer(size = 8)
-                HeaderText(text = "Enter Your Mail-ID")
-                VerticalSpacer(size = 5)
-                CustomTextFieldDialog(modifier = Modifier
-                    .fillMaxWidth(),
-                    text = email,
-                    keyboardType = KeyboardType.Email,
-                    imeAction = ImeAction.Next,
-                    isError = emailError,
-                    errorText = "Please enter valid email",
-                    placeholderText = stringResource(R.string.enter_your_mail),
-                    onNext = {
-                        localFocusManager.moveFocus(FocusDirection.Down)
-                    },
-                    onValueChange = { if (it.length <= 50) email = it })
 
-                VerticalSpacer(size = 12)
+                val scrollState = rememberScrollState()
 
-                Row(
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .wrapContentHeight(),
-                    verticalAlignment = Alignment.CenterVertically
+                        .weight(1f)
+                        .verticalScroll(scrollState)
                 ) {
-                    Box(
+                    VerticalSpacer(size = 5)
+                    HeaderText(text = "Enter Mobile Number")
+                    VerticalSpacer(size = 5)
+                    CustomTextFieldDialog(modifier = Modifier
+                        .fillMaxWidth(),
+                        text = mobileNum,
+                        placeholderText = stringResource(R.string.enter_your_mobile_number),
+                        keyboardType = KeyboardType.NumberPassword,
+                        imeAction = ImeAction.Next,
+                        isError = emptyNumError,
+                        errorText = stringResource(R.string.please_enter_valid_mobile_number),
+                        onNext = {
+                            localFocusManager.moveFocus(FocusDirection.Down)
+                        },
+                        onValueChange = {
+                            if (it.length <= 10) mobileNum = it
+                        })
+                    VerticalSpacer(size = 8)
+                    HeaderText(text = "Enter Your Name")
+                    VerticalSpacer(size = 5)
+                    CustomTextFieldDialog(modifier = Modifier
+                        .fillMaxWidth(),
+                        text = name,
+                        keyboardType = KeyboardType.Text,
+                        capitalization = KeyboardCapitalization.Words,
+                        imeAction = ImeAction.Next,
+                        isError = nameError,
+                        placeholderText = stringResource(id = R.string.enter_your_name),
+                        errorText = "Please enter name",
+                        onNext = {
+                            localFocusManager.moveFocus(FocusDirection.Down)
+                        },
+                        onValueChange = {
+                            if (it.length <= 50) name = it
+                        })
+                    VerticalSpacer(size = 8)
+                    HeaderText(text = "Enter Your Mail-ID")
+                    VerticalSpacer(size = 5)
+                    CustomTextFieldDialog(modifier = Modifier
+                        .fillMaxWidth(),
+                        text = email,
+                        keyboardType = KeyboardType.Email,
+                        imeAction = ImeAction.Next,
+                        isError = emailError,
+                        errorText = "Please enter valid email",
+                        placeholderText = stringResource(R.string.enter_your_mail),
+                        onNext = {
+                            localFocusManager.moveFocus(FocusDirection.Down)
+                        },
+                        onValueChange = { if (it.length <= 50) email = it })
+
+                    VerticalSpacer(size = 12)
+
+                    Row(
                         modifier = Modifier
-                            .wrapContentSize()
-                            .border(
-                                width = 1.dp,
-                                color = Blue,
-                                shape = RoundedCornerShape(8.dp)
-                            )
-                            .background(
-                                color = Color.White,
-                                shape = RoundedCornerShape(8.dp)
-                            )
-                    ) {
-                        if (selectedUri.isEmpty()) {
-                            Image(
-                                painter = painterResource(id = R.drawable.ic_app_logo),
-                                contentDescription = null,
-                                contentScale = ContentScale.FillBounds,
-                                modifier = Modifier
-                                    .width(logoImageSize)
-                                    .height(logoImageSize)
-                            )
-                        } else {
-                            AsyncImage(
-                                model = selectedUri,
-                                contentDescription = null,
-                                contentScale = ContentScale.FillBounds,
-                                modifier = Modifier
-                                    .width(logoImageSize)
-                                    .height(logoImageSize)
-                            )
-                        }
-
-                    }
-
-                    HorizontalSpacer(size = 25)
-
-                    Column(
-                        modifier = Modifier
-                            .wrapContentSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
+                            .fillMaxWidth()
+                            .wrapContentHeight(),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Box(
                             modifier = Modifier
-                                .size(50.dp)
-                                .background(color = Blue, shape = CircleShape)
-                                .clickable {
-                                    singlePhotoPickerLauncher.launch(
-                                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                                    )
-                                },
-                            contentAlignment = Alignment.Center
+                                .wrapContentSize()
+                                .border(
+                                    width = 1.dp,
+                                    color = Blue,
+                                    shape = RoundedCornerShape(8.dp)
+                                )
+                                .background(
+                                    color = Color.White,
+                                    shape = RoundedCornerShape(8.dp)
+                                )
                         ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_upload),
-                                contentDescription = null,
-                                tint = Color.White
-                            )
+                            if (selectedUri.isEmpty()) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.ic_app_logo),
+                                    contentDescription = null,
+                                    contentScale = ContentScale.FillBounds,
+                                    modifier = Modifier
+                                        .width(logoImageSize)
+                                        .height(logoImageSize)
+                                )
+                            } else {
+                                AsyncImage(
+                                    model = selectedUri,
+                                    contentDescription = null,
+                                    contentScale = ContentScale.FillBounds,
+                                    modifier = Modifier
+                                        .width(logoImageSize)
+                                        .height(logoImageSize)
+                                )
+                            }
+
                         }
 
-                        VerticalSpacer(size = 5)
+                        HorizontalSpacer(size = 25)
 
-                        Text(
-                            text = "Update Logo",
-                            style = TextStyle(
-                                color = TitleColor,
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.W400,
-                                fontFamily = FontFamily(Font(R.font.quicksand_medium))
+                        Column(
+                            modifier = Modifier
+                                .wrapContentSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(50.dp)
+                                    .background(color = Blue, shape = CircleShape)
+                                    .clickable {
+                                        singlePhotoPickerLauncher.launch(
+                                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                        )
+                                    },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_upload),
+                                    contentDescription = null,
+                                    tint = Color.White
+                                )
+                            }
+
+                            VerticalSpacer(size = 5)
+
+                            Text(
+                                text = "Update Logo",
+                                style = TextStyle(
+                                    color = TitleColor,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.W400,
+                                    fontFamily = FontFamily(Font(R.font.quicksand_medium))
+                                )
                             )
-                        )
+                        }
                     }
                 }
-            }
 
-            MainButton(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                text = stringResource(R.string.save)
-            ) {
-                emptyNumError = mobileNum.length < 10
-                nameError = name.isEmpty()
-                emailError = email.isEmpty()
+                MainButton(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    text = stringResource(R.string.save)
+                ) {
+                    emptyNumError = mobileNum.length < 10
+                    nameError = name.isEmpty()
+                    emailError = email.isEmpty()
 
-                if ((!emptyNumError) and (!nameError) and (!emailError)) {
-                    navController.popBackStack()
+                    if ((!emptyNumError) and (!nameError) and (!emailError)) {
+                        navController.popBackStack()
+                    }
                 }
             }
         }

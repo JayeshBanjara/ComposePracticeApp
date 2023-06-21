@@ -1,9 +1,10 @@
 package com.example.demoappcompose.ui.auth.login
 
-import PinView
-import androidx.compose.animation.AnimatedVisibility
+import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,17 +12,23 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -31,47 +38,131 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.demoappcompose.R
+import com.example.demoappcompose.ui.VerticalSpacer
+import com.example.demoappcompose.ui.auth.components.TopImage
+import com.example.demoappcompose.ui.auth.login.components.PasswordField
 import com.example.demoappcompose.ui.components.CustomTextField
 import com.example.demoappcompose.ui.components.MainButton
-import com.example.demoappcompose.ui.VerticalSpacer
-import com.example.demoappcompose.ui.components.WhiteTopAppBar
-import com.example.demoappcompose.ui.screenPadding
 import com.example.demoappcompose.ui.navigation.Screens
-import com.example.demoappcompose.ui.popUpToTop
+import com.example.demoappcompose.ui.screenPadding
 import com.example.demoappcompose.ui.theme.Blue
+import com.example.demoappcompose.ui.theme.HintColor
 import com.example.demoappcompose.ui.theme.TitleColor
+import com.example.demoappcompose.utility.UiState
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(navController: NavController) {
-    Scaffold(modifier = Modifier, topBar = {
-        WhiteTopAppBar(title = stringResource(R.string.login))
-    }) { contentPadding ->
+fun LoginScreen(
+    navController: NavController,
+    loginViewModel: LoginViewModel
+) {
+
+    val context = LocalContext.current
+
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+
+        Image(
+            painter = painterResource(id = R.drawable.screen_bg),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize()
+        )
+
+        val state by remember { loginViewModel.uiState }.collectAsState()
+
+        MainContent(navController = navController, loginViewModel = loginViewModel)
+
+        when (state) {
+            is UiState.Loading -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+
+            UiState.Empty -> {
+
+            }
+
+            is UiState.Error -> {
+                val errorMessage = (state as UiState.Error).data
+                LaunchedEffect(Unit) {
+                    Toast.makeText(
+                        context,
+                        errorMessage,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+            is UiState.Success -> {
+                LaunchedEffect(Unit) {
+                    val loginData = (state as UiState.Success).data.loginData
+                    navController.navigate(Screens.Dashboard.route) {
+                        popUpTo(Screens.SplashScreen.route) {
+                            inclusive = true
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun MainContent(
+    navController: NavController,
+    loginViewModel: LoginViewModel
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+
+        var mobileNum by remember { mutableStateOf("") }
+        //var mobileNum by remember { mutableStateOf("7226941148") }
+        var emptyNumError by remember { mutableStateOf(false) }
+        var password by remember { mutableStateOf("") }
+        //var password by remember { mutableStateOf("Admin@123") }
+        var passwordError by remember { mutableStateOf(false) }
+        var passwordVisibility: Boolean by remember { mutableStateOf(false) }
+        val scrollState = rememberScrollState()
+        val localFocusManager = LocalFocusManager.current
+        val coroutineScope = rememberCoroutineScope()
+
+        TopImage()
+
         Column(
             modifier = Modifier
-                .padding(
-                    top = contentPadding.calculateTopPadding(),
-                    start = screenPadding(),
-                    end = screenPadding(),
-                    bottom = screenPadding()
-                )
-                .fillMaxSize()
+                .fillMaxWidth()
+                .weight(1f)
+                .padding(screenPadding())
+                .verticalScroll(scrollState)
         ) {
 
-            var mobileNum by remember { mutableStateOf("") }
-            var emptyNumError by remember { mutableStateOf(false) }
-            var otp by remember { mutableStateOf("") }
-            var otpError by remember { mutableStateOf(false) }
-            var showOTPView by remember { mutableStateOf(false) }
-            var buttonLabel by remember { mutableStateOf("Get OTP") }
+            Text(
+                text = stringResource(id = R.string.login),
+                style = TextStyle(
+                    color = TitleColor,
+                    fontSize = 26.sp,
+                    fontWeight = FontWeight.W700,
+                    fontFamily = FontFamily(Font(R.font.quicksand_medium)),
+                    textAlign = TextAlign.Center
+                ),
+                modifier = Modifier.fillMaxWidth()
+            )
 
-            val localFocusManager = LocalFocusManager.current
-
-            VerticalSpacer(size = 50)
+            VerticalSpacer(size = 25)
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -97,89 +188,106 @@ fun LoginScreen(navController: NavController) {
                 isError = emptyNumError,
                 errorText = stringResource(R.string.please_enter_valid_mobile_number),
                 onNext = {
-                    if (mobileNum.length == 10) {
-                        emptyNumError = false
-                        showOTPView = true
-                        buttonLabel = "SUBMIT"
-                        localFocusManager.moveFocus(FocusDirection.Down)
-                    }
+                    localFocusManager.moveFocus(FocusDirection.Down)
                 },
                 onValueChange = {
                     if (it.length <= 10) mobileNum = it
                 })
 
-            VerticalSpacer(size = 40)
+            VerticalSpacer(size = 10)
 
-            AnimatedVisibility(visible = showOTPView) {
-
-                Column() {
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = "Enter the OTP send to ",
-                            style = TextStyle(
-                                color = TitleColor,
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.W600,
-                                fontFamily = FontFamily(Font(R.font.quicksand_medium))
-                            )
-                        )
-                        Text(
-                            text = "+91 $mobileNum",
-                            style = TextStyle(
-                                color = Blue,
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.W700,
-                                fontFamily = FontFamily(Font(R.font.quicksand_medium))
-                            )
-                        )
-                    }
-
-                    VerticalSpacer(size = 30)
-
-                    PinView(
-                        pinText = otp,
-                        onPinTextChange = {
-                            otp = it
-                        }
-                    )
-                    VerticalSpacer(size = 5)
-                    if (otpError) {
-                        Text(
-                            text = stringResource(id = R.string.please_enter_valid_otp),
-                            color = Color.Red,
-                            modifier = Modifier.fillMaxWidth(),
-                        )
-                    }
+            PasswordField(
+                text = password,
+                isError = passwordError,
+                passwordVisibility = passwordVisibility,
+                onTrailingIconClick = {
+                    passwordVisibility = !passwordVisibility
+                },
+                onNext = { localFocusManager.moveFocus(FocusDirection.Exit) },
+                onValueChange = {
+                    password = it
                 }
-            }
+            )
 
-            VerticalSpacer(size = 50)
+            VerticalSpacer(size = 40)
 
             MainButton(
                 modifier = Modifier
                     .fillMaxWidth(),
-                text = buttonLabel
+                text = stringResource(id = R.string.login)
             ) {
                 emptyNumError = mobileNum.length < 10
-                if (showOTPView) {
-                    otpError = otp.length < 4
-                }
+                passwordError = password.isEmpty()
 
-                if (mobileNum.length == 10) {
-                    showOTPView = true
-                    buttonLabel = "Verify & Proceed"
-                }
+                if ((!emptyNumError) and (password.isNotEmpty())) {
 
-                if ((mobileNum.length == 10) and (otp.length >= 4)) {
-                    navController.navigate(Screens.RegisterScreen.route) {
-                        popUpToTop(navController)
+                    coroutineScope.launch {
+                        loginViewModel.login(
+                            mobileNum = mobileNum,
+                            password = password
+                        )
                     }
+
+                    /// navController.navigate(Screens.Dashboard.route)
                 }
             }
+
+            /*VerticalSpacer(size = 8)
+
+            Text(
+                text = "or",
+                style = TextStyle(
+                    color = HintColor,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.W500,
+                    fontFamily = FontFamily(Font(R.font.quicksand_medium)),
+                    textAlign = TextAlign.Center
+                ),
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            VerticalSpacer(size = 8)
+
+            MainButton(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                text = "Login with OTP"
+            ) {
+                //Navigate to login with OTP screen
+            }
+*/
+            VerticalSpacer(size = 12)
+
+            Text(
+                text = "Don’t have an account?",
+                style = TextStyle(
+                    color = HintColor,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.W500,
+                    fontFamily = FontFamily(Font(R.font.quicksand_medium)),
+                    textAlign = TextAlign.Center
+                ),
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            VerticalSpacer(size = 5)
+
+            Text(
+                text = "Sign Up",
+                style = TextStyle(
+                    color = Blue,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.W700,
+                    fontFamily = FontFamily(Font(R.font.quicksand_bold)),
+                    textAlign = TextAlign.Center
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        loginViewModel._uiState.value = UiState.Empty
+                        navController.navigate(Screens.RegisterScreen.route)
+                    }
+            )
         }
     }
 }

@@ -2,12 +2,14 @@ package com.example.demoappcompose.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.demoappcompose.ui.auth.login.LoginScreenNew
+import com.example.demoappcompose.ui.auth.login.LoginScreen
+import com.example.demoappcompose.ui.auth.login.LoginViewModel
 import com.example.demoappcompose.ui.auth.register.RegisterScreen
 import com.example.demoappcompose.ui.create_question.ChapterList
 import com.example.demoappcompose.ui.create_question.CreateQuestion
@@ -33,7 +35,11 @@ fun AppNavigation(
         }
 
         composable(route = Screens.LoginScreen.route) {
-            LoginScreenNew(navController = navController)
+            val loginViewModel = hiltViewModel<LoginViewModel>()
+            LoginScreen(
+                navController = navController,
+                loginViewModel = loginViewModel
+            )
         }
 
         composable(route = Screens.RegisterScreen.route) {

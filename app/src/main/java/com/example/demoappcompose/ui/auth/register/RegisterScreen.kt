@@ -70,8 +70,15 @@ import com.example.demoappcompose.ui.theme.TitleColor
 fun RegisterScreen(navController: NavController) {
 
     Box(
-        modifier = Modifier.background(color = Color.White)
+        modifier = Modifier.fillMaxSize()
     ) {
+
+        Image(
+            painter = painterResource(id = R.drawable.screen_bg),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize()
+        )
+
         Column {
 
             val localFocusManager = LocalFocusManager.current
