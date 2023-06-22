@@ -24,13 +24,13 @@ import com.example.demoappcompose.ui.theme.NoRippleTheme
 import com.example.demoappcompose.ui.theme.WhiteText
 
 @Composable
-fun DashboardBottomNavigation(navController: NavController) {
+fun DashboardBottomNavigation(navController: NavController, userId: String) {
 
     val items = listOf(
         BottomNavigationScreens.Home,
         BottomNavigationScreens.AboutUs,
         BottomNavigationScreens.ContactUs,
-        BottomNavigationScreens.Feedback
+        if (userId == "1") BottomNavigationScreens.PaymentScreen else BottomNavigationScreens.Feedback
     )
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()

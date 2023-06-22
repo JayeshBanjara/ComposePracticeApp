@@ -1,7 +1,6 @@
 package com.example.demoappcompose.ui.dashboard
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,9 +15,8 @@ import com.example.demoappcompose.ui.dashboard.bottom_nav.DashboardBottomNavigat
 import com.example.demoappcompose.ui.dashboard.bottom_nav.DashboardNavHost
 import com.example.demoappcompose.ui.navigation.Screens
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Dashboard(mainNavController: NavController) {
+fun Dashboard(mainNavController: NavController, userId: String) {
     val navController: NavHostController = rememberNavController()
     Scaffold(
         topBar = {
@@ -30,7 +28,7 @@ fun Dashboard(mainNavController: NavController) {
                 }
             )
         },
-        bottomBar = { DashboardBottomNavigation(navController = navController) }
+        bottomBar = { DashboardBottomNavigation(navController = navController, userId = userId) }
     ) { innerPadding ->
         DashboardNavHost(
             mainNavController = mainNavController,

@@ -7,9 +7,11 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -113,19 +115,20 @@ fun ContactUsScreen(navController: NavController, modifier: Modifier) {
                     context.dial(phone = "+919106691910")
                 }
 
-                VerticalSpacer(size = 15)
+                VerticalSpacer(size = 100)
 
-                val htmlContent = "<html><body><iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3670.933452335579!2d72.62607747423534!3d23.062901214824166!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e87b26ce31acb%3A0x716c6c11fa3d9ccc!2sHarsh%20stationary%20%26%20xerox!5e0!3m2!1sen!2sin!4v1687071578421!5m2!1sen!2sin\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe></body></html>"
+                val htmlContent = "<html><body><iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3670.933452335579!2d72.62607747423534!3d23.062901214824166!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e87b26ce31acb%3A0x716c6c11fa3d9ccc!2sHarsh%20stationary%20%26%20xerox!5e0!3m2!1sen!2sin!4v1687071578421!5m2!1sen!2sin\" width=\"700\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe></body></html>"
 
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(300.dp),
+                        .fillMaxHeight(),
                     contentAlignment = Alignment.Center
                 ) {
                     AndroidView(factory = { context ->
                         WebView(context).apply {
                             webViewClient = object : WebViewClient() {
+
                                 override fun onPageStarted(
                                     view: WebView?,
                                     url: String?,

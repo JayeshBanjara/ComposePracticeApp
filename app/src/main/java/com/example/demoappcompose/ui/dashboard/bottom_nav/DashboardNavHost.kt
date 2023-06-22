@@ -2,16 +2,14 @@ package com.example.demoappcompose.ui.dashboard.bottom_nav
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.demoappcompose.ui.dashboard.about_us.AboutUsScreen
 import com.example.demoappcompose.ui.dashboard.contact_us.ContactUsScreen
-import com.example.demoappcompose.ui.dashboard.feedback.FeedbackScreen
 import com.example.demoappcompose.ui.dashboard.home.HomeScreen
-import com.example.demoappcompose.utility.sendMail
+import com.example.demoappcompose.ui.payment.PaymentScreen
 
 @Composable
 fun DashboardNavHost(
@@ -28,6 +26,9 @@ fun DashboardNavHost(
         }
         composable(BottomNavigationScreens.ContactUs.route) {
             ContactUsScreen(navController = mainNavController, modifier = modifier)
+        }
+        composable(route = BottomNavigationScreens.PaymentScreen.route) {
+            PaymentScreen()
         }
     }
 }

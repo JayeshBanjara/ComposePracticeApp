@@ -106,7 +106,7 @@ fun LoginScreen(
             is UiState.Success -> {
                 LaunchedEffect(Unit) {
                     val loginData = (state as UiState.Success).data.loginData
-                    navController.navigate(Screens.Dashboard.route) {
+                    navController.navigate(Screens.Dashboard.withArgs(loginData.userData[0].userId.toString())) {
                         popUpTo(Screens.SplashScreen.route) {
                             inclusive = true
                         }
