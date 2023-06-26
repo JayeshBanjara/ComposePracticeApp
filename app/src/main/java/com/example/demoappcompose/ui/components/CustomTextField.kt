@@ -61,7 +61,7 @@ fun CustomTextField(
             enabled = enabled,
             textStyle = TextStyle(
                 color = TitleColor,
-                fontSize = 14.sp,
+                fontSize = 16.sp,
                 fontWeight = FontWeight.W500,
                 fontFamily = FontFamily(Font(R.font.quicksand_medium))
             ),
@@ -91,7 +91,7 @@ fun CustomTextField(
                     text = placeholderText,
                     style = TextStyle(
                         color = HintColor,
-                        fontSize = 14.sp,
+                        fontSize = 16.sp,
                         fontWeight = FontWeight.W500,
                         fontFamily = FontFamily(Font(R.font.quicksand_medium))
                     )

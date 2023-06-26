@@ -271,6 +271,12 @@ fun RegisterScreen(navController: NavController) {
                             readOnly = true,
                             maxLines = 1,
                             singleLine = true,
+                            textStyle = TextStyle(
+                                color = TitleColor,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.W500,
+                                fontFamily = FontFamily(Font(R.font.quicksand_medium))
+                            ),
                             value = instituteLogoName,
                             shape = RoundedCornerShape(50.dp),
                             colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -285,7 +291,7 @@ fun RegisterScreen(navController: NavController) {
                                     text = "Upload institute logo",
                                     style = TextStyle(
                                         color = HintColor,
-                                        fontSize = 14.sp,
+                                        fontSize = 16.sp,
                                         fontWeight = FontWeight.W500,
                                         fontFamily = FontFamily(Font(R.font.quicksand_medium))
                                     )

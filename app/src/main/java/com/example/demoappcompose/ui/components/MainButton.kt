@@ -41,7 +41,7 @@ fun MainButton(
             text = text,
             style = TextStyle(
                 color = Color.White,
-                fontSize = 16.sp,
+                fontSize = 18.sp,
                 fontWeight = FontWeight.W500,
                 fontFamily = FontFamily(Font(R.font.quicksand_medium))
             )

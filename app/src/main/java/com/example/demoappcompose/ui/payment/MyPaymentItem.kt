@@ -1,5 +1,6 @@
 package com.example.demoappcompose.ui.payment
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,11 +28,12 @@ import com.example.demoappcompose.ui.theme.HintColor
 import com.example.demoappcompose.ui.theme.TitleColor
 
 @Composable
-fun MyPaymentItem() {
+fun MyPaymentItem(item: NotesItem) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
+            .background(color = Color.White)
     ) {
         Card(
             modifier = Modifier
@@ -88,9 +90,9 @@ fun MyPaymentItem() {
                 }
                 VerticalSpacer(size = 10)
                 Text(
-                    text = "Status: Pending",
+                    text = "Status: ${item.status}",
                     style = TextStyle(
-                        color = Color.Red,
+                        color = getStatusColor(item.status),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.W500,
                         fontFamily = FontFamily(Font(R.font.quicksand_medium))
@@ -101,5 +103,13 @@ fun MyPaymentItem() {
             }
         }
         VerticalSpacer(size = 15)
+    }
+}
+
+fun getStatusColor(status: String): Color {
+    return when (status) {
+        "Pending" -> Color.DarkGray
+        "Approved" -> Color.DarkGray
+        else -> Color.DarkGray
     }
 }

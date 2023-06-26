@@ -77,7 +77,7 @@ fun PasswordField(
                     text = stringResource(R.string.please_enter_password),
                     style = TextStyle(
                         color = HintColor,
-                        fontSize = 14.sp,
+                        fontSize = 16.sp,
                         fontWeight = FontWeight.W500,
                         fontFamily = FontFamily(Font(R.font.quicksand_medium))
                     )

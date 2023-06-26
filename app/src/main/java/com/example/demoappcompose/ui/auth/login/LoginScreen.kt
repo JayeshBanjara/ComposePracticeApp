@@ -129,7 +129,7 @@ fun MainContent(
             .fillMaxSize()
     ) {
 
-        var mobileNum by remember { mutableStateOf("") }
+       var mobileNum by remember { mutableStateOf("") }
         //var mobileNum by remember { mutableStateOf("7226941148") }
         var emptyNumError by remember { mutableStateOf(false) }
         var password by remember { mutableStateOf("") }
@@ -154,7 +154,7 @@ fun MainContent(
                 text = stringResource(id = R.string.login),
                 style = TextStyle(
                     color = TitleColor,
-                    fontSize = 26.sp,
+                    fontSize = 28.sp,
                     fontWeight = FontWeight.W700,
                     fontFamily = FontFamily(Font(R.font.quicksand_medium)),
                     textAlign = TextAlign.Center
@@ -162,7 +162,7 @@ fun MainContent(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            VerticalSpacer(size = 25)
+            VerticalSpacer(size = 30)
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -177,7 +177,7 @@ fun MainContent(
                 )
             }
 
-            VerticalSpacer(size = 30)
+            VerticalSpacer(size = 40)
 
             CustomTextField(modifier = Modifier
                 .fillMaxWidth(),
@@ -209,7 +209,7 @@ fun MainContent(
                 }
             )
 
-            VerticalSpacer(size = 40)
+            VerticalSpacer(size = 50)
 
             MainButton(
                 modifier = Modifier
