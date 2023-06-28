@@ -47,6 +47,7 @@ import com.example.demoappcompose.ui.VerticalSpacer
 import com.example.demoappcompose.ui.auth.components.TopImage
 import com.example.demoappcompose.ui.auth.login.components.PasswordField
 import com.example.demoappcompose.ui.components.CustomTextField
+import com.example.demoappcompose.ui.components.Loader
 import com.example.demoappcompose.ui.components.MainButton
 import com.example.demoappcompose.ui.navigation.Screens
 import com.example.demoappcompose.ui.screenPadding
@@ -79,18 +80,9 @@ fun LoginScreen(
         MainContent(navController = navController, loginViewModel = loginViewModel)
 
         when (state) {
-            is UiState.Loading -> {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
-            }
+            is UiState.Loading -> { Loader() }
 
-            UiState.Empty -> {
-
-            }
+            UiState.Empty -> {}
 
             is UiState.Error -> {
                 val errorMessage = (state as UiState.Error).data
@@ -112,7 +104,6 @@ fun LoginScreen(
                         }
                     }
                 }
-
             }
         }
     }

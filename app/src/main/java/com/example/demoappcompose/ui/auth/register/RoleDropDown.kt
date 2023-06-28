@@ -1,4 +1,4 @@
-package com.example.demoappcompose.ui.components
+package com.example.demoappcompose.ui.auth.register
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -36,19 +36,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import com.example.demoappcompose.R
+import com.example.demoappcompose.data.responses.register_response.RoleData
 import com.example.demoappcompose.ui.HorizontalSpacer
 import com.example.demoappcompose.ui.theme.GreyLight
 import com.example.demoappcompose.ui.theme.HintColor
 import com.example.demoappcompose.ui.theme.TitleColor
 
 @Composable
-fun CustomDropDown(
+fun RoleDropDown(
     mExpanded: Boolean,
-    items: List<String>,
-    mSelectedText: String,
+    items: List<RoleData>,
+    role: RoleData,
     onClick: () -> Unit,
     onDismissRequest: () -> Unit,
-    onItemSelect: (label: String) -> Unit
+    onItemSelect: (selectedRole: RoleData) -> Unit
 ) {
     var mTextFieldSize by remember { mutableStateOf(Size.Zero) }
 
@@ -72,7 +73,7 @@ fun CustomDropDown(
                     // the DropDown the same width
                     mTextFieldSize = coordinates.size.toSize()
                 },
-            value = mSelectedText,
+            value = role.roleName,
             readOnly = true,
             onValueChange = {
 
@@ -87,7 +88,7 @@ fun CustomDropDown(
                 Row(modifier = Modifier
                     .fillMaxWidth()
                     .clickable { onClick() }) {
-                    if (mSelectedText.isEmpty()) {
+                    /* if (mSelectedText.isEmpty()) {
                         Text(
                             text = stringResource(id = R.string.select_your_post),
                             color = HintColor,
@@ -95,7 +96,7 @@ fun CustomDropDown(
                             fontWeight = FontWeight.W400,
                             fontFamily = FontFamily(Font(R.font.quicksand_medium))
                         )
-                    }
+                    }*/
                 }
                 innerTextField()
             }
@@ -117,12 +118,12 @@ fun CustomDropDown(
             modifier = Modifier
                 .width(with(LocalDensity.current) { mTextFieldSize.width.toDp() })
         ) {
-            items.forEach { label ->
+            items.forEach { role ->
                 DropdownMenuItem(onClick = {
-                    onItemSelect(label)
+                    onItemSelect(role)
                 },
                     text = {
-                        Text(text = label)
+                        Text(text = role.roleName)
                     })
             }
         }

@@ -1,7 +1,7 @@
 package com.example.demoappcompose.di
 
 import com.example.demoappcompose.BuildConfig
-import com.example.demoappcompose.di.network.api.LoginApi
+import com.example.demoappcompose.di.network.api.ApiInterface
 import com.example.demoappcompose.utility.Constants
 import dagger.Module
 import dagger.Provides
@@ -57,5 +57,6 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideLoginApi(retrofit: Retrofit): LoginApi = retrofit.create(LoginApi::class.java)
+    fun provideApiInterface(retrofit: Retrofit): ApiInterface =
+        retrofit.create(ApiInterface::class.java)
 }

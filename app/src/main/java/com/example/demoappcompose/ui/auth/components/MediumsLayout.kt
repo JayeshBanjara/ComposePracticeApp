@@ -13,12 +13,14 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.demoappcompose.R
+import com.example.demoappcompose.data.responses.register_response.MediumData
 import com.example.demoappcompose.ui.HorizontalSpacer
 import com.example.demoappcompose.ui.theme.Blue
 import com.example.demoappcompose.ui.theme.TitleColor
 
 @Composable
 fun MediumsLayout(
+    mediums: List<MediumData>,
     isHindiChecked: Boolean,
     onHindiCheckChanged: () -> Unit,
     isGujaratiChecked: Boolean,
@@ -40,18 +42,23 @@ fun MediumsLayout(
             )
         }
         Row {
+            if(mediums.isNotEmpty())
             CheckBoxLayout(
-                text = "Hindi",
+                text = mediums[0].mediumName,
                 isChecked = isHindiChecked,
                 onCheckedChange = { onHindiCheckChanged() }
             )
+
+            if(mediums.size > 1)
             CheckBoxLayout(
-                text = "Gujarati",
+                text = mediums[1].mediumName,
                 isChecked = isGujaratiChecked,
                 onCheckedChange = { onGujaratiCheckChanged() }
             )
+
+            if(mediums.size > 2)
             CheckBoxLayout(
-                text = "English",
+                text = mediums[2].mediumName,
                 isChecked = isEnglishChecked,
                 onCheckedChange = { onEnglishCheckChanged() }
             )

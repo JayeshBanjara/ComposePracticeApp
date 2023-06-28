@@ -11,13 +11,13 @@ import androidx.navigation.navArgument
 import com.example.demoappcompose.ui.auth.login.LoginScreen
 import com.example.demoappcompose.ui.auth.login.LoginViewModel
 import com.example.demoappcompose.ui.auth.register.RegisterScreen
+import com.example.demoappcompose.ui.auth.register.RegisterViewModel
 import com.example.demoappcompose.ui.create_question.ChapterList
 import com.example.demoappcompose.ui.create_question.CreateQuestion
 import com.example.demoappcompose.ui.create_question.QuestionList
 import com.example.demoappcompose.ui.dashboard.Dashboard
 import com.example.demoappcompose.ui.dashboard.my_subscription.MySubscription
 import com.example.demoappcompose.ui.paper_history.PaperHistory
-import com.example.demoappcompose.ui.payment.PaymentScreen
 import com.example.demoappcompose.ui.print_settings.PrintSettings
 import com.example.demoappcompose.ui.profile.EditProfile
 import com.example.demoappcompose.ui.register_purchase_book.RegisterToPurchaseBook
@@ -44,7 +44,11 @@ fun AppNavigation(
         }
 
         composable(route = Screens.RegisterScreen.route) {
-            RegisterScreen(navController = navController)
+            val registerViewModel = hiltViewModel<RegisterViewModel>()
+            RegisterScreen(
+                navController = navController,
+                registerViewModel = registerViewModel
+            )
         }
 
         composable(

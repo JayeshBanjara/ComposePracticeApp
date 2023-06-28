@@ -1,4 +1,4 @@
-package com.example.demoappcompose.data.responses
+package com.example.demoappcompose.data.responses.login_response
 
 
 import com.squareup.moshi.Json
