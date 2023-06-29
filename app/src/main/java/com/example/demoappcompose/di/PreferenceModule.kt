@@ -20,7 +20,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class AppModule {
+class PreferenceModule {
 
     private val USER_PREFERENCES = "user_preferences"
 

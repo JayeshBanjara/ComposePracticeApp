@@ -118,6 +118,7 @@ fun HomeScreen(navController: NavController, modifier: Modifier) {
             if (showLogoutPopup) {
                 LogoutPopup(
                     onLogoutConfirmed = {
+
                         navController.navigate(Screens.LoginScreen.route) {
                             popUpToTop(navController)
                         }

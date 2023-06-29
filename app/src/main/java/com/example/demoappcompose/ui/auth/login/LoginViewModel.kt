@@ -1,10 +1,14 @@
 package com.example.demoappcompose.ui.auth.login
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Build
+import android.provider.Settings
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.demoappcompose.data.PreferencesManager
 import com.example.demoappcompose.data.requests.LoginRequest
 import com.example.demoappcompose.data.responses.login_response.LoginResponse
 import com.example.demoappcompose.di.network.ApiException
@@ -12,6 +16,7 @@ import com.example.demoappcompose.repository.LoginRepository
 import com.example.demoappcompose.utility.Constants
 import com.example.demoappcompose.utility.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -19,9 +24,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    /*@ApplicationContext context: Context,*/
+    @ApplicationContext private val context: Context,
     private val loginRepository: LoginRepository,
-    private val dataStore: DataStore<Preferences>
+    private val preferencesManager: PreferencesManager
 ) : ViewModel() {
 
     val _uiState = MutableStateFlow<UiState<LoginResponse>>(UiState.Empty)
@@ -34,10 +39,10 @@ class LoginViewModel @Inject constructor(
         val request = LoginRequest(
             deviceModel = Build.MODEL,
             deviceName = Build.BRAND,
-            deviceNo = "M51" /*Settings.Secure.getString(
+            deviceNo = Settings.Secure.getString(
                 context.contentResolver,
                 Settings.Secure.ANDROID_ID
-            )*/,
+            ),
             devicePlatform = Constants.DEVICE_PLATFORM,
             deviceType = Constants.DEVICE_TYPE,
             deviceUuid = "12234",
@@ -49,7 +54,7 @@ class LoginViewModel @Inject constructor(
         try {
             val response = loginRepository.login(request = request)
             if (response.statusCode == 200) {
-
+                preferencesManager.setLoggedIn(isLoggedIn = 1)
                 _uiState.value = UiState.Success(response)
             } else {
                 _uiState.value = UiState.Error(response.message)

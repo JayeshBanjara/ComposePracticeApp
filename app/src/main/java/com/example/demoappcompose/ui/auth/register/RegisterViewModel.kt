@@ -1,5 +1,6 @@
 package com.example.demoappcompose.ui.auth.register
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -17,6 +18,7 @@ import com.example.demoappcompose.repository.RegisterRepository
 import com.example.demoappcompose.utility.Constants
 import com.example.demoappcompose.utility.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -25,6 +27,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val registerRepository: RegisterRepository,
     private val dataStore: DataStore<Preferences>
 ) : ViewModel() {
@@ -116,7 +119,7 @@ class RegisterViewModel @Inject constructor(
     }
 
     private fun encode(imageUri: Uri): String {
-        val input = context1.contentResolver.openInputStream(imageUri)
+        val input = context.contentResolver.openInputStream(imageUri)
         val image = BitmapFactory.decodeStream(input, null, null)
         // Encode image to base64 string
         val baos = ByteArrayOutputStream()

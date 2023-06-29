@@ -9,14 +9,15 @@ import com.example.demoappcompose.ui.navigation.AppNavigation
 import com.example.demoappcompose.ui.theme.AppTheme
 
 @Composable
-fun App() {
+fun App(isLoggedIn: Boolean) {
     AppTheme(darkTheme = false) {
         val navController = rememberNavController()
 
         Scaffold { innerPadding ->
             AppNavigation(
                 modifier = Modifier.padding(innerPadding),
-                navController = navController
+                navController = navController,
+                isLoggedIn = isLoggedIn
             )
         }
     }
