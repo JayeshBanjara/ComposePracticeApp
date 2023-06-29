@@ -52,6 +52,8 @@ class LoginViewModel @Inject constructor(
             if (response.statusCode == 200) {
                 preferencesManager.setLoggedIn(isLoggedIn = 1)
                 preferencesManager.setUserId(userId = response.loginData.userData[0].userId.toString())
+                preferencesManager.setToken(token = response.loginData.token)
+                preferencesManager.setToken(token = response.loginData.userData[0].loginLogId.toString())
                 _uiState.value = UiState.Success(response)
             } else {
                 _uiState.value = UiState.Error(response.message)

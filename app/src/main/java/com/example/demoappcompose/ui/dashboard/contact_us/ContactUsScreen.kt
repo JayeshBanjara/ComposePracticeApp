@@ -64,22 +64,8 @@ fun ContactUsScreen(navController: NavController, modifier: Modifier) {
             contentDescription = null,
             modifier = Modifier.fillMaxSize()
         )
-
-        Card(
-            modifier = modifier
-                .padding(screenPadding())
-                .fillMaxWidth()
-                .wrapContentHeight(),
-            colors = CardDefaults.cardColors(
-                containerColor = Color.White
-            ),
-            shape = RoundedCornerShape(8.dp),
-            elevation = CardDefaults.cardElevation(
-                defaultElevation = 10.dp
-            )
-        ) {
             Column(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
                     .padding(screenPadding())
@@ -121,8 +107,7 @@ fun ContactUsScreen(navController: NavController, modifier: Modifier) {
 
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(),
+                        .fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
                     AndroidView(factory = { context ->
@@ -159,6 +144,5 @@ fun ContactUsScreen(navController: NavController, modifier: Modifier) {
                 }
 
             }
-        }
     }
 }

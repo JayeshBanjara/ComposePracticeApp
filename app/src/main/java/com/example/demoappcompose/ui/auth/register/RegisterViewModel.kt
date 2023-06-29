@@ -5,10 +5,9 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Base64
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.demoappcompose.data.PreferencesManager
 import com.example.demoappcompose.data.requests.MasterDataRequest
 import com.example.demoappcompose.data.requests.RegisterRequest
 import com.example.demoappcompose.data.responses.register_response.GetRoleMediumDataResponse
@@ -28,8 +27,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val registerRepository: RegisterRepository,
-    private val dataStore: DataStore<Preferences>
+    private val registerRepository: RegisterRepository
 ) : ViewModel() {
 
     private val _getRolesState = MutableStateFlow<UiState<GetRoleMediumDataResponse>>(UiState.Empty)

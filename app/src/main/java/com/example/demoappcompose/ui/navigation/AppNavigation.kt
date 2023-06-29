@@ -18,6 +18,7 @@ import com.example.demoappcompose.ui.create_question.QuestionList
 import com.example.demoappcompose.ui.dashboard.Dashboard
 import com.example.demoappcompose.ui.dashboard.home.HomeViewModel
 import com.example.demoappcompose.ui.dashboard.my_subscription.MySubscription
+import com.example.demoappcompose.ui.dashboard.my_subscription.MySubscriptionViewModel
 import com.example.demoappcompose.ui.paper_history.PaperHistory
 import com.example.demoappcompose.ui.print_settings.PrintSettings
 import com.example.demoappcompose.ui.profile.EditProfile
@@ -27,7 +28,10 @@ import com.example.demoappcompose.ui.subject.SubjectScreen
 
 @Composable
 fun AppNavigation(
-    modifier: Modifier = Modifier, navController: NavHostController, isLoggedIn: Boolean, userId: String?
+    modifier: Modifier = Modifier,
+    navController: NavHostController,
+    isLoggedIn: Boolean,
+    userId: String?
 ) {
 
     val startScreen: String =
@@ -52,24 +56,28 @@ fun AppNavigation(
             )
         }
 
-        composable(route = Screens.Dashboard.route + "/{userId}",
+        composable(
+            route = Screens.Dashboard.route + "/{userId}",
             arguments = listOf(navArgument("userId") {
                 type = NavType.StringType
-            })) { entry ->
+            })
+        ) { entry ->
 
             val homeViewModel = hiltViewModel<HomeViewModel>()
 
             Dashboard(
                 mainNavController = navController,
                 homeViewModel = homeViewModel,
-                userId = if (isLoggedIn) userId!! else  entry.arguments?.getString("userId") ?: ""
+                userId = if (isLoggedIn) userId!! else entry.arguments?.getString("userId") ?: ""
             )
         }
 
-        composable(route = Screens.SubjectScreen.route + "/{std}",
+        composable(
+            route = Screens.SubjectScreen.route + "/{std}",
             arguments = listOf(navArgument("std") {
                 type = NavType.StringType
-            })) { entry ->
+            })
+        ) { entry ->
             SubjectScreen(
                 navController = navController, std = entry.arguments?.getString("std") ?: ""
             )
@@ -80,7 +88,11 @@ fun AppNavigation(
         }
 
         composable(route = Screens.MySubscription.route) {
-            MySubscription(navController = navController)
+            val mySubscriptionViewModel = hiltViewModel<MySubscriptionViewModel>()
+            MySubscription(
+                navController = navController,
+                mySubscriptionViewModel = mySubscriptionViewModel
+            )
         }
 
         composable(route = Screens.RegisterPurchaseBook.route) {
@@ -91,10 +103,12 @@ fun AppNavigation(
             PaperHistory(navController = navController)
         }
 
-        composable(route = Screens.CreateQuestion.route + "/{subjectName}",
+        composable(
+            route = Screens.CreateQuestion.route + "/{subjectName}",
             arguments = listOf(navArgument("subjectName") {
                 type = NavType.StringType
-            })) { entry ->
+            })
+        ) { entry ->
             CreateQuestion(
                 navController = navController,
                 subjectName = entry.arguments?.getString("subjectName") ?: ""
@@ -105,20 +119,24 @@ fun AppNavigation(
             PrintSettings(navController = navController)
         }
 
-        composable(route = Screens.ChapterList.route + "/{subjectName}",
+        composable(
+            route = Screens.ChapterList.route + "/{subjectName}",
             arguments = listOf(navArgument("subjectName") {
                 type = NavType.StringType
-            })) { entry ->
+            })
+        ) { entry ->
             ChapterList(
                 navController = navController,
                 subjectName = entry.arguments?.getString("subjectName") ?: ""
             )
         }
 
-        composable(route = Screens.QuestionList.route + "/{chapterName}",
+        composable(
+            route = Screens.QuestionList.route + "/{chapterName}",
             arguments = listOf(navArgument("chapterName") {
                 type = NavType.StringType
-            })) { entry ->
+            })
+        ) { entry ->
             QuestionList(
                 navController = navController,
                 chapterName = entry.arguments?.getString("chapterName") ?: ""

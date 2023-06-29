@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.demoappcompose.R
+import com.example.demoappcompose.data.responses.my_subscription.Subscription
 import com.example.demoappcompose.ui.HorizontalSpacer
 import com.example.demoappcompose.ui.VerticalSpacer
 import com.example.demoappcompose.ui.theme.Blue
@@ -27,7 +28,7 @@ import com.example.demoappcompose.ui.theme.HintColor
 import com.example.demoappcompose.ui.theme.TitleColor
 
 @Composable
-fun MySubsItem() {
+fun MySubsItem(subscription: Subscription) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -52,7 +53,7 @@ fun MySubsItem() {
                     .padding(10.dp)
             ) {
                 Text(
-                    text = "2023-06-01 11:09:38",
+                    text = subscription.subscriptionStart,
                     style = TextStyle(
                         color = HintColor,
                         fontSize = 12.sp,
@@ -67,7 +68,7 @@ fun MySubsItem() {
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = "10 (EM) Yearly",
+                        text = "${subscription.className} (${subscription.mediumName}) ${subscription.streamName}",
                         style = TextStyle(
                             color = TitleColor,
                             fontSize = 15.sp,
@@ -77,7 +78,7 @@ fun MySubsItem() {
                     )
                     HorizontalSpacer(size = 10)
                     Text(
-                        text = "Computer",
+                        text = subscription.subjectName,
                         style = TextStyle(
                             color = Blue,
                             fontSize = 15.sp,
@@ -88,7 +89,7 @@ fun MySubsItem() {
                 }
                 VerticalSpacer(size = 10)
                 Text(
-                    text = "Your plan expires at 30-Jun-2023",
+                    text = subscription.subscriptionEnd,
                     style = TextStyle(
                         color = Color.Red,
                         fontSize = 12.sp,

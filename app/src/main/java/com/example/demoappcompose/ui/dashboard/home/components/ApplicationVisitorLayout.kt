@@ -30,7 +30,7 @@ import com.example.demoappcompose.ui.screenPadding
 import com.example.demoappcompose.ui.theme.Blue
 
 @Composable
-fun ApplicationVisitor() {
+fun ApplicationVisitor(count: String) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -77,7 +77,7 @@ fun ApplicationVisitor() {
                     )
                 )
                 Text(
-                    text = "9,826,157",
+                    text = count,
                     style = TextStyle(
                         color = Color.White,
                         fontSize = 18.sp,

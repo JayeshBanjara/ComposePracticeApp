@@ -143,9 +143,13 @@ fun RegisterScreen(
 
                         is UiState.Success -> {
                             LaunchedEffect(Unit) {
-                                val registerData =
-                                    (registerState as UiState.Success).data.registerData
-                                navController.navigate(Screens.Dashboard.withArgs(registerData.userId.toString())) {
+                                val message = (registerState as UiState.Success).data.message
+                                Toast.makeText(
+                                    context,
+                                    message,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                navController.navigate(Screens.LoginScreen.route) {
                                     popUpTo(Screens.SplashScreen.route) {
                                         inclusive = true
                                     }
@@ -492,7 +496,6 @@ fun MainContent(
             ) {
 
 
-
                 emptyNumError = mobileNum.length < 10
                 nameError = name.isEmpty()
                 emailError = email.isEmpty()
@@ -501,7 +504,7 @@ fun MainContent(
                 instituteError = instituteName.isEmpty()
                 instituteLogoError = instituteLogoName == null
                 cityError = city.isEmpty()
-                postError = /*selectedRole.isEmpty()*/false
+                postError = false
                 mediumError =
                     isEnglishChecked.not() and isGujaratiChecked.not() and isHindiChecked.not()
 
@@ -511,7 +514,7 @@ fun MainContent(
                     val mediumIds = mutableListOf<String>()
                     mediumIds.add("1")
                     mediumIds.add("2")
-                   // if ()
+                    // if ()
 
                     coroutineScope.launch {
                         registerViewModel.register(

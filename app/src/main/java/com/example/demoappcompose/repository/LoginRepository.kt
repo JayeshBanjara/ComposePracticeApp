@@ -10,7 +10,7 @@ import javax.inject.Singleton
 @Singleton
 class LoginRepository @Inject constructor(
     private val apiInterface: ApiInterface
-): SafeApiRequest() {
+) : SafeApiRequest() {
 
     suspend fun login(request: LoginRequest): LoginResponse {
         return apiRequest { apiInterface.login(request) }/*.flowOn(Dispatchers.IO)*/

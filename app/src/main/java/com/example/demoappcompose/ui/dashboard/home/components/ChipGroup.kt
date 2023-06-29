@@ -9,13 +9,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.demoappcompose.data.responses.dashboard_response.MediumData
 import com.example.demoappcompose.ui.HorizontalSpacer
 
 @Composable
 fun ChipGroup(
-    mediums: List<String>,
-    selectedMedium: String,
-    onSelectedChanged: (String) -> Unit,
+    mediums: List<MediumData>,
+    selectedMedium: MediumData,
+    onSelectedChanged: (MediumData) -> Unit,
 ) {
     Column(modifier = Modifier.padding(8.dp)) {
         LazyRow(
@@ -23,8 +24,8 @@ fun ChipGroup(
             items(mediums) {
                 Row {
                     CustomChip(
-                        name = it,
-                        isSelected = selectedMedium == it,
+                        name = it.mediumName,
+                        isSelected = selectedMedium.id == it.id,
                         onSelectionChanged = {
                             onSelectedChanged(it)
                         },

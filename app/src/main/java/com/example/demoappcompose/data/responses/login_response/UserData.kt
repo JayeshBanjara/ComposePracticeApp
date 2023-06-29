@@ -21,7 +21,7 @@ data class UserData(
     @Json(name = "large_image_url")
     val largeImageUrl: String,
     @Json(name = "login_log_id")
-    val loginLogId: Int,
+    val loginLogId: Long,
     @Json(name = "mobile_no")
     val mobileNo: String,
     @Json(name = "password")
@@ -35,5 +35,5 @@ data class UserData(
     @Json(name = "updated_at")
     val updatedAt: String,
     @Json(name = "user_id")
-    val userId: Int
+    val userId: Long
 )

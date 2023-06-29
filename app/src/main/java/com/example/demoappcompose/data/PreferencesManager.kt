@@ -187,6 +187,24 @@ class PreferencesManager @Inject constructor(@ApplicationContext private val app
             preferences[TOKEN]
         }
 
+    suspend fun setLoginLogId(token: String) {
+        appContext.dataStore.edit { preferences ->
+            preferences[TOKEN] = token
+        }
+    }
+
+    val getLoginLogId: Flow<String?> = appContext.dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emptyPreferences()
+            } else {
+                throw exception
+            }
+        }
+        .map { preferences ->
+            preferences[TOKEN]
+        }
+
     suspend fun setUserId(userId: String) {
         appContext.dataStore.edit { preferences ->
             preferences[USER_ID] = userId

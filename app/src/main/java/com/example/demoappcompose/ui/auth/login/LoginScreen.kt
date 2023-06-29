@@ -218,8 +218,6 @@ fun MainContent(
                             password = password
                         )
                     }
-
-                    /// navController.navigate(Screens.Dashboard.route)
                 }
             }
 

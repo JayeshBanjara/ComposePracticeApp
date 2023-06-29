@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.demoappcompose.R
+import com.example.demoappcompose.data.responses.dashboard_response.ClassData
 import com.example.demoappcompose.ui.HorizontalSpacer
 import com.example.demoappcompose.ui.VerticalSpacer
 import com.example.demoappcompose.ui.navigation.Screens
@@ -38,7 +39,7 @@ import com.example.demoappcompose.ui.theme.LightBlue
 
 @Composable
 fun ClassLayout(
-    classes: List<String>,
+    classes: List<ClassData>,
     navController: NavController
 ) {
     LazyVerticalGrid(
@@ -57,7 +58,7 @@ fun ClassLayout(
                         )
                         .background(color = LightBlue, shape = RoundedCornerShape(10.dp))
                         .clickable {
-                            navController.navigate(Screens.SubjectScreen.withArgs(it))
+                            navController.navigate(Screens.SubjectScreen.withArgs(it.className))
                         },
                     contentAlignment = Alignment.Center
                 ) {
@@ -72,7 +73,7 @@ fun ClassLayout(
                         HorizontalSpacer(size = 5)
                         Column {
                             Text(
-                                text = it,
+                                text = it.className,
                                 style = TextStyle(
                                     color = Blue,
                                     fontSize = 21.sp,

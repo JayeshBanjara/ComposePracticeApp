@@ -28,7 +28,7 @@ fun AboutUsScreen(navController: NavController, modifier: Modifier) {
             modifier = Modifier.fillMaxSize()
         )
 
-        Surface(modifier = modifier) {
+        Surface(modifier = modifier.fillMaxSize()) {
             AndroidView(factory = {
                 WebView(it).apply {
                     loadDataWithBaseURL(
