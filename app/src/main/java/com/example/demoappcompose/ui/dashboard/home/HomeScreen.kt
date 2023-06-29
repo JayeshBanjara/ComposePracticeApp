@@ -35,7 +35,11 @@ import com.example.demoappcompose.ui.popUpToTop
 import com.example.demoappcompose.ui.theme.TitleColor
 
 @Composable
-fun HomeScreen(navController: NavController, modifier: Modifier) {
+fun HomeScreen(
+    navController: NavController,
+    homeViewModel: HomeViewModel,
+    modifier: Modifier
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -119,6 +123,7 @@ fun HomeScreen(navController: NavController, modifier: Modifier) {
                 LogoutPopup(
                     onLogoutConfirmed = {
 
+                        homeViewModel.clearPreference()
                         navController.navigate(Screens.LoginScreen.route) {
                             popUpToTop(navController)
                         }

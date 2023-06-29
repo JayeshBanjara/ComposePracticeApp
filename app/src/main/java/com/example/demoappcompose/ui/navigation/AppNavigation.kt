@@ -16,6 +16,7 @@ import com.example.demoappcompose.ui.create_question.ChapterList
 import com.example.demoappcompose.ui.create_question.CreateQuestion
 import com.example.demoappcompose.ui.create_question.QuestionList
 import com.example.demoappcompose.ui.dashboard.Dashboard
+import com.example.demoappcompose.ui.dashboard.home.HomeViewModel
 import com.example.demoappcompose.ui.dashboard.my_subscription.MySubscription
 import com.example.demoappcompose.ui.paper_history.PaperHistory
 import com.example.demoappcompose.ui.print_settings.PrintSettings
@@ -26,7 +27,7 @@ import com.example.demoappcompose.ui.subject.SubjectScreen
 
 @Composable
 fun AppNavigation(
-    modifier: Modifier = Modifier, navController: NavHostController, isLoggedIn: Boolean
+    modifier: Modifier = Modifier, navController: NavHostController, isLoggedIn: Boolean, userId: String?
 ) {
 
     val startScreen: String =
@@ -55,9 +56,13 @@ fun AppNavigation(
             arguments = listOf(navArgument("userId") {
                 type = NavType.StringType
             })) { entry ->
+
+            val homeViewModel = hiltViewModel<HomeViewModel>()
+
             Dashboard(
                 mainNavController = navController,
-                userId = entry.arguments?.getString("userId") ?: ""
+                homeViewModel = homeViewModel,
+                userId = if (isLoggedIn) userId!! else  entry.arguments?.getString("userId") ?: ""
             )
         }
 

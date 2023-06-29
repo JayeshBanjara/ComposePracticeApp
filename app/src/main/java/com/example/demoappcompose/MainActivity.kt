@@ -1,6 +1,7 @@
 package com.example.demoappcompose
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.lifecycle.lifecycleScope
@@ -22,6 +23,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         var isLoggedIn: Int? = 0
+        var userId: String? = null
 
         lifecycleScope.launch {
             withContext(lifecycleScope.coroutineContext) {
@@ -29,12 +31,13 @@ class MainActivity : ComponentActivity() {
 
                 isLoggedIn.let {
                     if (isLoggedIn == 1) {
+                        userId = prefManager.getUserId.first()
                         setContent {
-                            App(isLoggedIn = true)
+                            App(isLoggedIn = true, userId = userId)
                         }
                     } else {
                         setContent {
-                            App(isLoggedIn = false)
+                            App(isLoggedIn = false, userId = userId)
                         }
                     }
                 }

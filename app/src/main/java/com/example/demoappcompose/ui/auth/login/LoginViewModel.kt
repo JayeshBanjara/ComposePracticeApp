@@ -1,11 +1,8 @@
 package com.example.demoappcompose.ui.auth.login
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.provider.Settings
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.demoappcompose.data.PreferencesManager
@@ -40,8 +37,7 @@ class LoginViewModel @Inject constructor(
             deviceModel = Build.MODEL,
             deviceName = Build.BRAND,
             deviceNo = Settings.Secure.getString(
-                context.contentResolver,
-                Settings.Secure.ANDROID_ID
+                context.contentResolver, Settings.Secure.ANDROID_ID
             ),
             devicePlatform = Constants.DEVICE_PLATFORM,
             deviceType = Constants.DEVICE_TYPE,
@@ -55,6 +51,7 @@ class LoginViewModel @Inject constructor(
             val response = loginRepository.login(request = request)
             if (response.statusCode == 200) {
                 preferencesManager.setLoggedIn(isLoggedIn = 1)
+                preferencesManager.setUserId(userId = response.loginData.userData[0].userId.toString())
                 _uiState.value = UiState.Success(response)
             } else {
                 _uiState.value = UiState.Error(response.message)

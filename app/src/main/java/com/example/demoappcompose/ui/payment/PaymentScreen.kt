@@ -24,10 +24,13 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -43,11 +46,7 @@ import com.example.demoappcompose.ui.screenPadding
 fun PaymentScreen() {
     Scaffold(topBar = {
         CustomTopAppBar(
-            title = "Payment",
-            showBack = true,
-            onBackClick = {
-                //  navController.popBackStack()
-            }
+            title = "Payment"
         )
     }) { innerPadding ->
 
@@ -68,70 +67,57 @@ fun PaymentScreen() {
             ScreenBackground()
 
             Surface(
-                modifier = Modifier
-                    .padding(
+                modifier = Modifier.padding(
                         start = screenPadding(),
                         top = innerPadding.calculateTopPadding(),
                         end = screenPadding(),
                         bottom = screenPadding()
                     )
             ) {
-                LazyColumn(
-                    content = {
-                        item { Spacer(modifier = Modifier.height(10.dp)) }
-                        items(
-                            items = notesList,
-                            key = { toDoItem -> toDoItem.id },
-                            itemContent = { item ->
 
-                                val currentItem by rememberUpdatedState(newValue = item)
-                                val dismissState = rememberDismissState(
-                                    confirmValueChange = {
-                                        when (it) {
-                                            DismissValue.DismissedToEnd -> {
-                                                //Do something when swipe Start to End
-                                                currentItem.status = "Rejected"
-                                                notesList.add(NotesItem(0, "", ""))
-                                                notesList.remove(NotesItem(0, "", ""))
-                                                Toast.makeText(
-                                                    context,
-                                                    "Rejected",
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
-                                                true
-                                            }
+                LazyColumn(content = {
+                    item { Spacer(modifier = Modifier.height(10.dp)) }
+                    items(items = notesList,
+                        key = { toDoItem -> toDoItem.id },
+                        itemContent = { item ->
 
-                                            DismissValue.DismissedToStart -> {
-                                                //Do something when swipe End to Start
-                                                currentItem.status = "Approved"
-                                                Toast.makeText(
-                                                    context,
-                                                    "Approved",
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
-                                                true
-                                            }
-
-                                            else -> {
-                                                false
-                                            }
-                                        }
+                            val currentItem by rememberUpdatedState(newValue = item)
+                            val dismissState = rememberDismissState(confirmValueChange = {
+                                when (it) {
+                                    DismissValue.DismissedToEnd -> {
+                                        //Do something when swipe Start to End
+                                        currentItem.status = "Rejected"
+                                        notesList.add(NotesItem(0, "", ""))
+                                        notesList.remove(NotesItem(0, "", ""))
+                                        Toast.makeText(
+                                            context, "Rejected", Toast.LENGTH_SHORT
+                                        ).show()
+                                        true
                                     }
-                                )
 
-                                SwipeToDismiss(
-                                    state = dismissState,
-                                    background = {
-                                        SwipeBackground(dismissState = dismissState)
-                                    },
-                                    dismissContent = {
-                                        MyPaymentItem(item = item)
+                                    DismissValue.DismissedToStart -> {
+                                        //Do something when swipe End to Start
+                                        currentItem.status = "Approved"
+                                        Toast.makeText(
+                                            context, "Approved", Toast.LENGTH_SHORT
+                                        ).show()
+                                        true
                                     }
-                                )
 
-                            }
-                        )
-                    })
+                                    else -> {
+                                        false
+                                    }
+                                }
+                            })
+
+                            SwipeToDismiss(state = dismissState, background = {
+                                SwipeBackground(dismissState = dismissState)
+                            }, dismissContent = {
+                                MyPaymentItem(item = item)
+                            })
+
+                        })
+                })
             }
         }
     }
@@ -169,9 +155,7 @@ fun SwipeBackground(dismissState: DismissState) {
         contentAlignment = alignment
     ) {
         Icon(
-            icon,
-            contentDescription = "Localized description",
-            modifier = Modifier.scale(scale)
+            icon, contentDescription = "Localized description", modifier = Modifier.scale(scale)
         )
     }
 }

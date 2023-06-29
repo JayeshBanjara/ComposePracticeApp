@@ -13,10 +13,15 @@ import com.example.demoappcompose.R
 import com.example.demoappcompose.ui.components.CustomTopAppBar
 import com.example.demoappcompose.ui.dashboard.bottom_nav.DashboardBottomNavigation
 import com.example.demoappcompose.ui.dashboard.bottom_nav.DashboardNavHost
+import com.example.demoappcompose.ui.dashboard.home.HomeViewModel
 import com.example.demoappcompose.ui.navigation.Screens
 
 @Composable
-fun Dashboard(mainNavController: NavController, userId: String) {
+fun Dashboard(
+    mainNavController: NavController,
+    homeViewModel: HomeViewModel,
+    userId: String
+) {
     val navController: NavHostController = rememberNavController()
     Scaffold(
         topBar = {
@@ -33,6 +38,7 @@ fun Dashboard(mainNavController: NavController, userId: String) {
         DashboardNavHost(
             mainNavController = mainNavController,
             navController = navController,
+            homeViewModel = homeViewModel,
             modifier = Modifier.padding(innerPadding)
         )
     }
