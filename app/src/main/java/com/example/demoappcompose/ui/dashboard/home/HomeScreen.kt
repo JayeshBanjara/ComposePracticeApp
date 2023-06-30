@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.demoappcompose.R
 import com.example.demoappcompose.data.responses.dashboard_response.ClassData
@@ -42,6 +43,7 @@ import com.example.demoappcompose.ui.navigation.Screens
 import com.example.demoappcompose.ui.popUpToTop
 import com.example.demoappcompose.ui.theme.TitleColor
 import com.example.demoappcompose.utility.UiState
+import com.example.demoappcompose.utility.toast
 import kotlinx.coroutines.launch
 
 @Composable
@@ -63,7 +65,7 @@ fun HomeScreen(
             modifier = Modifier.fillMaxSize()
         )
 
-        val state by remember { homeViewModel.uiState }.collectAsState()
+        val state by remember { homeViewModel.uiState }.collectAsStateWithLifecycle()
         when (state) {
             is UiState.Empty -> {}
             is UiState.Error -> {
@@ -183,7 +185,7 @@ fun MainContent(
 
             val coroutineScope = rememberCoroutineScope()
 
-            val logoutState by remember { homeViewModel.logoutState }.collectAsState()
+            val logoutState by remember { homeViewModel.logoutState }.collectAsStateWithLifecycle()
             when (logoutState) {
                 is UiState.Empty -> {
                     LogoutPopup(
@@ -200,11 +202,7 @@ fun MainContent(
                 is UiState.Error -> {
                     val errorMessage = (logoutState as UiState.Error).data
                     LaunchedEffect(Unit) {
-                        Toast.makeText(
-                            context,
-                            errorMessage,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        context.toast(errorMessage)
                     }
                 }
 

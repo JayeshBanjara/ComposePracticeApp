@@ -16,6 +16,7 @@ import com.example.demoappcompose.di.network.ApiException
 import com.example.demoappcompose.repository.RegisterRepository
 import com.example.demoappcompose.utility.Constants
 import com.example.demoappcompose.utility.UiState
+import com.example.demoappcompose.utility.toast
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -78,16 +79,12 @@ class RegisterViewModel @Inject constructor(
         instituteLogo: Uri,
         city: String,
         roleId: String,
-        mediums: List<String>
+        mediumIds: List<String>
     ) = viewModelScope.launch {
 
         _registerState.value = UiState.Loading
 
         val insLogo = encode(instituteLogo)
-
-        val mediumIds = mutableListOf<String>()
-        mediumIds.add("1")
-        mediumIds.add("2")
 
         val request = RegisterRequest(
             deviceType = Constants.DEVICE_TYPE,

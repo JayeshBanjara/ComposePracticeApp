@@ -41,6 +41,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.demoappcompose.R
 import com.example.demoappcompose.ui.VerticalSpacer
@@ -75,7 +76,7 @@ fun LoginScreen(
             modifier = Modifier.fillMaxSize()
         )
 
-        val state by remember { loginViewModel.uiState }.collectAsState()
+        val state by remember { loginViewModel.uiState }.collectAsStateWithLifecycle()
 
         MainContent(navController = navController, loginViewModel = loginViewModel)
 

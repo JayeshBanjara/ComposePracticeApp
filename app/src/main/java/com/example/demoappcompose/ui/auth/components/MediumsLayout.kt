@@ -42,26 +42,29 @@ fun MediumsLayout(
             )
         }
         Row {
-            if(mediums.isNotEmpty())
-            CheckBoxLayout(
-                text = mediums[0].mediumName,
-                isChecked = isHindiChecked,
-                onCheckedChange = { onHindiCheckChanged() }
-            )
+            if(mediums.isNotEmpty()) {
+                CheckBoxLayout(
+                    text = mediums[0].mediumName,
+                    isChecked = isHindiChecked,
+                    onCheckedChange = { onHindiCheckChanged() }
+                )
+            }
 
-            if(mediums.size > 1)
-            CheckBoxLayout(
-                text = mediums[1].mediumName,
-                isChecked = isGujaratiChecked,
-                onCheckedChange = { onGujaratiCheckChanged() }
-            )
+            if(mediums.size > 1) {
+                CheckBoxLayout(
+                    text = mediums[1].mediumName,
+                    isChecked = isGujaratiChecked,
+                    onCheckedChange = { onGujaratiCheckChanged() }
+                )
+            }
 
-            if(mediums.size > 2)
-            CheckBoxLayout(
-                text = mediums[2].mediumName,
-                isChecked = isEnglishChecked,
-                onCheckedChange = { onEnglishCheckChanged() }
-            )
+            if(mediums.size > 2) {
+                CheckBoxLayout(
+                    text = mediums[2].mediumName,
+                    isChecked = isEnglishChecked,
+                    onCheckedChange = { onEnglishCheckChanged() }
+                )
+            }
         }
     }
 }

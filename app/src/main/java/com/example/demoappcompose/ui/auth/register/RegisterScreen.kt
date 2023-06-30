@@ -54,6 +54,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.demoappcompose.R
 import com.example.demoappcompose.data.responses.register_response.MediumData
@@ -77,8 +78,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun RegisterScreen(
-    navController: NavController,
-    registerViewModel: RegisterViewModel
+    navController: NavController, registerViewModel: RegisterViewModel
 ) {
 
     val context = LocalContext.current
@@ -94,7 +94,7 @@ fun RegisterScreen(
         )
 
         Column {
-            val getRolesState by remember { registerViewModel.getRolesState }.collectAsState()
+            val getRolesState by remember { registerViewModel.getRolesState }.collectAsStateWithLifecycle()
             when (getRolesState) {
                 is UiState.Loading -> {
                     Loader()
@@ -106,52 +106,48 @@ fun RegisterScreen(
                     val errorMessage = (getRolesState as UiState.Error).data
                     LaunchedEffect(Unit) {
                         Toast.makeText(
-                            context,
-                            errorMessage,
-                            Toast.LENGTH_SHORT
+                            context, errorMessage, Toast.LENGTH_SHORT
                         ).show()
                     }
                 }
 
                 is UiState.Success -> {
 
-                    val data = (getRolesState as UiState.Success).data.roleMediumData
-                    MainContent(
-                        navController = navController,
-                        registerViewModel = registerViewModel,
-                        roleData = data.roleData,
-                        mediumData = data.mediumData
-                    )
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        val data = (getRolesState as UiState.Success).data.roleMediumData
+                        MainContent(
+                            navController = navController,
+                            registerViewModel = registerViewModel,
+                            roleData = data.roleData,
+                            mediumData = data.mediumData
+                        )
 
-                    val registerState by remember { registerViewModel.registerState }.collectAsState()
-                    when (registerState) {
-                        UiState.Empty -> {}
-                        is UiState.Error -> {
-                            val errorMessage = (registerState as UiState.Error).data
-                            LaunchedEffect(Unit) {
-                                Toast.makeText(
-                                    context,
-                                    errorMessage,
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                        val registerState by remember { registerViewModel.registerState }.collectAsStateWithLifecycle()
+                        when (registerState) {
+                            UiState.Empty -> {}
+                            is UiState.Error -> {
+                                val errorMessage = (registerState as UiState.Error).data
+                                LaunchedEffect(Unit) {
+                                    Toast.makeText(
+                                        context, errorMessage, Toast.LENGTH_SHORT
+                                    ).show()
+                                }
                             }
-                        }
 
-                        is UiState.Loading -> {
-                            Loader()
-                        }
+                            is UiState.Loading -> {
+                                Loader()
+                            }
 
-                        is UiState.Success -> {
-                            LaunchedEffect(Unit) {
-                                val message = (registerState as UiState.Success).data.message
-                                Toast.makeText(
-                                    context,
-                                    message,
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                navController.navigate(Screens.LoginScreen.route) {
-                                    popUpTo(Screens.SplashScreen.route) {
-                                        inclusive = true
+                            is UiState.Success -> {
+                                LaunchedEffect(Unit) {
+                                    val message = (registerState as UiState.Success).data.message
+                                    Toast.makeText(
+                                        context, message, Toast.LENGTH_SHORT
+                                    ).show()
+                                    navController.navigate(Screens.LoginScreen.route) {
+                                        popUpTo(Screens.SplashScreen.route) {
+                                            inclusive = true
+                                        }
                                     }
                                 }
                             }
@@ -203,366 +199,344 @@ fun MainContent(
 
     val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = { uri ->
-            if (uri != null) {
-                instituteLogoName = uri
+        onResult = { selectedUri ->
+            if (selectedUri != null) {
+                instituteLogoName = selectedUri
             }
-        }
-    )
+        })
 
-
-    TopImage()
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
+    Column(modifier = Modifier.fillMaxSize()) {
+        TopImage()
 
         Column(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
-                .padding(screenPadding())
-                .verticalScroll(scrollState)
+            modifier = Modifier.fillMaxSize()
         ) {
 
-            Text(
-                text = "Register",
-                style = TextStyle(
-                    color = TitleColor,
-                    fontSize = 26.sp,
-                    fontWeight = FontWeight.W700,
-                    fontFamily = FontFamily(Font(R.font.quicksand_medium)),
-                    textAlign = TextAlign.Center
-                ),
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            VerticalSpacer(size = 25)
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_register_top),
-                    contentDescription = "",
-                    modifier = Modifier
-                        .width(182.dp)
-                        .height(119.dp)
-                )
-            }
-
-            VerticalSpacer(size = 30)
-
-            CustomTextField(modifier = Modifier
-                .fillMaxWidth(),
-                text = mobileNum,
-                placeholderText = stringResource(R.string.enter_your_mobile_number),
-                keyboardType = KeyboardType.NumberPassword,
-                imeAction = ImeAction.Next,
-                isError = emptyNumError,
-                errorText = stringResource(R.string.please_enter_valid_mobile_number),
-                onNext = {
-                    localFocusManager.moveFocus(FocusDirection.Down)
-                },
-                onValueChange = {
-                    if (it.length <= 10) mobileNum = it
-                })
-
-            VerticalSpacer(size = 15)
-
-            CustomTextField(modifier = Modifier
-                .fillMaxWidth(),
-                text = name,
-                keyboardType = KeyboardType.Text,
-                capitalization = KeyboardCapitalization.Words,
-                imeAction = ImeAction.Next,
-                isError = nameError,
-                placeholderText = stringResource(id = R.string.enter_your_name),
-                errorText = "Please enter name",
-                onNext = {
-                    localFocusManager.moveFocus(FocusDirection.Down)
-                },
-                onValueChange = {
-                    if (it.length <= 50) name = it
-                })
-
-            VerticalSpacer(size = 15)
-
-            CustomTextField(modifier = Modifier
-                .fillMaxWidth(),
-                text = email,
-                keyboardType = KeyboardType.Email,
-                imeAction = ImeAction.Next,
-                isError = emailError,
-                errorText = "Please enter valid email",
-                placeholderText = stringResource(R.string.enter_your_mail),
-                onNext = {
-                    localFocusManager.moveFocus(FocusDirection.Down)
-                },
-                onValueChange = { if (it.length <= 50) email = it })
-
-            VerticalSpacer(size = 15)
-
-            CustomTextField(modifier = Modifier
-                .fillMaxWidth(),
-                text = password,
-                keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Next,
-                isError = passwordError,
-                errorText = "Please enter password",
-                placeholderText = "Enter password",
-                onNext = {
-                    localFocusManager.moveFocus(FocusDirection.Down)
-                },
-                onValueChange = { password = it })
-
-            VerticalSpacer(size = 15)
-
-            CustomTextField(modifier = Modifier
-                .fillMaxWidth(),
-                text = cnfPwd,
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next,
-                isError = cnfPwdError,
-                errorText = "Password and confirm password does not match",
-                placeholderText = "Enter confirm password",
-                onNext = {
-                    localFocusManager.moveFocus(FocusDirection.Down)
-                },
-                onValueChange = { cnfPwd = it })
-
-            VerticalSpacer(size = 15)
-
-            CustomTextField(modifier = Modifier
-                .fillMaxWidth(),
-                text = instituteName,
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next,
-                isError = instituteError,
-                placeholderText = stringResource(id = R.string.enter_your_institute),
-                errorText = "Please enter institute name",
-                onNext = {
-                    localFocusManager.moveFocus(FocusDirection.Down)
-                },
-                onValueChange = {
-                    if (it.length <= 50) instituteName = it
-                })
-
-            VerticalSpacer(size = 15)
-
-            Row(
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                OutlinedTextField(modifier = Modifier
                     .weight(1f)
-                    .wrapContentHeight(),
-                    readOnly = true,
-                    maxLines = 1,
-                    singleLine = true,
-                    textStyle = TextStyle(
+                    .fillMaxWidth()
+                    .padding(screenPadding())
+                    .verticalScroll(scrollState)
+            ) {
+
+                Text(
+                    text = "Register", style = TextStyle(
                         color = TitleColor,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.W500,
-                        fontFamily = FontFamily(Font(R.font.quicksand_medium))
-                    ),
-                    value = instituteLogoName.toString(),
-                    shape = RoundedCornerShape(50.dp),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = GreyLight,
-                        unfocusedBorderColor = GreyLight,
-                        focusedLabelColor = GreyLight,
-                        cursorColor = GreyDark,
-                        containerColor = GreyLight
-                    ),
-                    placeholder = {
-                        Text(
-                            text = "Upload institute logo",
-                            style = TextStyle(
-                                color = HintColor,
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.W500,
-                                fontFamily = FontFamily(Font(R.font.quicksand_medium))
-                            )
-                        )
-                    }, onValueChange = {})
+                        fontSize = 26.sp,
+                        fontWeight = FontWeight.W700,
+                        fontFamily = FontFamily(Font(R.font.quicksand_medium)),
+                        textAlign = TextAlign.Center
+                    ), modifier = Modifier.fillMaxWidth()
+                )
 
-                HorizontalSpacer(size = 5)
+                VerticalSpacer(size = 25)
 
-                Box(
-                    modifier = Modifier
-                        .size(50.dp)
-                        .background(color = Blue, shape = CircleShape)
-                        .clickable {
-                            singlePhotoPickerLauncher.launch(
-                                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                            )
-                        },
-                    contentAlignment = Alignment.Center
+                Row(
+                    modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center
                 ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_upload),
-                        contentDescription = null,
-                        tint = Color.White
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_register_top),
+                        contentDescription = "",
+                        modifier = Modifier
+                            .width(182.dp)
+                            .height(119.dp)
                     )
                 }
 
-            }
-            if (instituteLogoError) {
-                Text(
-                    text = "Please upload institute logo", color = Color.Red,
+                VerticalSpacer(size = 30)
+
+                CustomTextField(modifier = Modifier.fillMaxWidth(),
+                    text = mobileNum,
+                    placeholderText = stringResource(R.string.enter_your_mobile_number),
+                    keyboardType = KeyboardType.NumberPassword,
+                    imeAction = ImeAction.Next,
+                    isError = emptyNumError,
+                    errorText = stringResource(R.string.please_enter_valid_mobile_number),
+                    onNext = {
+                        localFocusManager.moveFocus(FocusDirection.Down)
+                    },
+                    onValueChange = {
+                        if (it.length <= 10) mobileNum = it
+                    })
+
+                VerticalSpacer(size = 15)
+
+                CustomTextField(modifier = Modifier.fillMaxWidth(),
+                    text = name,
+                    keyboardType = KeyboardType.Text,
+                    capitalization = KeyboardCapitalization.Words,
+                    imeAction = ImeAction.Next,
+                    isError = nameError,
+                    placeholderText = stringResource(id = R.string.enter_your_name),
+                    errorText = "Please enter name",
+                    onNext = {
+                        localFocusManager.moveFocus(FocusDirection.Down)
+                    },
+                    onValueChange = {
+                        if (it.length <= 50) name = it
+                    })
+
+                VerticalSpacer(size = 15)
+
+                CustomTextField(modifier = Modifier.fillMaxWidth(),
+                    text = email,
+                    keyboardType = KeyboardType.Email,
+                    imeAction = ImeAction.Next,
+                    isError = emailError,
+                    errorText = "Please enter valid email",
+                    placeholderText = stringResource(R.string.enter_your_mail),
+                    onNext = {
+                        localFocusManager.moveFocus(FocusDirection.Down)
+                    },
+                    onValueChange = { if (it.length <= 50) email = it })
+
+                VerticalSpacer(size = 15)
+
+                CustomTextField(modifier = Modifier.fillMaxWidth(),
+                    text = password,
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Next,
+                    isError = passwordError,
+                    errorText = "Please enter password",
+                    placeholderText = "Enter password",
+                    onNext = {
+                        localFocusManager.moveFocus(FocusDirection.Down)
+                    },
+                    onValueChange = { password = it })
+
+                VerticalSpacer(size = 15)
+
+                CustomTextField(modifier = Modifier.fillMaxWidth(),
+                    text = cnfPwd,
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next,
+                    isError = cnfPwdError,
+                    errorText = "Password and confirm password does not match",
+                    placeholderText = "Enter confirm password",
+                    onNext = {
+                        localFocusManager.moveFocus(FocusDirection.Down)
+                    },
+                    onValueChange = { cnfPwd = it })
+
+                VerticalSpacer(size = 15)
+
+                CustomTextField(modifier = Modifier.fillMaxWidth(),
+                    text = instituteName,
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next,
+                    isError = instituteError,
+                    placeholderText = stringResource(id = R.string.enter_your_institute),
+                    errorText = "Please enter institute name",
+                    onNext = {
+                        localFocusManager.moveFocus(FocusDirection.Down)
+                    },
+                    onValueChange = {
+                        if (it.length <= 50) instituteName = it
+                    })
+
+                VerticalSpacer(size = 15)
+
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .wrapContentHeight(),
-                )
-            }
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    OutlinedTextField(modifier = Modifier
+                        .weight(1f)
+                        .wrapContentHeight(),
+                        readOnly = true,
+                        maxLines = 1,
+                        singleLine = true,
+                        textStyle = TextStyle(
+                            color = TitleColor,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.W500,
+                            fontFamily = FontFamily(Font(R.font.quicksand_medium))
+                        ),
+                        value = instituteLogoName.toString(),
+                        shape = RoundedCornerShape(50.dp),
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            focusedBorderColor = GreyLight,
+                            unfocusedBorderColor = GreyLight,
+                            focusedLabelColor = GreyLight,
+                            cursorColor = GreyDark,
+                            containerColor = GreyLight
+                        ),
+                        placeholder = {
+                            Text(
+                                text = "Upload institute logo", style = TextStyle(
+                                    color = HintColor,
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.W500,
+                                    fontFamily = FontFamily(Font(R.font.quicksand_medium))
+                                )
+                            )
+                        },
+                        onValueChange = {})
 
-            VerticalSpacer(size = 15)
+                    HorizontalSpacer(size = 5)
 
-            CustomTextField(modifier = Modifier
-                .fillMaxWidth(),
-                text = city,
-                keyboardType = KeyboardType.Text,
-                capitalization = KeyboardCapitalization.Words,
-                imeAction = ImeAction.Done,
-                isError = cityError,
-                placeholderText = stringResource(id = R.string.city_name),
-                errorText = "Please enter city name",
-                onNext = {
-                    localFocusManager.clearFocus()
-                },
-                onValueChange = {
-                    if (it.length <= 50) city = it
-                })
-
-            VerticalSpacer(size = 15)
-
-            RoleDropDown(
-                mExpanded = mExpanded,
-                items = roleData,
-                role = selectedRole,
-                onClick = {
-                    mExpanded = mExpanded.not()
-                },
-                onDismissRequest = {
-                    mExpanded = false
-                }
-            ) { role ->
-                selectedRole = role
-                mExpanded = false
-            }
-
-            if (postError) {
-                Text(
-                    text = "Please select your role", color = Color.Red,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-            }
-
-            VerticalSpacer(size = 15)
-
-            MediumsLayout(
-                mediums = mediumData,
-                isHindiChecked = isHindiChecked,
-                onHindiCheckChanged = {
-                    isHindiChecked = isHindiChecked.not()
-                },
-                isGujaratiChecked = isGujaratiChecked,
-                onGujaratiCheckChanged = {
-                    isGujaratiChecked = isGujaratiChecked.not()
-                },
-                isEnglishChecked = isEnglishChecked,
-                onEnglishCheckChanged = {
-                    isEnglishChecked = isEnglishChecked.not()
-                }
-            )
-            if (mediumError) {
-                Text(
-                    text = "Please select medium", color = Color.Red,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-            }
-
-            VerticalSpacer(size = 15)
-
-            MainButton(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                text = "Register"
-            ) {
-
-
-                emptyNumError = mobileNum.length < 10
-                nameError = name.isEmpty()
-                emailError = email.isEmpty()
-                passwordError = password.isEmpty()
-                cnfPwdError = cnfPwd.isEmpty()
-                instituteError = instituteName.isEmpty()
-                instituteLogoError = instituteLogoName == null
-                cityError = city.isEmpty()
-                postError = false
-                mediumError =
-                    isEnglishChecked.not() and isGujaratiChecked.not() and isHindiChecked.not()
-
-                if (emptyNumError.not() and nameError.not() and emailError.not() and passwordError.not() and cnfPwdError.not() and instituteError.not() and instituteLogoError.not() and cityError.not() and postError.not() and mediumError.not()) {
-                    //navController.navigate(Screens.Dashboard.route)
-
-                    val mediumIds = mutableListOf<String>()
-                    mediumIds.add("1")
-                    mediumIds.add("2")
-                    // if ()
-
-                    coroutineScope.launch {
-                        registerViewModel.register(
-                            mobileNo = mobileNum,
-                            fullName = name,
-                            email = email,
-                            password = password,
-                            instituteName = instituteName,
-                            instituteLogo = instituteLogoName!!,
-                            city = city,
-                            roleId = selectedRole.id.toString(),
-                            mediums = mediumIds
+                    Box(
+                        modifier = Modifier
+                            .size(50.dp)
+                            .background(color = Blue, shape = CircleShape)
+                            .clickable {
+                                singlePhotoPickerLauncher.launch(
+                                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                )
+                            }, contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_upload),
+                            contentDescription = null,
+                            tint = Color.White
                         )
                     }
+
                 }
-            }
+                if (instituteLogoError) {
+                    Text(
+                        text = "Please upload institute logo", color = Color.Red,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight(),
+                    )
+                }
 
-            VerticalSpacer(size = 12)
+                VerticalSpacer(size = 15)
 
-            Text(
-                text = "Already have an account?",
-                style = TextStyle(
-                    color = HintColor,
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.W500,
-                    fontFamily = FontFamily(Font(R.font.quicksand_medium)),
-                    textAlign = TextAlign.Center
-                ),
-                modifier = Modifier.fillMaxWidth()
-            )
+                CustomTextField(modifier = Modifier.fillMaxWidth(),
+                    text = city,
+                    keyboardType = KeyboardType.Text,
+                    capitalization = KeyboardCapitalization.Words,
+                    imeAction = ImeAction.Done,
+                    isError = cityError,
+                    placeholderText = stringResource(id = R.string.city_name),
+                    errorText = "Please enter city name",
+                    onNext = {
+                        localFocusManager.clearFocus()
+                    },
+                    onValueChange = {
+                        if (it.length <= 50) city = it
+                    })
 
-            VerticalSpacer(size = 5)
+                VerticalSpacer(size = 15)
 
-            Text(
-                text = "Login",
-                style = TextStyle(
+                RoleDropDown(mExpanded = mExpanded, items = roleData, role = selectedRole, onClick = {
+                    mExpanded = mExpanded.not()
+                }, onDismissRequest = {
+                    mExpanded = false
+                }) { role ->
+                    selectedRole = role
+                    mExpanded = false
+                }
+
+                if (postError) {
+                    Text(
+                        text = "Please select your role", color = Color.Red,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
+
+                VerticalSpacer(size = 15)
+
+                MediumsLayout(mediums = mediumData,
+                    isHindiChecked = isHindiChecked,
+                    onHindiCheckChanged = {
+                        isHindiChecked = isHindiChecked.not()
+                    },
+                    isGujaratiChecked = isGujaratiChecked,
+                    onGujaratiCheckChanged = {
+                        isGujaratiChecked = isGujaratiChecked.not()
+                    },
+                    isEnglishChecked = isEnglishChecked,
+                    onEnglishCheckChanged = {
+                        isEnglishChecked = isEnglishChecked.not()
+                    })
+                if (mediumError) {
+                    Text(
+                        text = "Please select medium", color = Color.Red,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
+
+                VerticalSpacer(size = 15)
+
+                MainButton(
+                    modifier = Modifier.fillMaxWidth(), text = "Register"
+                ) {
+
+
+                    emptyNumError = mobileNum.length < 10
+                    nameError = name.isEmpty()
+                    emailError = email.isEmpty()
+                    passwordError = password.isEmpty()
+                    cnfPwdError = cnfPwd.isEmpty()
+                    instituteError = instituteName.isEmpty()
+                    instituteLogoError = instituteLogoName == null
+                    cityError = city.isEmpty()
+                    postError = false
+                    mediumError =
+                        isEnglishChecked.not() and isGujaratiChecked.not() and isHindiChecked.not()
+
+                    if (emptyNumError.not() and nameError.not() and emailError.not() and passwordError.not() and cnfPwdError.not() and instituteError.not() and instituteLogoError.not() and cityError.not() and postError.not() and mediumError.not()) {
+
+                        val mediumIds = mutableListOf<String>()
+
+                        if (isHindiChecked) {
+                            mediumIds.add(mediumData[0].id.toString())
+                        }
+                        if (isGujaratiChecked) {
+                            mediumIds.add(mediumData[1].id.toString())
+                        }
+                        if (isEnglishChecked) {
+                            mediumIds.add(mediumData[2].id.toString())
+                        }
+
+                        coroutineScope.launch {
+                            registerViewModel.register(
+                                mobileNo = mobileNum,
+                                fullName = name,
+                                email = email,
+                                password = password,
+                                instituteName = instituteName,
+                                instituteLogo = instituteLogoName!!,
+                                city = city,
+                                roleId = selectedRole.id.toString(),
+                                mediumIds = mediumIds
+                            )
+                        }
+                    }
+                }
+
+                VerticalSpacer(size = 12)
+
+                Text(
+                    text = "Already have an account?", style = TextStyle(
+                        color = HintColor,
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.W500,
+                        fontFamily = FontFamily(Font(R.font.quicksand_medium)),
+                        textAlign = TextAlign.Center
+                    ), modifier = Modifier.fillMaxWidth()
+                )
+
+                VerticalSpacer(size = 5)
+
+                Text(text = "Login", style = TextStyle(
                     color = Blue,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.W700,
                     fontFamily = FontFamily(Font(R.font.quicksand_bold)),
                     textAlign = TextAlign.Center
-                ),
-                modifier = Modifier
+                ), modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
                         navController.navigate(Screens.LoginScreen.route)
-                    }
-            )
+                    })
+            }
         }
     }
 }

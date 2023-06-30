@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.demoappcompose.R
 import com.example.demoappcompose.ui.components.CustomTopAppBar
@@ -63,7 +64,7 @@ fun MySubscription(
                     )
             ) {
 
-                val state by remember { mySubscriptionViewModel.uiState }.collectAsState()
+                val state by remember { mySubscriptionViewModel.uiState }.collectAsStateWithLifecycle()
                 when (state) {
                     is UiState.Empty -> {}
                     is UiState.Error -> {
