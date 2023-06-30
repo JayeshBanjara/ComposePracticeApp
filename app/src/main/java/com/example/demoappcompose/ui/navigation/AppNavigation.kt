@@ -22,9 +22,11 @@ import com.example.demoappcompose.ui.dashboard.my_subscription.MySubscriptionVie
 import com.example.demoappcompose.ui.paper_history.PaperHistory
 import com.example.demoappcompose.ui.print_settings.PrintSettings
 import com.example.demoappcompose.ui.profile.EditProfile
+import com.example.demoappcompose.ui.profile.EditProfileViewModel
 import com.example.demoappcompose.ui.register_purchase_book.RegisterToPurchaseBook
 import com.example.demoappcompose.ui.splash.SplashScreenNew
 import com.example.demoappcompose.ui.subject.SubjectScreen
+import com.example.demoappcompose.ui.subject.SubjectsViewModel
 
 @Composable
 fun AppNavigation(
@@ -73,18 +75,37 @@ fun AppNavigation(
         }
 
         composable(
-            route = Screens.SubjectScreen.route + "/{std}",
-            arguments = listOf(navArgument("std") {
-                type = NavType.StringType
-            })
+            route = Screens.SubjectScreen.route + "/{className}/{classId}/{isStream}",
+            arguments = listOf(
+                navArgument("className") {
+                    type = NavType.StringType
+                },
+                navArgument("classId") {
+                    type = NavType.StringType
+                },
+                navArgument("isStream") {
+                    type = NavType.StringType
+                }
+            )
         ) { entry ->
+
+            val subjectsViewModel = hiltViewModel<SubjectsViewModel>()
+
             SubjectScreen(
-                navController = navController, std = entry.arguments?.getString("std") ?: ""
+                navController = navController,
+                subjectsViewModel = subjectsViewModel,
+                className = entry.arguments?.getString("className") ?: "",
+                classId = entry.arguments?.getString("classId") ?: "",
+                isStream = entry.arguments?.getString("isStream") ?: ""
             )
         }
 
         composable(route = Screens.EditProfile.route) {
-            EditProfile(navController = navController)
+            val editProfileViewModel = hiltViewModel<EditProfileViewModel>()
+            EditProfile(
+                navController = navController,
+                editProfileViewModel = editProfileViewModel
+            )
         }
 
         composable(route = Screens.MySubscription.route) {

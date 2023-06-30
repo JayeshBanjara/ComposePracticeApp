@@ -50,10 +50,21 @@ class LoginViewModel @Inject constructor(
         try {
             val response = loginRepository.login(request = request)
             if (response.statusCode == 200) {
-                preferencesManager.setLoggedIn(isLoggedIn = 1)
-                preferencesManager.setUserId(userId = response.loginData.userData[0].userId.toString())
-                preferencesManager.setToken(token = response.loginData.token)
-                preferencesManager.setToken(token = response.loginData.userData[0].loginLogId.toString())
+                preferencesManager.apply {
+
+                    response.loginData.userData[0].let {
+                        setLoggedIn(isLoggedIn = 1)
+                        setUserId(userId = it.userId.toString())
+                        setToken(token = response.loginData.token)
+                        setLoginLogId(loginLogId = it.loginLogId.toString())
+                        setUserMobileNumber(mobileNumber = it.mobileNo)
+                        setUserFullName(fullName = it.fullName)
+                        setEmail(email = it.email)
+                        setUserProfileImage(imageUrl = it.largeImageUrl)
+                    }
+
+                }
+
                 _uiState.value = UiState.Success(response)
             } else {
                 _uiState.value = UiState.Error(response.message)

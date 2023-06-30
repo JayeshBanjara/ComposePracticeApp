@@ -5,12 +5,14 @@ import com.example.demoappcompose.data.requests.LoginRequest
 import com.example.demoappcompose.data.requests.LogoutRequest
 import com.example.demoappcompose.data.requests.MasterDataRequest
 import com.example.demoappcompose.data.requests.RegisterRequest
+import com.example.demoappcompose.data.requests.SubjectListRequest
 import com.example.demoappcompose.data.responses.dashboard_response.DashboardResponse
 import com.example.demoappcompose.data.responses.login_response.LoginResponse
 import com.example.demoappcompose.data.responses.logout.LogoutResponse
 import com.example.demoappcompose.data.responses.my_subscription.SubscriptionListResponse
 import com.example.demoappcompose.data.responses.register_response.GetRoleMediumDataResponse
 import com.example.demoappcompose.data.responses.register_response.RegisterResponse
+import com.example.demoappcompose.data.responses.subjects.SubjectListResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.HeaderMap
@@ -50,5 +52,11 @@ interface ApiInterface {
         @HeaderMap headerMap: Map<String, String>,
         @Body request: LogoutRequest
     ): Response<LogoutResponse>
+
+    @POST("user/get-subject-data")
+    suspend fun getSubjects(
+        @HeaderMap headerMap: Map<String, String>,
+        @Body request: SubjectListRequest
+    ): Response<SubjectListResponse>
 
 }

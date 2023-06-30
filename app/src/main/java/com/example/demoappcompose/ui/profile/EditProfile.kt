@@ -48,6 +48,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.demoappcompose.R
@@ -62,7 +63,7 @@ import com.example.demoappcompose.ui.theme.Blue
 import com.example.demoappcompose.ui.theme.TitleColor
 
 @Composable
-fun EditProfile(navController: NavController) {
+fun EditProfile(navController: NavController, editProfileViewModel: EditProfileViewModel) {
     Scaffold(
         topBar = {
             CustomTopAppBar(
@@ -76,12 +77,19 @@ fun EditProfile(navController: NavController) {
     ) { innerPadding ->
 
         val localFocusManager = LocalFocusManager.current
-        var mobileNum by remember { mutableStateOf("9874561200") }
+
+        val savedMobile = editProfileViewModel.numberState.collectAsStateWithLifecycle()
+        var mobileNum by remember { mutableStateOf(savedMobile.value) }
         var emptyNumError by remember { mutableStateOf(false) }
-        var name by remember { mutableStateOf("Suraj Lodhi") }
+
+        val savedName = editProfileViewModel.nameState.collectAsStateWithLifecycle()
+        var name by remember { mutableStateOf(savedName.value) }
         var nameError by remember { mutableStateOf(false) }
-        var email by remember { mutableStateOf("suraj@gmail.com") }
+
+        val savedEmail = editProfileViewModel.emailState.collectAsStateWithLifecycle()
+        var email by remember { mutableStateOf(savedEmail.value) }
         var emailError by remember { mutableStateOf(false) }
+
         var selectedUri by remember { mutableStateOf("") }
         val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.PickVisualMedia(),
