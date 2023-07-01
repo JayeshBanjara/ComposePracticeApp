@@ -4,8 +4,8 @@ import com.example.demoappcompose.data.requests.MasterDataRequest
 import com.example.demoappcompose.data.requests.RegisterRequest
 import com.example.demoappcompose.data.responses.register_response.GetRoleMediumDataResponse
 import com.example.demoappcompose.data.responses.register_response.RegisterResponse
-import com.example.demoappcompose.di.network.SafeApiRequest
-import com.example.demoappcompose.di.network.api.ApiInterface
+import com.example.demoappcompose.network.SafeApiRequest
+import com.example.demoappcompose.network.ApiInterface
 import javax.inject.Inject
 import javax.inject.Singleton
 

@@ -1,4 +1,4 @@
-package com.example.demoappcompose.di.network
+package com.example.demoappcompose.network
 
 import org.json.JSONException
 import org.json.JSONObject

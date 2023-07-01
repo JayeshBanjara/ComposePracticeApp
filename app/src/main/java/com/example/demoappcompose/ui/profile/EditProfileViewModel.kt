@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.demoappcompose.data.PreferencesManager
 import com.example.demoappcompose.data.requests.CommonRequest
 import com.example.demoappcompose.data.responses.my_subscription.SubscriptionListResponse
-import com.example.demoappcompose.di.network.ApiException
+import com.example.demoappcompose.network.ApiException
 import com.example.demoappcompose.repository.SubscriptionRepository
 import com.example.demoappcompose.utility.Constants
 import com.example.demoappcompose.utility.UiState

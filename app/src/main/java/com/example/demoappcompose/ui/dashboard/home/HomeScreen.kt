@@ -191,7 +191,6 @@ fun MainContent(
                     LogoutPopup(
                         onLogoutConfirmed = {
                             coroutineScope.launch {
-                                showLogoutPopup = false
                                 homeViewModel.logout()
                             }
                         },
@@ -211,6 +210,7 @@ fun MainContent(
                 }
 
                 is UiState.Success -> {
+                    showLogoutPopup = false
                     navController.navigate(Screens.LoginScreen.route) {
                         popUpToTop(navController)
                     }

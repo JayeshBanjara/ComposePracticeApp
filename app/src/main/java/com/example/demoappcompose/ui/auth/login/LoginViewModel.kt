@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.demoappcompose.data.PreferencesManager
 import com.example.demoappcompose.data.requests.LoginRequest
 import com.example.demoappcompose.data.responses.login_response.LoginResponse
-import com.example.demoappcompose.di.network.ApiException
+import com.example.demoappcompose.network.ApiException
 import com.example.demoappcompose.repository.LoginRepository
 import com.example.demoappcompose.utility.Constants
 import com.example.demoappcompose.utility.UiState

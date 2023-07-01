@@ -7,8 +7,8 @@ import com.example.demoappcompose.data.requests.CommonRequest
 import com.example.demoappcompose.data.requests.LogoutRequest
 import com.example.demoappcompose.data.responses.dashboard_response.DashboardResponse
 import com.example.demoappcompose.data.responses.logout.LogoutResponse
-import com.example.demoappcompose.di.network.ApiException
-import com.example.demoappcompose.di.network.UnAuthorisedException
+import com.example.demoappcompose.network.ApiException
+import com.example.demoappcompose.network.UnAuthorisedException
 import com.example.demoappcompose.repository.HomeRepository
 import com.example.demoappcompose.utility.Constants
 import com.example.demoappcompose.utility.UiState

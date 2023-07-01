@@ -1,12 +1,12 @@
-package com.example.demoappcompose.ui.dashboard.my_subscription
+package com.example.demoappcompose.ui.paper_history
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.demoappcompose.data.PreferencesManager
 import com.example.demoappcompose.data.requests.CommonRequest
-import com.example.demoappcompose.data.responses.my_subscription.SubscriptionListResponse
+import com.example.demoappcompose.data.responses.paper_history.PaperHistoryResponse
 import com.example.demoappcompose.network.ApiException
-import com.example.demoappcompose.repository.SubscriptionRepository
+import com.example.demoappcompose.repository.UserRepository
 import com.example.demoappcompose.utility.Constants
 import com.example.demoappcompose.utility.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,21 +17,21 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MySubscriptionViewModel @Inject constructor(
+class PaperHistoryViewModel @Inject constructor(
     private val prefManager: PreferencesManager,
-    private val subscriptionRepository: SubscriptionRepository
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<UiState<SubscriptionListResponse>>(UiState.Loading)
-    val uiState: StateFlow<UiState<SubscriptionListResponse>> get() = _uiState
+    private val _uiState = MutableStateFlow<UiState<PaperHistoryResponse>>(UiState.Loading)
+    val uiState: StateFlow<UiState<PaperHistoryResponse>> get() = _uiState
 
     init {
         viewModelScope.launch {
-            getSubscriptionList()
+            getPaperHistory()
         }
     }
 
-    private suspend fun getSubscriptionList() = viewModelScope.launch {
+    private suspend fun getPaperHistory() = viewModelScope.launch {
 
         val userId = prefManager.getUserId.first()!!
         val token = prefManager.getToken.first()!!
@@ -41,12 +41,12 @@ class MySubscriptionViewModel @Inject constructor(
 
         val request = CommonRequest(
             deviceType = Constants.DEVICE_TYPE,
-            userId = userId,
+            userId = userId
         )
 
         try {
             val response =
-                subscriptionRepository.getSubscriptionList(headerMap = headers, request = request)
+                userRepository.getPaperHistory(headerMap = headers, request = request)
             if (response.statusCode == 200) {
                 _uiState.value = UiState.Success(response)
             } else {

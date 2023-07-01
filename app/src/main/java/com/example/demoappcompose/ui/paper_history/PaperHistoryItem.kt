@@ -23,13 +23,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.demoappcompose.R
+import com.example.demoappcompose.data.responses.paper_history.PaperHistory
 import com.example.demoappcompose.ui.HorizontalSpacer
 import com.example.demoappcompose.ui.VerticalSpacer
 import com.example.demoappcompose.ui.theme.Blue
 import com.example.demoappcompose.ui.theme.TitleColor
 
 @Composable
-fun PaperHistoryItem() {
+fun PaperHistoryItem(paperHistory: PaperHistory) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -61,7 +62,7 @@ fun PaperHistoryItem() {
                 ) {
                     VerticalSpacer(size = 5)
                     Text(
-                        text = "Bhagawati Vidhyalaya",
+                        text = paperHistory.instituteName,
                         style = TextStyle(
                             color = TitleColor,
                             fontSize = 15.sp,
@@ -71,7 +72,7 @@ fun PaperHistoryItem() {
                     )
                     VerticalSpacer(size = 7)
                     Text(
-                        text = "Standard: 11 (EM) - Computer",
+                        text = "Standard: ${paperHistory.className} (${paperHistory.mediumName}) - ${paperHistory.subjectName}",
                         style = TextStyle(
                             color = Blue,
                             fontSize = 15.sp,

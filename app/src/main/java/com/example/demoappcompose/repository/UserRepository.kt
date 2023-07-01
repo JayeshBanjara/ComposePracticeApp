@@ -1,23 +1,23 @@
 package com.example.demoappcompose.repository
 
 import com.example.demoappcompose.data.requests.CommonRequest
-import com.example.demoappcompose.data.responses.my_subscription.SubscriptionListResponse
-import com.example.demoappcompose.network.SafeApiRequest
+import com.example.demoappcompose.data.responses.paper_history.PaperHistoryResponse
 import com.example.demoappcompose.network.ApiInterface
+import com.example.demoappcompose.network.SafeApiRequest
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SubscriptionRepository @Inject constructor(
+class UserRepository @Inject constructor(
     private val apiInterface: ApiInterface
 ) : SafeApiRequest() {
 
-    suspend fun getSubscriptionList(
+    suspend fun getPaperHistory(
         headerMap: Map<String, String>,
         request: CommonRequest
-    ): SubscriptionListResponse {
+    ): PaperHistoryResponse {
         return apiRequest {
-            apiInterface.getSubscriptionList(
+            apiInterface.getPaperHistory(
                 headerMap = headerMap,
                 request = request
             )

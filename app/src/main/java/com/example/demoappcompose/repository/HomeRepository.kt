@@ -4,8 +4,8 @@ import com.example.demoappcompose.data.requests.CommonRequest
 import com.example.demoappcompose.data.requests.LogoutRequest
 import com.example.demoappcompose.data.responses.dashboard_response.DashboardResponse
 import com.example.demoappcompose.data.responses.logout.LogoutResponse
-import com.example.demoappcompose.di.network.SafeApiRequest
-import com.example.demoappcompose.di.network.api.ApiInterface
+import com.example.demoappcompose.network.SafeApiRequest
+import com.example.demoappcompose.network.ApiInterface
 import javax.inject.Inject
 import javax.inject.Singleton
 

@@ -7,18 +7,25 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.demoappcompose.R
+import com.example.demoappcompose.ui.components.Loader
 import com.example.demoappcompose.ui.screenPadding
+import com.example.demoappcompose.utility.UiState
+import com.example.demoappcompose.utility.toast
 
 @Composable
-fun AboutUsScreen(navController: NavController, modifier: Modifier) {
+fun AboutUsScreen(modifier: Modifier, aboutUsViewModel: AboutUsViewModel) {
 
-    val htmlContent =
-        "<h2>What is Lorem Ipsum?</h2><p><strong>Lorem Ipsum</strong>&nbsp;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry&#39;s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>"
+    val context = LocalContext.current
 
     Box (modifier = Modifier.fillMaxSize()){
 
@@ -28,18 +35,37 @@ fun AboutUsScreen(navController: NavController, modifier: Modifier) {
             modifier = Modifier.fillMaxSize()
         )
 
-        Surface(modifier = modifier.fillMaxSize()) {
-            AndroidView(factory = {
-                WebView(it).apply {
-                    loadDataWithBaseURL(
-                        null,
-                        htmlContent,
-                        "text/html; charset=utf-8",
-                        "utf8",
-                        null
-                    )
+        val state by remember { aboutUsViewModel.state }.collectAsStateWithLifecycle()
+        when(state) {
+            is UiState.Empty -> {}
+            is UiState.Error -> {
+                val errorMessage = (state as UiState.Error).data
+                LaunchedEffect(Unit) {
+                    context.toast(message = errorMessage)
                 }
-            })
+            }
+
+            is UiState.Loading -> {
+                Loader()
+            }
+            is UiState.Success -> {
+
+                val htmlContent = (state as UiState.Success).data.aboutUsData.cmspage[0].pageContent
+
+                Surface(modifier = modifier.fillMaxSize()) {
+                    AndroidView(factory = {
+                        WebView(it).apply {
+                            loadDataWithBaseURL(
+                                null,
+                                htmlContent,
+                                "text/html; charset=utf-8",
+                                "utf8",
+                                null
+                            )
+                        }
+                    })
+                }
+            }
         }
     }
 }

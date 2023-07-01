@@ -2,8 +2,8 @@ package com.example.demoappcompose.repository
 
 import com.example.demoappcompose.data.requests.SubjectListRequest
 import com.example.demoappcompose.data.responses.subjects.SubjectListResponse
-import com.example.demoappcompose.di.network.SafeApiRequest
-import com.example.demoappcompose.di.network.api.ApiInterface
+import com.example.demoappcompose.network.SafeApiRequest
+import com.example.demoappcompose.network.ApiInterface
 import javax.inject.Inject
 import javax.inject.Singleton
 

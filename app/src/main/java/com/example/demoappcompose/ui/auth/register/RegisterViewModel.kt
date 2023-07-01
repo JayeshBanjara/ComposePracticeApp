@@ -7,16 +7,14 @@ import android.net.Uri
 import android.util.Base64
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.demoappcompose.data.PreferencesManager
 import com.example.demoappcompose.data.requests.MasterDataRequest
 import com.example.demoappcompose.data.requests.RegisterRequest
 import com.example.demoappcompose.data.responses.register_response.GetRoleMediumDataResponse
 import com.example.demoappcompose.data.responses.register_response.RegisterResponse
-import com.example.demoappcompose.di.network.ApiException
+import com.example.demoappcompose.network.ApiException
 import com.example.demoappcompose.repository.RegisterRepository
 import com.example.demoappcompose.utility.Constants
 import com.example.demoappcompose.utility.UiState
-import com.example.demoappcompose.utility.toast
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow

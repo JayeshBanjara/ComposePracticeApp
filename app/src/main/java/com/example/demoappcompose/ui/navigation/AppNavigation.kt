@@ -20,11 +20,13 @@ import com.example.demoappcompose.ui.dashboard.home.HomeViewModel
 import com.example.demoappcompose.ui.dashboard.my_subscription.MySubscription
 import com.example.demoappcompose.ui.dashboard.my_subscription.MySubscriptionViewModel
 import com.example.demoappcompose.ui.paper_history.PaperHistory
+import com.example.demoappcompose.ui.paper_history.PaperHistoryViewModel
 import com.example.demoappcompose.ui.print_settings.PrintSettings
 import com.example.demoappcompose.ui.profile.EditProfile
 import com.example.demoappcompose.ui.profile.EditProfileViewModel
 import com.example.demoappcompose.ui.register_purchase_book.RegisterToPurchaseBook
-import com.example.demoappcompose.ui.splash.SplashScreenNew
+import com.example.demoappcompose.ui.splash.SplashScreen
+import com.example.demoappcompose.ui.splash.SplashViewModel
 import com.example.demoappcompose.ui.subject.SubjectScreen
 import com.example.demoappcompose.ui.subject.SubjectsViewModel
 
@@ -41,20 +43,26 @@ fun AppNavigation(
 
     NavHost(navController = navController, startDestination = startScreen) {
         composable(route = Screens.SplashScreen.route) {
-            SplashScreenNew(navController = navController)
+            val splashViewModel = hiltViewModel<SplashViewModel>()
+            SplashScreen(
+                navController = navController,
+                splashViewModel = splashViewModel
+            )
         }
 
         composable(route = Screens.LoginScreen.route) {
             val loginViewModel = hiltViewModel<LoginViewModel>()
             LoginScreen(
-                navController = navController, loginViewModel = loginViewModel
+                navController = navController,
+                loginViewModel = loginViewModel
             )
         }
 
         composable(route = Screens.RegisterScreen.route) {
             val registerViewModel = hiltViewModel<RegisterViewModel>()
             RegisterScreen(
-                navController = navController, registerViewModel = registerViewModel
+                navController = navController,
+                registerViewModel = registerViewModel
             )
         }
 
@@ -121,7 +129,11 @@ fun AppNavigation(
         }
 
         composable(route = Screens.PaperHistory.route) {
-            PaperHistory(navController = navController)
+            val paperHistoryViewModel = hiltViewModel<PaperHistoryViewModel>()
+            PaperHistory(
+                navController = navController,
+                paperHistoryViewModel = paperHistoryViewModel
+            )
         }
 
         composable(
