@@ -4,7 +4,6 @@ import android.webkit.WebView
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -17,17 +16,23 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.demoappcompose.R
+import com.example.demoappcompose.data.PreferencesManager
 import com.example.demoappcompose.ui.components.Loader
-import com.example.demoappcompose.ui.screenPadding
+import com.example.demoappcompose.ui.navigation.Screens
+import com.example.demoappcompose.ui.popUpToTop
 import com.example.demoappcompose.utility.UiState
 import com.example.demoappcompose.utility.toast
 
 @Composable
-fun AboutUsScreen(modifier: Modifier, aboutUsViewModel: AboutUsViewModel) {
+fun AboutUsScreen(
+    modifier: Modifier,
+    navController: NavController,
+    aboutUsViewModel: AboutUsViewModel
+) {
 
     val context = LocalContext.current
 
-    Box (modifier = Modifier.fillMaxSize()){
+    Box(modifier = Modifier.fillMaxSize()) {
 
         Image(
             painter = painterResource(id = R.drawable.screen_bg),
@@ -36,10 +41,20 @@ fun AboutUsScreen(modifier: Modifier, aboutUsViewModel: AboutUsViewModel) {
         )
 
         val state by remember { aboutUsViewModel.state }.collectAsStateWithLifecycle()
-        when(state) {
+        when (state) {
             is UiState.Empty -> {}
+            is UiState.UnAuthorised -> {
+                LaunchedEffect(Unit) {
+                    val errorMessage = (state as UiState.UnAuthorised).errorMessage
+                    context.toast(message = errorMessage)
+                    navController.navigate(Screens.LoginScreen.route) {
+                        popUpToTop(navController)
+                    }
+                }
+            }
+
             is UiState.Error -> {
-                val errorMessage = (state as UiState.Error).data
+                val errorMessage = (state as UiState.Error).errorMessage
                 LaunchedEffect(Unit) {
                     context.toast(message = errorMessage)
                 }
@@ -48,6 +63,7 @@ fun AboutUsScreen(modifier: Modifier, aboutUsViewModel: AboutUsViewModel) {
             is UiState.Loading -> {
                 Loader()
             }
+
             is UiState.Success -> {
 
                 val htmlContent = (state as UiState.Success).data.aboutUsData.cmspage[0].pageContent

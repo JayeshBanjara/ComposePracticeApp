@@ -2,11 +2,15 @@ package com.example.demoappcompose.network
 
 import com.example.demoappcompose.data.requests.CommonRequest
 import com.example.demoappcompose.data.requests.ConfigRequest
+import com.example.demoappcompose.data.requests.HeadingListRequest
 import com.example.demoappcompose.data.requests.LoginRequest
 import com.example.demoappcompose.data.requests.LogoutRequest
 import com.example.demoappcompose.data.requests.MasterDataRequest
+import com.example.demoappcompose.data.requests.PurchaseBookRequest
 import com.example.demoappcompose.data.requests.RegisterRequest
 import com.example.demoappcompose.data.requests.SubjectListRequest
+import com.example.demoappcompose.data.requests.UpdateProfileRequest
+import com.example.demoappcompose.data.responses.SuccessResponse
 import com.example.demoappcompose.data.responses.about_us.AboutUsResponse
 import com.example.demoappcompose.data.responses.config.ConfigResponse
 import com.example.demoappcompose.data.responses.dashboard_response.DashboardResponse
@@ -14,6 +18,9 @@ import com.example.demoappcompose.data.responses.login_response.LoginResponse
 import com.example.demoappcompose.data.responses.logout.LogoutResponse
 import com.example.demoappcompose.data.responses.my_subscription.SubscriptionListResponse
 import com.example.demoappcompose.data.responses.paper_history.PaperHistoryResponse
+import com.example.demoappcompose.data.responses.profile.ProfileResponse
+import com.example.demoappcompose.data.responses.purchase_book.BooksResponse
+import com.example.demoappcompose.data.responses.questions.HeadingListResponse
 import com.example.demoappcompose.data.responses.register_response.GetRoleMediumDataResponse
 import com.example.demoappcompose.data.responses.register_response.RegisterResponse
 import com.example.demoappcompose.data.responses.subjects.SubjectListResponse
@@ -78,4 +85,27 @@ interface ApiInterface {
         @HeaderMap headerMap: Map<String, String>,
         @Body request: CommonRequest
     ): Response<PaperHistoryResponse>
+
+    @POST("user/update-user-profile-data")
+    suspend fun updateProfile(
+        @HeaderMap headerMap: Map<String, String>,
+        @Body request: UpdateProfileRequest
+    ): Response<ProfileResponse>
+
+    @POST("get-master-data")
+    suspend fun getBookList(
+        @Body request: MasterDataRequest
+    ): Response<BooksResponse>
+
+    @POST("user/register-to-book-purchase")
+    suspend fun registerToPurchaseBook(
+        @HeaderMap headerMap: Map<String, String>,
+        @Body request: PurchaseBookRequest
+    ): Response<SuccessResponse>
+
+    @POST("user/get-subject-heading-data")
+    suspend fun getHeadingList(
+        @HeaderMap headerMap: Map<String, String>,
+        @Body request: HeadingListRequest
+    ): Response<HeadingListResponse>
 }

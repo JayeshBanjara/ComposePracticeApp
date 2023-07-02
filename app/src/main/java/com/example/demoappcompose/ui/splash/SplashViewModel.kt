@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.demoappcompose.data.requests.ConfigRequest
 import com.example.demoappcompose.data.responses.config.ConfigResponse
 import com.example.demoappcompose.network.ApiException
+import com.example.demoappcompose.network.UnAuthorisedException
 import com.example.demoappcompose.repository.AppRepository
 import com.example.demoappcompose.utility.Constants
 import com.example.demoappcompose.utility.UiState
@@ -44,6 +45,8 @@ class SplashViewModel @Inject constructor(
             }
         } catch (e: ApiException) {
             _uiState.value = UiState.Error(e.message)
+        } catch (e: UnAuthorisedException) {
+            _uiState.value = UiState.UnAuthorised(e.message)
         } catch (e: Exception) {
             _uiState.value = UiState.Error(e.message)
         }

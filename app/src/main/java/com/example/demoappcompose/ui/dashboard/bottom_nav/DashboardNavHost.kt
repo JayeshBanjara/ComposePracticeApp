@@ -35,6 +35,7 @@ fun DashboardNavHost(
 
             AboutUsScreen(
                 modifier = modifier,
+                navController = mainNavController,
                 aboutUsViewModel = aboutUsViewModel
             )
         }

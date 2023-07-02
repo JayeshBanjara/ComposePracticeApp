@@ -27,8 +27,11 @@ import androidx.navigation.NavController
 import com.example.demoappcompose.R
 import com.example.demoappcompose.ui.components.Loader
 import com.example.demoappcompose.ui.dashboard.my_subscription.MySubsItem
+import com.example.demoappcompose.ui.navigation.Screens
+import com.example.demoappcompose.ui.popUpToTop
 import com.example.demoappcompose.ui.subject.SubjectsViewModel
 import com.example.demoappcompose.utility.UiState
+import com.example.demoappcompose.utility.toast
 
 @Composable
 fun SubjectList(
@@ -54,14 +57,21 @@ fun SubjectList(
         val state by remember { subjectsViewModel.uiState }.collectAsStateWithLifecycle()
         when (state) {
             is UiState.Empty -> {}
-            is UiState.Error -> {
-                val errorMessage = (state as UiState.Error).data
+
+            is UiState.UnAuthorised -> {
                 LaunchedEffect(Unit) {
-                    Toast.makeText(
-                        context,
-                        errorMessage,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    val errorMessage = (state as UiState.UnAuthorised).errorMessage
+                    context.toast(message = errorMessage)
+                    navController.navigate(Screens.LoginScreen.route) {
+                        popUpToTop(navController)
+                    }
+                }
+            }
+
+            is UiState.Error -> {
+                val errorMessage = (state as UiState.Error).errorMessage
+                LaunchedEffect(Unit) {
+                    context.toast(message = errorMessage)
                 }
             }
 

@@ -59,6 +59,9 @@ class HomeViewModel @Inject constructor(
             }
         } catch (e: ApiException) {
             _uiState.value = UiState.Error(e.message)
+        } catch (e: UnAuthorisedException) {
+            prefManager.clearData()
+            _uiState.value = UiState.UnAuthorised(e.message)
         } catch (e: Exception) {
             _uiState.value = UiState.Error(e.message)
         }
@@ -91,6 +94,9 @@ class HomeViewModel @Inject constructor(
             }
         } catch (e: ApiException) {
             _logoutState.value = UiState.Error(e.message)
+        } catch (e: UnAuthorisedException) {
+            prefManager.clearData()
+            _uiState.value = UiState.UnAuthorised(e.message)
         } catch (e: Exception) {
             _logoutState.value = UiState.Error(e.message)
         }

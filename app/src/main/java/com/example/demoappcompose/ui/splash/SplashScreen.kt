@@ -37,6 +37,7 @@ import com.example.demoappcompose.R
 import com.example.demoappcompose.ui.VerticalSpacer
 import com.example.demoappcompose.ui.components.Loader
 import com.example.demoappcompose.ui.navigation.Screens
+import com.example.demoappcompose.ui.popUpToTop
 import com.example.demoappcompose.ui.theme.Blue
 import com.example.demoappcompose.ui.theme.White
 import com.example.demoappcompose.ui.theme.WhiteText
@@ -65,9 +66,21 @@ fun SplashScreen(
 
         val state by remember { splashViewModel.uiState }.collectAsStateWithLifecycle()
         when (state) {
+
             is UiState.Empty -> {}
+
+            is UiState.UnAuthorised -> {
+                LaunchedEffect(Unit) {
+                    val errorMessage = (state as UiState.UnAuthorised).errorMessage
+                    context.toast(message = errorMessage)
+                    navController.navigate(Screens.LoginScreen.route) {
+                        popUpToTop(navController)
+                    }
+                }
+            }
+
             is UiState.Error -> {
-                val errorMessage = (state as UiState.Error).data
+                val errorMessage = (state as UiState.Error).errorMessage
                 LaunchedEffect(Unit) {
                     context.toast(message = errorMessage)
                 }

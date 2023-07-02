@@ -6,6 +6,7 @@ import com.example.demoappcompose.data.PreferencesManager
 import com.example.demoappcompose.data.requests.CommonRequest
 import com.example.demoappcompose.data.responses.my_subscription.SubscriptionListResponse
 import com.example.demoappcompose.network.ApiException
+import com.example.demoappcompose.network.UnAuthorisedException
 import com.example.demoappcompose.repository.SubscriptionRepository
 import com.example.demoappcompose.utility.Constants
 import com.example.demoappcompose.utility.UiState
@@ -54,6 +55,9 @@ class MySubscriptionViewModel @Inject constructor(
             }
         } catch (e: ApiException) {
             _uiState.value = UiState.Error(e.message)
+        } catch (e: UnAuthorisedException) {
+            prefManager.clearData()
+            _uiState.value = UiState.UnAuthorised(e.message)
         } catch (e: Exception) {
             _uiState.value = UiState.Error(e.message)
         }

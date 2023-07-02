@@ -14,17 +14,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
@@ -51,6 +48,7 @@ import com.example.demoappcompose.ui.components.CustomTextField
 import com.example.demoappcompose.ui.components.Loader
 import com.example.demoappcompose.ui.components.MainButton
 import com.example.demoappcompose.ui.navigation.Screens
+import com.example.demoappcompose.ui.popUpToTop
 import com.example.demoappcompose.ui.screenPadding
 import com.example.demoappcompose.ui.theme.Blue
 import com.example.demoappcompose.ui.theme.HintColor
@@ -81,12 +79,16 @@ fun LoginScreen(
         MainContent(navController = navController, loginViewModel = loginViewModel)
 
         when (state) {
-            is UiState.Loading -> { Loader() }
+            is UiState.Loading -> {
+                Loader()
+            }
 
-            UiState.Empty -> {}
+            is UiState.Empty -> {}
+
+            is UiState.UnAuthorised -> {}
 
             is UiState.Error -> {
-                val errorMessage = (state as UiState.Error).data
+                val errorMessage = (state as UiState.Error).errorMessage
                 LaunchedEffect(Unit) {
                     Toast.makeText(
                         context,
@@ -121,7 +123,7 @@ fun MainContent(
             .fillMaxSize()
     ) {
 
-       var mobileNum by remember { mutableStateOf("") }
+        var mobileNum by remember { mutableStateOf("") }
         //var mobileNum by remember { mutableStateOf("7226941148") }
         var emptyNumError by remember { mutableStateOf(false) }
         var password by remember { mutableStateOf("") }

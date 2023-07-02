@@ -100,10 +100,12 @@ fun RegisterScreen(
                     Loader()
                 }
 
-                UiState.Empty -> {}
+                is UiState.Empty -> {}
+
+                is UiState.UnAuthorised -> {}
 
                 is UiState.Error -> {
-                    val errorMessage = (getRolesState as UiState.Error).data
+                    val errorMessage = (getRolesState as UiState.Error).errorMessage
                     LaunchedEffect(Unit) {
                         Toast.makeText(
                             context, errorMessage, Toast.LENGTH_SHORT
@@ -125,8 +127,11 @@ fun RegisterScreen(
                         val registerState by remember { registerViewModel.registerState }.collectAsStateWithLifecycle()
                         when (registerState) {
                             UiState.Empty -> {}
+
+                            is UiState.UnAuthorised -> {}
+
                             is UiState.Error -> {
-                                val errorMessage = (registerState as UiState.Error).data
+                                val errorMessage = (registerState as UiState.Error).errorMessage
                                 LaunchedEffect(Unit) {
                                     Toast.makeText(
                                         context, errorMessage, Toast.LENGTH_SHORT

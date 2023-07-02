@@ -12,6 +12,7 @@ import com.example.demoappcompose.data.requests.RegisterRequest
 import com.example.demoappcompose.data.responses.register_response.GetRoleMediumDataResponse
 import com.example.demoappcompose.data.responses.register_response.RegisterResponse
 import com.example.demoappcompose.network.ApiException
+import com.example.demoappcompose.network.UnAuthorisedException
 import com.example.demoappcompose.repository.RegisterRepository
 import com.example.demoappcompose.utility.Constants
 import com.example.demoappcompose.utility.UiState
@@ -63,6 +64,8 @@ class RegisterViewModel @Inject constructor(
             }
         } catch (e: ApiException) {
             _getRolesState.value = UiState.Error(e.message)
+        } catch (e: UnAuthorisedException) {
+            _getRolesState.value = UiState.UnAuthorised(e.message)
         } catch (e: Exception) {
             _getRolesState.value = UiState.Error(e.message)
         }
@@ -106,6 +109,8 @@ class RegisterViewModel @Inject constructor(
             }
         } catch (e: ApiException) {
             _registerState.value = UiState.Error(e.message)
+        } catch (e: UnAuthorisedException) {
+            _registerState.value = UiState.UnAuthorised(e.message)
         } catch (e: Exception) {
             _registerState.value = UiState.Error(e.message)
         }

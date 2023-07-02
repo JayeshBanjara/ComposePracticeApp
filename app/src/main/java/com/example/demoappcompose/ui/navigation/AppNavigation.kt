@@ -14,6 +14,7 @@ import com.example.demoappcompose.ui.auth.register.RegisterScreen
 import com.example.demoappcompose.ui.auth.register.RegisterViewModel
 import com.example.demoappcompose.ui.create_question.ChapterList
 import com.example.demoappcompose.ui.create_question.CreateQuestion
+import com.example.demoappcompose.ui.create_question.CreateQuestionViewModel
 import com.example.demoappcompose.ui.create_question.QuestionList
 import com.example.demoappcompose.ui.dashboard.Dashboard
 import com.example.demoappcompose.ui.dashboard.home.HomeViewModel
@@ -24,6 +25,7 @@ import com.example.demoappcompose.ui.paper_history.PaperHistoryViewModel
 import com.example.demoappcompose.ui.print_settings.PrintSettings
 import com.example.demoappcompose.ui.profile.EditProfile
 import com.example.demoappcompose.ui.profile.EditProfileViewModel
+import com.example.demoappcompose.ui.register_purchase_book.PurchaseBookViewModel
 import com.example.demoappcompose.ui.register_purchase_book.RegisterToPurchaseBook
 import com.example.demoappcompose.ui.splash.SplashScreen
 import com.example.demoappcompose.ui.splash.SplashViewModel
@@ -125,7 +127,11 @@ fun AppNavigation(
         }
 
         composable(route = Screens.RegisterPurchaseBook.route) {
-            RegisterToPurchaseBook(navController = navController)
+            val purchaseBookViewModel = hiltViewModel<PurchaseBookViewModel>()
+            RegisterToPurchaseBook(
+                navController = navController,
+                purchaseBookViewModel = purchaseBookViewModel
+            )
         }
 
         composable(route = Screens.PaperHistory.route) {
@@ -137,13 +143,27 @@ fun AppNavigation(
         }
 
         composable(
-            route = Screens.CreateQuestion.route + "/{subjectName}",
-            arguments = listOf(navArgument("subjectName") {
-                type = NavType.StringType
-            })
+            route = Screens.CreateQuestion.route + "/{classId}/{subjectId}/{subjectName}",
+            arguments = listOf(
+                navArgument("classId") {
+                    type = NavType.StringType
+                },
+                navArgument("subjectId") {
+                    type = NavType.StringType
+                },
+                navArgument("subjectName") {
+                    type = NavType.StringType
+                }
+            )
         ) { entry ->
+
+            val createQuestionViewModel = hiltViewModel<CreateQuestionViewModel>()
+
             CreateQuestion(
                 navController = navController,
+                createQuestionViewModel = createQuestionViewModel,
+                classId = entry.arguments?.getString("classId") ?: "",
+                subjectId = entry.arguments?.getString("subjectId") ?: "",
                 subjectName = entry.arguments?.getString("subjectName") ?: ""
             )
         }

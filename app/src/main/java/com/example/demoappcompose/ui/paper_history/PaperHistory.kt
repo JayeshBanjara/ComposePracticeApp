@@ -1,6 +1,5 @@
 package com.example.demoappcompose.ui.paper_history
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -20,8 +19,11 @@ import androidx.navigation.NavController
 import com.example.demoappcompose.ui.components.CustomTopAppBar
 import com.example.demoappcompose.ui.components.Loader
 import com.example.demoappcompose.ui.components.ScreenBackground
+import com.example.demoappcompose.ui.navigation.Screens
+import com.example.demoappcompose.ui.popUpToTop
 import com.example.demoappcompose.ui.screenPadding
 import com.example.demoappcompose.utility.UiState
+import com.example.demoappcompose.utility.toast
 
 @Composable
 fun PaperHistory(
@@ -55,24 +57,33 @@ fun PaperHistory(
             ScreenBackground()
 
             val state by remember { paperHistoryViewModel.uiState }.collectAsStateWithLifecycle()
-            when(state) {
+            when (state) {
                 is UiState.Empty -> {}
-                is UiState.Error -> {
-                    val errorMessage = (state as UiState.Error).data
+
+                is UiState.UnAuthorised -> {
                     LaunchedEffect(Unit) {
-                        Toast.makeText(
-                            context,
-                            errorMessage,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        val errorMessage = (state as UiState.UnAuthorised).errorMessage
+                        context.toast(message = errorMessage)
+                        navController.navigate(Screens.LoginScreen.route) {
+                            popUpToTop(navController)
+                        }
+                    }
+                }
+
+                is UiState.Error -> {
+                    val errorMessage = (state as UiState.Error).errorMessage
+                    LaunchedEffect(Unit) {
+                        context.toast(message = errorMessage)
                     }
                 }
 
                 is UiState.Loading -> {
                     Loader()
                 }
+
                 is UiState.Success -> {
-                    val paperHistoryList = (state as UiState.Success).data.paperHistoryData.paperHistoryList
+                    val paperHistoryList =
+                        (state as UiState.Success).data.paperHistoryData.paperHistoryList
                     LazyColumn(content = {
                         item { Spacer(modifier = Modifier.height(10.dp)) }
                         items(paperHistoryList) {

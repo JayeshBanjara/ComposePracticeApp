@@ -1,7 +1,6 @@
-package com.example.demoappcompose.ui.create_question.components
+package com.example.demoappcompose.ui.register_purchase_book
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -17,15 +16,14 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -38,45 +36,44 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import com.example.demoappcompose.R
-import com.example.demoappcompose.data.responses.questions.HeadingData
+import com.example.demoappcompose.data.responses.purchase_book.Book
 import com.example.demoappcompose.ui.HorizontalSpacer
-import com.example.demoappcompose.ui.theme.Blue
-import com.example.demoappcompose.ui.theme.GreyDark
 import com.example.demoappcompose.ui.theme.GreyLight
 import com.example.demoappcompose.ui.theme.HintColor
 import com.example.demoappcompose.ui.theme.TitleColor
 
 @Composable
-fun QuestionTitleDropDown(
-    modifier: Modifier,
+fun BooksDropDown(
     mExpanded: Boolean,
-    items: List<HeadingData>,
-    selectedHeading: HeadingData,
+    items: List<Book>,
+    selectedBook: Book,
     onClick: () -> Unit,
     onDismissRequest: () -> Unit,
-    onItemSelect: (heading: HeadingData) -> Unit
+    onItemSelect: (book: Book) -> Unit
 ) {
-    var mTextFieldSize by remember { mutableStateOf(Size.Zero)}
+    var mTextFieldSize by remember { mutableStateOf(Size.Zero) }
 
     Box(
-        modifier = modifier
+        modifier = Modifier
             .clickable { onClick() }
-            .clip(shape = RoundedCornerShape(5.dp))
-            .background(Color.White)
-            .padding(10.dp),
+            .fillMaxWidth()
+            .height(52.dp)
+            .clip(RoundedCornerShape(corner = CornerSize(25.dp)))
+            .background(GreyLight)
+            .padding(15.dp),
         contentAlignment = Alignment.Center
     ) {
         BasicTextField(
             modifier = Modifier
                 .clickable { onClick() }
                 .fillMaxWidth()
-                .background(Color.White)
+                .background(GreyLight)
                 .onGloballyPositioned { coordinates ->
                     // This value is used to assign to
                     // the DropDown the same width
                     mTextFieldSize = coordinates.size.toSize()
                 },
-            value = selectedHeading.headingName,
+            value = selectedBook.bookName,
             readOnly = true,
             onValueChange = {
 
@@ -88,13 +85,15 @@ fun QuestionTitleDropDown(
                 fontFamily = FontFamily(Font(R.font.quicksand_medium))
             ),
             decorationBox = { innerTextField ->
-                Row(modifier = Modifier.fillMaxWidth().clickable { onClick() }) {
-                    if (selectedHeading == null) {
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onClick() }) {
+                    if (selectedBook == null) {
                         Text(
                             text = stringResource(id = R.string.select_your_post),
                             color = HintColor,
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.W600,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.W400,
                             fontFamily = FontFamily(Font(R.font.quicksand_medium))
                         )
                     }
@@ -104,27 +103,28 @@ fun QuestionTitleDropDown(
         )
 
         Row(modifier = Modifier
-            .align(Alignment.TopEnd).clickable {  onClick() }) {
+            .align(Alignment.CenterEnd)
+            .clickable { onClick() }) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_arrow_drop_down),
                 contentDescription = ""
             )
             HorizontalSpacer(size = 5)
         }
-        
+
         DropdownMenu(
             expanded = mExpanded,
             onDismissRequest = { onDismissRequest() },
             modifier = Modifier
                 .width(with(LocalDensity.current) { mTextFieldSize.width.toDp() })
         ) {
-            items.forEach { heading ->
+            items.forEach { book ->
                 DropdownMenuItem(onClick = {
-                    onItemSelect(heading)
+                    onItemSelect(book)
                 },
-                text = {
-                    Text(text = heading.headingName)
-                })
+                    text = {
+                        Text(text = book.bookName)
+                    })
             }
         }
     }

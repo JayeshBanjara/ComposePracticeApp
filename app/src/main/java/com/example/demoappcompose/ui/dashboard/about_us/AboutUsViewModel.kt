@@ -2,9 +2,11 @@ package com.example.demoappcompose.ui.dashboard.about_us
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.demoappcompose.data.PreferencesManager
 import com.example.demoappcompose.data.requests.MasterDataRequest
 import com.example.demoappcompose.data.responses.about_us.AboutUsResponse
 import com.example.demoappcompose.network.ApiException
+import com.example.demoappcompose.network.UnAuthorisedException
 import com.example.demoappcompose.repository.AppRepository
 import com.example.demoappcompose.utility.Constants
 import com.example.demoappcompose.utility.UiState
@@ -16,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AboutUsViewModel @Inject constructor(
-    private val appRepository: AppRepository
+    private val appRepository: AppRepository,
+    private val prefManager: PreferencesManager
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<UiState<AboutUsResponse>>(UiState.Empty)
@@ -47,6 +50,9 @@ class AboutUsViewModel @Inject constructor(
             } else {
                 _state.value = UiState.Error(response.message)
             }
+        } catch (e: UnAuthorisedException) {
+            prefManager.clearData()
+            _state.value = UiState.UnAuthorised(e.message)
         } catch (e: ApiException) {
             _state.value = UiState.Error(e.message)
         } catch (e: Exception) {
