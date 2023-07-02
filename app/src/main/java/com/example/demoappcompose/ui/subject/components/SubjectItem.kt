@@ -47,7 +47,13 @@ fun SubjectItem(navController: NavController, subject: Subject) {
             )
             .background(color = LightBlue, shape = RoundedCornerShape(10.dp))
             .clickable {
-                navController.navigate(Screens.CreateQuestion.withArgs(subject.classId.toString(), subject.sId.toString()))
+                navController.navigate(
+                    Screens.CreateQuestion.withArgs(
+                        subject.classId.toString(),
+                        subject.sId.toString(),
+                        subject.subjectName
+                    )
+                )
             },
         contentAlignment = Alignment.Center
     ) {

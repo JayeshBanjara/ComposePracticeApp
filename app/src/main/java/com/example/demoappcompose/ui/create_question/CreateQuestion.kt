@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -50,6 +51,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.demoappcompose.R
+import com.example.demoappcompose.data.responses.questions.HeadingData
 import com.example.demoappcompose.ui.HorizontalSpacer
 import com.example.demoappcompose.ui.VerticalSpacer
 import com.example.demoappcompose.ui.components.CustomTopAppBar
@@ -58,6 +60,8 @@ import com.example.demoappcompose.ui.components.ScreenBackground
 import com.example.demoappcompose.ui.create_question.components.QuestionPreferenceCheckBox
 import com.example.demoappcompose.ui.create_question.components.QuestionTitleDropDown
 import com.example.demoappcompose.ui.create_question.components.WhiteTextField
+import com.example.demoappcompose.ui.create_question.model.PaperData
+import com.example.demoappcompose.ui.create_question.model.Section
 import com.example.demoappcompose.ui.navigation.Screens
 import com.example.demoappcompose.ui.popUpToTop
 import com.example.demoappcompose.ui.screenPadding
@@ -77,8 +81,26 @@ fun CreateQuestion(
     subjectName: String
 ) {
 
-    var titleListSize by remember { mutableIntStateOf(1) }
-    var titleList = remember { mutableStateListOf<Int>() }
+    var headingList = mutableListOf<HeadingData>()
+    val sectionList = remember { mutableStateListOf<Section>() }
+
+    LaunchedEffect(Unit) {
+        val section = Section(
+            sectionName = "A",
+            headingList = headingList,
+            selectedHeading = null,
+            marks = ""
+        )
+
+        sectionList.add(section)
+
+        val paperData = PaperData(
+            isSectionWise = false,
+            isAddNewInSameSection = false,
+            lastSectionName = "A",
+            sectionList = sectionList
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -97,7 +119,14 @@ fun CreateQuestion(
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = {
-                    titleListSize += 1
+                    sectionList.add(
+                        Section(
+                            sectionName = "A",
+                            headingList = headingList,
+                            selectedHeading = headingList[0],
+                            marks = ""
+                        )
+                    )
                 },
                 containerColor = Blue,
             ) {
@@ -162,8 +191,8 @@ fun CreateQuestion(
 
                 is UiState.Success -> {
 
-                    val headingList =
-                        (getHeadingState as UiState.Success).data.headingListData.headingList
+                    headingList =
+                        (getHeadingState as UiState.Success).data.headingListData.headingList.toMutableList()
                     var mExpanded by remember { mutableStateOf(false) }
                     var selectedHeading by remember { mutableStateOf(headingList[0]) }
 
@@ -203,7 +232,7 @@ fun CreateQuestion(
                         LazyColumn(
                             verticalArrangement = Arrangement.spacedBy(10.dp),
                             content = {
-                                items(titleListSize) {
+                                items(sectionList) {
                                     Column(
                                         modifier = Modifier
                                             .fillMaxWidth()
@@ -216,7 +245,7 @@ fun CreateQuestion(
 
                                         if (sectionWiseCheckedState) {
 
-                                            if (it == 0) {
+                                            /*if (it == 0) {
                                                 Text(
                                                     text = "Section A",
                                                     style = TextStyle(
@@ -228,7 +257,7 @@ fun CreateQuestion(
                                                     textAlign = TextAlign.Center,
                                                     modifier = Modifier.fillMaxWidth()
                                                 )
-                                            } else if (!newQueSameSectionCheckedState) {
+                                            } else*/ if (!newQueSameSectionCheckedState) {
                                                 Text(
                                                     text = "Section A",
                                                     style = TextStyle(
@@ -331,11 +360,11 @@ fun CreateQuestion(
                                                         }
                                                     }
 
-                                                    if (it > 0) {
+                                                    if (sectionList.size > 0) {
                                                         HorizontalSpacer(size = 10)
                                                     }
 
-                                                    if (it > 0) {
+                                                    if (sectionList.size > 0) {
 
                                                         Box(
                                                             modifier = Modifier
@@ -348,7 +377,7 @@ fun CreateQuestion(
                                                         ) {
                                                             IconButton(
                                                                 onClick = {
-                                                                    titleListSize -= 1
+                                                                    sectionList.remove(it)
                                                                 },
                                                                 modifier = Modifier.size(30.dp)
                                                             ) {
