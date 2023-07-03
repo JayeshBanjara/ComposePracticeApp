@@ -5,6 +5,7 @@ import com.example.demoappcompose.data.requests.HeadingListRequest
 import com.example.demoappcompose.data.requests.PurchaseBookRequest
 import com.example.demoappcompose.data.requests.UpdateProfileRequest
 import com.example.demoappcompose.data.responses.SuccessResponse
+import com.example.demoappcompose.data.responses.chapter_list.ChapterListResponse
 import com.example.demoappcompose.data.responses.paper_history.PaperHistoryResponse
 import com.example.demoappcompose.data.responses.profile.ProfileResponse
 import com.example.demoappcompose.data.responses.questions.HeadingListResponse
@@ -60,6 +61,18 @@ class UserRepository @Inject constructor(
     ): HeadingListResponse {
         return apiRequest {
             apiInterface.getHeadingList(
+                headerMap = headerMap,
+                request = request
+            )
+        }
+    }
+
+    suspend fun getChapterList(
+        headerMap: Map<String, String>,
+        request: HeadingListRequest
+    ): ChapterListResponse {
+        return apiRequest {
+            apiInterface.getChapterList(
                 headerMap = headerMap,
                 request = request
             )

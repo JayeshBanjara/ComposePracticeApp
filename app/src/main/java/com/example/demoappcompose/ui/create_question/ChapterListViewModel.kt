@@ -1,17 +1,13 @@
 package com.example.demoappcompose.ui.create_question
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.demoappcompose.data.PreferencesManager
 import com.example.demoappcompose.data.requests.HeadingListRequest
-import com.example.demoappcompose.data.responses.questions.HeadingListResponse
+import com.example.demoappcompose.data.responses.chapter_list.ChapterListResponse
 import com.example.demoappcompose.network.ApiException
 import com.example.demoappcompose.network.UnAuthorisedException
 import com.example.demoappcompose.repository.UserRepository
-import com.example.demoappcompose.ui.create_question.model.Section
 import com.example.demoappcompose.utility.Constants
 import com.example.demoappcompose.utility.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,15 +18,15 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CreateQuestionViewModel @Inject constructor(
+class ChapterListViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val prefManager: PreferencesManager
 ) : ViewModel() {
 
-    private val _getHeadingState = MutableStateFlow<UiState<HeadingListResponse>>(UiState.Empty)
-    val getHeadingState: StateFlow<UiState<HeadingListResponse>> get() = _getHeadingState
+    private val _uiState = MutableStateFlow<UiState<ChapterListResponse>>(UiState.Empty)
+    val uiState: StateFlow<UiState<ChapterListResponse>> get() = _uiState
 
-    suspend fun getHeadingList(classId: String, subjectId: String) = viewModelScope.launch {
+    suspend fun getChapterList(classId: String, subjectId: String) = viewModelScope.launch {
 
         val userId = prefManager.getUserId.first()!!
         val token = prefManager.getToken.first()!!
@@ -46,19 +42,19 @@ class CreateQuestionViewModel @Inject constructor(
         )
 
         try {
-            val response = userRepository.getHeadingList(headerMap = headers, request = request)
+            val response = userRepository.getChapterList(headerMap = headers, request = request)
             if (response.statusCode == 200) {
-                _getHeadingState.value = UiState.Success(response)
+                _uiState.value = UiState.Success(response)
             } else {
-                _getHeadingState.value = UiState.Error(response.message)
+                _uiState.value = UiState.Error(response.message)
             }
         } catch (e: UnAuthorisedException) {
             prefManager.clearData()
-            _getHeadingState.value = UiState.UnAuthorised(e.message)
+            _uiState.value = UiState.UnAuthorised(e.message)
         } catch (e: ApiException) {
-            _getHeadingState.value = UiState.Error(e.message)
+            _uiState.value = UiState.Error(e.message)
         } catch (e: Exception) {
-            _getHeadingState.value = UiState.Error(e.message)
+            _uiState.value = UiState.Error(e.message)
         }
     }
 }

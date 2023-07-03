@@ -10,6 +10,7 @@ data class PaperData(
 )
 
 data class Section(
+    var hasSectionName: Boolean,
     var sectionName: String,
     val headingList: List<HeadingData>,
     var selectedHeading: HeadingData?,

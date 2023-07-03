@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -26,11 +27,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -81,12 +82,20 @@ fun CreateQuestion(
     subjectName: String
 ) {
 
+    //val listState = rememberLazyListState()
     var headingList = mutableListOf<HeadingData>()
     val sectionList = remember { mutableStateListOf<Section>() }
 
+    var sectionWiseCheckedState by rememberSaveable { mutableStateOf(false) }
+
+    var newQueSameSectionCheckedState by rememberSaveable { mutableStateOf(false) }
+    //var sectionCounter = "1"
+    var lastSectionName = 65
+
     LaunchedEffect(Unit) {
         val section = Section(
-            sectionName = "A",
+            hasSectionName = true,
+            sectionName = lastSectionName.toChar().toString(),
             headingList = headingList,
             selectedHeading = null,
             marks = ""
@@ -97,7 +106,7 @@ fun CreateQuestion(
         val paperData = PaperData(
             isSectionWise = false,
             isAddNewInSameSection = false,
-            lastSectionName = "A",
+            lastSectionName = section.sectionName,
             sectionList = sectionList
         )
     }
@@ -119,14 +128,20 @@ fun CreateQuestion(
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = {
-                    sectionList.add(
-                        Section(
-                            sectionName = "A",
-                            headingList = headingList,
-                            selectedHeading = headingList[0],
-                            marks = ""
-                        )
+                    val newSection = Section(
+                        hasSectionName = sectionWiseCheckedState,
+                        sectionName = if (sectionWiseCheckedState && !newQueSameSectionCheckedState) {
+                            "${(lastSectionName + 1).toChar()}"
+                        } else {
+                            lastSectionName.toChar().toString()
+                        },
+                        headingList = headingList,
+                        selectedHeading = headingList[0],
+                        marks = ""
                     )
+
+                    sectionList.add(newSection)
+                    lastSectionName = newSection.sectionName[0].code
                 },
                 containerColor = Blue,
             ) {
@@ -143,16 +158,13 @@ fun CreateQuestion(
         }
     ) { innerPadding ->
 
-        var sectionWiseCheckedState by remember { mutableStateOf(false) }
-        var questionSeriesCheckedState by remember { mutableStateOf(false) }
-        var newQueSameSectionCheckedState by remember { mutableStateOf(false) }
-        var questionNo by remember { mutableStateOf("") }
-        var marks by remember { mutableStateOf("") }
         val localFocusManager = LocalFocusManager.current
         val context = LocalContext.current
         val coroutineScope = rememberCoroutineScope()
 
         Box(modifier = Modifier.fillMaxSize()) {
+
+            ScreenBackground()
 
             LaunchedEffect(Unit) {
                 coroutineScope.launch {
@@ -162,8 +174,6 @@ fun CreateQuestion(
                     )
                 }
             }
-
-            ScreenBackground()
 
             val getHeadingState by remember { createQuestionViewModel.getHeadingState }.collectAsStateWithLifecycle()
             when (getHeadingState) {
@@ -191,10 +201,9 @@ fun CreateQuestion(
 
                 is UiState.Success -> {
 
+                    headingList.clear()
                     headingList =
                         (getHeadingState as UiState.Success).data.headingListData.headingList.toMutableList()
-                    var mExpanded by remember { mutableStateOf(false) }
-                    var selectedHeading by remember { mutableStateOf(headingList[0]) }
 
                     Column(
                         modifier = Modifier.padding(
@@ -230,9 +239,15 @@ fun CreateQuestion(
                         VerticalSpacer(size = 25)
 
                         LazyColumn(
+                            /*state = listState,*/
                             verticalArrangement = Arrangement.spacedBy(10.dp),
                             content = {
-                                items(sectionList) {
+                                items(sectionList) { section ->
+
+                                    var mExpanded by remember { mutableStateOf(false) }
+                                    var selectedHeading by remember { mutableStateOf(headingList[0]) }
+                                    var marks by remember { mutableStateOf("") }
+
                                     Column(
                                         modifier = Modifier
                                             .fillMaxWidth()
@@ -242,35 +257,19 @@ fun CreateQuestion(
                                             )
                                             .padding(8.dp)
                                     ) {
-
-                                        if (sectionWiseCheckedState) {
-
-                                            /*if (it == 0) {
-                                                Text(
-                                                    text = "Section A",
-                                                    style = TextStyle(
-                                                        color = Blue,
-                                                        fontSize = 13.sp,
-                                                        fontWeight = FontWeight.W600,
-                                                        fontFamily = FontFamily(Font(R.font.quicksand_semi_bold))
-                                                    ),
-                                                    textAlign = TextAlign.Center,
-                                                    modifier = Modifier.fillMaxWidth()
-                                                )
-                                            } else*/ if (!newQueSameSectionCheckedState) {
-                                                Text(
-                                                    text = "Section A",
-                                                    style = TextStyle(
-                                                        color = Blue,
-                                                        fontSize = 13.sp,
-                                                        fontWeight = FontWeight.W600,
-                                                        fontFamily = FontFamily(Font(R.font.quicksand_semi_bold))
-                                                    ),
-                                                    textAlign = TextAlign.Center,
-                                                    modifier = Modifier.fillMaxWidth()
-                                                )
-                                            }
-                                        }
+                                        if (sectionWiseCheckedState and section.hasSectionName) {
+                                        Text(
+                                            text = "Section ${section.sectionName}",
+                                            style = TextStyle(
+                                                color = Blue,
+                                                fontSize = 13.sp,
+                                                fontWeight = FontWeight.W600,
+                                                fontFamily = FontFamily(Font(R.font.quicksand_semi_bold))
+                                            ),
+                                            textAlign = TextAlign.Center,
+                                            modifier = Modifier.fillMaxWidth()
+                                        )
+                                    }
 
                                         Column(
                                             modifier = Modifier
@@ -298,6 +297,7 @@ fun CreateQuestion(
                                                 onItemSelect = {
                                                     selectedHeading = it
                                                     mExpanded = false
+                                                    section.selectedHeading = it
                                                 }
                                             )
 
@@ -324,6 +324,7 @@ fun CreateQuestion(
                                                     onValueChange = {
                                                         if (it.length < 5) {
                                                             marks = it
+                                                            section.marks = it
                                                         }
                                                     }
                                                 )
@@ -377,7 +378,8 @@ fun CreateQuestion(
                                                         ) {
                                                             IconButton(
                                                                 onClick = {
-                                                                    sectionList.remove(it)
+                                                                    sectionList.remove(section)
+                                                                    lastSectionName -= 1
                                                                 },
                                                                 modifier = Modifier.size(30.dp)
                                                             ) {
