@@ -37,7 +37,7 @@ interface ApiInterface {
     suspend fun getDashboardData(
         @HeaderMap headerMap: Map<String, String>,
         @Body request: CommonRequest
-    ): Response<DashboardResponse>
+    ): DashboardResponse
 
     @POST("user/get-my-subscription-data")
     suspend fun getSubscriptionList(

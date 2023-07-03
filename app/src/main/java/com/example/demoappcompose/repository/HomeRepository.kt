@@ -6,6 +6,11 @@ import com.example.demoappcompose.data.responses.dashboard_response.DashboardRes
 import com.example.demoappcompose.data.responses.logout.LogoutResponse
 import com.example.demoappcompose.di.network.SafeApiRequest
 import com.example.demoappcompose.di.network.api.ApiInterface
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import retrofit2.Response
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -14,7 +19,7 @@ class HomeRepository @Inject constructor(
     private val apiInterface: ApiInterface
 ) : SafeApiRequest() {
 
-    suspend fun getDashboardData(
+    /*suspend fun getDashboardData(
         headerMap: Map<String, String>,
         request: CommonRequest
     ): DashboardResponse {
@@ -24,7 +29,18 @@ class HomeRepository @Inject constructor(
                 request = request
             )
         }
-    }
+    }*/
+
+    suspend fun getDashboardData(
+        headerMap: Map<String, String>,
+        request: CommonRequest
+    ): Flow<DashboardResponse> = flow {
+        val response = apiInterface.getDashboardData(
+            headerMap = headerMap,
+            request = request
+        )
+        emit(response)
+    }.flowOn(Dispatchers.IO)
 
     suspend fun logout(
         headerMap: Map<String, String>,

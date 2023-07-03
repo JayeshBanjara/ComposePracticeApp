@@ -21,6 +21,7 @@ abstract class SafeApiRequest {
                 try {
                     message.append(JSONObject(it).getString("message"))
                 } catch (e: JSONException) {
+                    e.printStackTrace()
                 }
             }
 

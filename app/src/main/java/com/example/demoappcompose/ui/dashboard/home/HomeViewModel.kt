@@ -15,6 +15,7 @@ import com.example.demoappcompose.utility.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -51,11 +52,12 @@ class HomeViewModel @Inject constructor(
         )
 
         try {
-            val response = homeRepository.getDashboardData(headerMap = headers, request = request)
-            if (response.statusCode == 200) {
-                _uiState.value = UiState.Success(response)
-            } else {
-                _uiState.value = UiState.Error(response.message)
+            homeRepository.getDashboardData(headerMap = headers, request = request).collect { response ->
+                if (response.statusCode == 200) {
+                    _uiState.value = UiState.Success(response)
+                } else {
+                    _uiState.value = UiState.Error(response.message)
+                }
             }
         } catch (e: ApiException) {
             _uiState.value = UiState.Error(e.message)
