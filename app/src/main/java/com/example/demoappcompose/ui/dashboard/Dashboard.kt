@@ -20,15 +20,16 @@ import com.example.demoappcompose.ui.navigation.Screens
 fun Dashboard(
     mainNavController: NavController,
     homeViewModel: HomeViewModel,
-    userId: String
+    userId: String,
+    profilePicUrl: String
 ) {
     val navController: NavHostController = rememberNavController()
     Scaffold(
         topBar = {
             CustomTopAppBar(
                 title = stringResource(id = R.string.app_name),
-                actionIcon = painterResource(id = R.drawable.ic_user),
-                onIconClick = {
+                imgUrl = profilePicUrl,
+                onImageClick = {
                     mainNavController.navigate(Screens.EditProfile.route)
                 }
             )

@@ -1,7 +1,7 @@
 package com.example.demoappcompose.di
 
 import com.example.demoappcompose.BuildConfig
-import com.example.demoappcompose.di.network.api.ApiInterface
+import com.example.demoappcompose.network.ApiInterface
 import com.example.demoappcompose.utility.Constants
 import dagger.Module
 import dagger.Provides

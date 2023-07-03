@@ -8,7 +8,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -23,7 +22,11 @@ import com.example.demoappcompose.ui.theme.Blue
 import com.example.demoappcompose.ui.theme.HintColor
 
 @Composable
-fun TabScreen(navController: NavController, subjects: List<String>) {
+fun TabScreen(
+    navController: NavController,
+    subjectsViewModel: SubjectsViewModel,
+    classId: String
+) {
     var tabIndex by remember { mutableIntStateOf(0) }
 
     val tabs = listOf("સાયન્સ", "કૉમેર્સ", "આર્ટસ")
@@ -48,9 +51,21 @@ fun TabScreen(navController: NavController, subjects: List<String>) {
             }
         }
         when (tabIndex) {
-            0 -> ScienceSubjects(subjects = subjects, navController = navController)
-            1 -> CommerceSubjects(subjects = subjects, navController = navController)
-            2 -> ArtsSubjects(subjects = subjects, navController = navController)
+            0 -> ScienceSubjects(
+                navController = navController,
+                subjectsViewModel = subjectsViewModel,
+                classId = classId
+            )
+            1 -> CommerceSubjects(
+                navController = navController,
+                subjectsViewModel = subjectsViewModel,
+                classId = classId
+            )
+            2 -> ArtsSubjects(
+                navController = navController,
+                subjectsViewModel = subjectsViewModel,
+                classId = classId
+            )
         }
     }
 }

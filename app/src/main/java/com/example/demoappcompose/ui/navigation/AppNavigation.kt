@@ -14,32 +14,43 @@ import com.example.demoappcompose.ui.auth.register.RegisterScreen
 import com.example.demoappcompose.ui.auth.register.RegisterViewModel
 import com.example.demoappcompose.ui.create_question.ChapterList
 import com.example.demoappcompose.ui.create_question.CreateQuestion
+import com.example.demoappcompose.ui.create_question.CreateQuestionViewModel
 import com.example.demoappcompose.ui.create_question.QuestionList
 import com.example.demoappcompose.ui.dashboard.Dashboard
 import com.example.demoappcompose.ui.dashboard.home.HomeViewModel
 import com.example.demoappcompose.ui.dashboard.my_subscription.MySubscription
 import com.example.demoappcompose.ui.dashboard.my_subscription.MySubscriptionViewModel
 import com.example.demoappcompose.ui.paper_history.PaperHistory
+import com.example.demoappcompose.ui.paper_history.PaperHistoryViewModel
 import com.example.demoappcompose.ui.print_settings.PrintSettings
 import com.example.demoappcompose.ui.profile.EditProfile
+import com.example.demoappcompose.ui.profile.EditProfileViewModel
+import com.example.demoappcompose.ui.register_purchase_book.PurchaseBookViewModel
 import com.example.demoappcompose.ui.register_purchase_book.RegisterToPurchaseBook
-import com.example.demoappcompose.ui.splash.SplashScreenNew
+import com.example.demoappcompose.ui.splash.SplashScreen
+import com.example.demoappcompose.ui.splash.SplashViewModel
 import com.example.demoappcompose.ui.subject.SubjectScreen
+import com.example.demoappcompose.ui.subject.SubjectsViewModel
 
 @Composable
 fun AppNavigation(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     isLoggedIn: Boolean,
-    userId: String?
+    userId: String?,
+    profilePicUrl: String?
 ) {
 
     val startScreen: String =
-        if (isLoggedIn) Screens.Dashboard.route + "/{userId}" else Screens.SplashScreen.route
+        if (isLoggedIn) Screens.Dashboard.route + "/{userId}/{profilePicUrl}" else Screens.SplashScreen.route
 
     NavHost(navController = navController, startDestination = startScreen) {
+
         composable(route = Screens.SplashScreen.route) {
-            SplashScreenNew(navController = navController)
+            val splashViewModel = hiltViewModel<SplashViewModel>()
+            SplashScreen(
+                navController = navController, splashViewModel = splashViewModel
+            )
         }
 
         composable(route = Screens.LoginScreen.route) {
@@ -56,61 +67,88 @@ fun AppNavigation(
             )
         }
 
-        composable(
-            route = Screens.Dashboard.route + "/{userId}",
+        composable(route = Screens.Dashboard.route + "/{userId}/{profilePicUrl}",
             arguments = listOf(navArgument("userId") {
                 type = NavType.StringType
-            })
-        ) { entry ->
+            }, navArgument("profilePicUrl") {
+                type = NavType.StringType
+            })) { entry ->
 
             val homeViewModel = hiltViewModel<HomeViewModel>()
 
             Dashboard(
                 mainNavController = navController,
                 homeViewModel = homeViewModel,
-                userId = if (isLoggedIn) userId!! else entry.arguments?.getString("userId") ?: ""
+                userId = if (isLoggedIn) userId!! else entry.arguments?.getString("userId") ?: "",
+                profilePicUrl = if (isLoggedIn) profilePicUrl!! else entry.arguments?.getString("profilePicUrl")
+                    ?: ""
             )
         }
 
-        composable(
-            route = Screens.SubjectScreen.route + "/{std}",
-            arguments = listOf(navArgument("std") {
+        composable(route = Screens.SubjectScreen.route + "/{className}/{classId}/{isStream}",
+            arguments = listOf(navArgument("className") {
                 type = NavType.StringType
-            })
-        ) { entry ->
+            }, navArgument("classId") {
+                type = NavType.StringType
+            }, navArgument("isStream") {
+                type = NavType.StringType
+            })) { entry ->
+
+            val subjectsViewModel = hiltViewModel<SubjectsViewModel>()
+
             SubjectScreen(
-                navController = navController, std = entry.arguments?.getString("std") ?: ""
+                navController = navController,
+                subjectsViewModel = subjectsViewModel,
+                className = entry.arguments?.getString("className") ?: "",
+                classId = entry.arguments?.getString("classId") ?: "",
+                isStream = entry.arguments?.getString("isStream") ?: ""
             )
         }
 
         composable(route = Screens.EditProfile.route) {
-            EditProfile(navController = navController)
+            val editProfileViewModel = hiltViewModel<EditProfileViewModel>()
+            EditProfile(
+                navController = navController, editProfileViewModel = editProfileViewModel
+            )
         }
 
         composable(route = Screens.MySubscription.route) {
             val mySubscriptionViewModel = hiltViewModel<MySubscriptionViewModel>()
             MySubscription(
-                navController = navController,
-                mySubscriptionViewModel = mySubscriptionViewModel
+                navController = navController, mySubscriptionViewModel = mySubscriptionViewModel
             )
         }
 
         composable(route = Screens.RegisterPurchaseBook.route) {
-            RegisterToPurchaseBook(navController = navController)
+            val purchaseBookViewModel = hiltViewModel<PurchaseBookViewModel>()
+            RegisterToPurchaseBook(
+                navController = navController, purchaseBookViewModel = purchaseBookViewModel
+            )
         }
 
         composable(route = Screens.PaperHistory.route) {
-            PaperHistory(navController = navController)
+            val paperHistoryViewModel = hiltViewModel<PaperHistoryViewModel>()
+            PaperHistory(
+                navController = navController, paperHistoryViewModel = paperHistoryViewModel
+            )
         }
 
-        composable(
-            route = Screens.CreateQuestion.route + "/{subjectName}",
-            arguments = listOf(navArgument("subjectName") {
+        composable(route = Screens.CreateQuestion.route + "/{classId}/{subjectId}/{subjectName}",
+            arguments = listOf(navArgument("classId") {
                 type = NavType.StringType
-            })
-        ) { entry ->
+            }, navArgument("subjectId") {
+                type = NavType.StringType
+            }, navArgument("subjectName") {
+                type = NavType.StringType
+            })) { entry ->
+
+            val createQuestionViewModel = hiltViewModel<CreateQuestionViewModel>()
+
             CreateQuestion(
                 navController = navController,
+                createQuestionViewModel = createQuestionViewModel,
+                classId = entry.arguments?.getString("classId") ?: "",
+                subjectId = entry.arguments?.getString("subjectId") ?: "",
                 subjectName = entry.arguments?.getString("subjectName") ?: ""
             )
         }

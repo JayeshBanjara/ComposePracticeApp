@@ -9,7 +9,7 @@ import com.example.demoappcompose.ui.navigation.AppNavigation
 import com.example.demoappcompose.ui.theme.AppTheme
 
 @Composable
-fun App(isLoggedIn: Boolean, userId: String?) {
+fun App(isLoggedIn: Boolean, userId: String?, profilePicUrl: String?) {
     AppTheme(darkTheme = false) {
         val navController = rememberNavController()
 
@@ -18,7 +18,8 @@ fun App(isLoggedIn: Boolean, userId: String?) {
                 modifier = Modifier.padding(innerPadding),
                 navController = navController,
                 isLoggedIn = isLoggedIn,
-                userId = userId
+                userId = userId,
+                profilePicUrl = profilePicUrl
             )
         }
     }

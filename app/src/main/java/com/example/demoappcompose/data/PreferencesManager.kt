@@ -3,7 +3,6 @@ package com.example.demoappcompose.data
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
@@ -22,15 +21,14 @@ import javax.inject.Inject
 @Module
 @InstallIn(SingletonComponent::class)
 class PreferencesManager @Inject constructor(@ApplicationContext private val appContext: Context) {
-    
+
     companion object {
         val IS_LOGIN = intPreferencesKey("is_login")
         val TOKEN = stringPreferencesKey("login_token")
-        val LOG_IN_LOG_ID = intPreferencesKey("login_log_id")
+        val LOG_IN_LOG_ID = stringPreferencesKey("login_log_id")
         val USER_MOBILE_NUMBER = stringPreferencesKey("user_number")
-        val USER_NAME = stringPreferencesKey("user_name")
-        val USER_FIRST_NAME = stringPreferencesKey("first_name")
-        val USER_LAST_NAME = stringPreferencesKey("last_name")
+        val USER_EMAIL = stringPreferencesKey("user_name")
+        val USER_FULL_NAME = stringPreferencesKey("full_name")
         val USER_PROFILE_IMAGE = stringPreferencesKey("user_profile_image")
         val USER_ID = stringPreferencesKey("user_id")
 
@@ -91,13 +89,13 @@ class PreferencesManager @Inject constructor(@ApplicationContext private val app
             preferences[USER_PROFILE_IMAGE]
         }
 
-    suspend fun setUserName(no: String) {
-        appContext.dataStore.edit { mNo ->
-            mNo[USER_NAME] = no
+    suspend fun setEmail(email: String) {
+        appContext.dataStore.edit { mEmail ->
+            mEmail[USER_EMAIL] = email
         }
     }
 
-    val getUserName: Flow<String?> = appContext.dataStore.data
+    val getEmail: Flow<String?> = appContext.dataStore.data
         .catch { exception ->
             if (exception is IOException) {
                 emptyPreferences()
@@ -106,17 +104,16 @@ class PreferencesManager @Inject constructor(@ApplicationContext private val app
             }
         }
         .map { preferences ->
-            preferences[USER_NAME]
+            preferences[USER_EMAIL]
         }
 
-
-    suspend fun setLogId(no: Int) {
-        appContext.dataStore.edit { mNo ->
-            mNo[LOG_IN_LOG_ID] = no
+    suspend fun setUserFullName(fullName: String) {
+        appContext.dataStore.edit { mFullName ->
+            mFullName[USER_FULL_NAME] = fullName
         }
     }
 
-    val getLogId: Flow<Int?> = appContext.dataStore.data
+    val getUserFullName: Flow<String?> = appContext.dataStore.data
         .catch { exception ->
             if (exception is IOException) {
                 emptyPreferences()
@@ -125,48 +122,7 @@ class PreferencesManager @Inject constructor(@ApplicationContext private val app
             }
         }
         .map { preferences ->
-            preferences[LOG_IN_LOG_ID]
-
-        }
-
-
-    suspend fun setUserFirstName(no: String) {
-        appContext.dataStore.edit { mNo ->
-            mNo[USER_FIRST_NAME] = no
-        }
-    }
-
-    val getUserFirstName: Flow<String?> = appContext.dataStore.data
-        .catch { exception ->
-            if (exception is IOException) {
-                emptyPreferences()
-            } else {
-                throw exception
-            }
-        }
-        .map { preferences ->
-            preferences[USER_FIRST_NAME]
-
-        }
-
-
-    suspend fun setUserLastName(no: String) {
-        appContext.dataStore.edit { mNo ->
-            mNo[USER_LAST_NAME] = no
-        }
-    }
-
-    val getUserLastName: Flow<String?> = appContext.dataStore.data
-        .catch { exception ->
-            if (exception is IOException) {
-                emptyPreferences()
-            } else {
-                throw exception
-            }
-        }
-        .map { preferences ->
-            preferences[USER_LAST_NAME]
-
+            preferences[USER_FULL_NAME]
         }
 
     suspend fun setToken(token: String) {
@@ -183,13 +139,14 @@ class PreferencesManager @Inject constructor(@ApplicationContext private val app
                 throw exception
             }
         }
+
         .map { preferences ->
             preferences[TOKEN]
         }
 
-    suspend fun setLoginLogId(token: String) {
+    suspend fun setLoginLogId(loginLogId: String) {
         appContext.dataStore.edit { preferences ->
-            preferences[TOKEN] = token
+            preferences[LOG_IN_LOG_ID] = loginLogId
         }
     }
 
@@ -202,7 +159,7 @@ class PreferencesManager @Inject constructor(@ApplicationContext private val app
             }
         }
         .map { preferences ->
-            preferences[TOKEN]
+            preferences[LOG_IN_LOG_ID]
         }
 
     suspend fun setUserId(userId: String) {

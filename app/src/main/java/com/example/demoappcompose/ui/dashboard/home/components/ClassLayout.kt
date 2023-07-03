@@ -58,7 +58,7 @@ fun ClassLayout(
                         )
                         .background(color = LightBlue, shape = RoundedCornerShape(10.dp))
                         .clickable {
-                            navController.navigate(Screens.SubjectScreen.withArgs(it.className))
+                            navController.navigate(Screens.SubjectScreen.withArgs(it.className, it.cId, it.isStream))
                         },
                     contentAlignment = Alignment.Center
                 ) {

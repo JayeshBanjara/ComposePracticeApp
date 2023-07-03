@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import com.example.demoappcompose.R
+import com.example.demoappcompose.data.responses.questions.HeadingData
 import com.example.demoappcompose.ui.HorizontalSpacer
 import com.example.demoappcompose.ui.theme.Blue
 import com.example.demoappcompose.ui.theme.GreyDark
@@ -49,11 +50,11 @@ import com.example.demoappcompose.ui.theme.TitleColor
 fun QuestionTitleDropDown(
     modifier: Modifier,
     mExpanded: Boolean,
-    items: List<String>,
-    mSelectedText: String,
+    items: List<HeadingData>,
+    selectedHeading: HeadingData,
     onClick: () -> Unit,
     onDismissRequest: () -> Unit,
-    onItemSelect: (label: String) -> Unit
+    onItemSelect: (heading: HeadingData) -> Unit
 ) {
     var mTextFieldSize by remember { mutableStateOf(Size.Zero)}
 
@@ -75,7 +76,7 @@ fun QuestionTitleDropDown(
                     // the DropDown the same width
                     mTextFieldSize = coordinates.size.toSize()
                 },
-            value = mSelectedText,
+            value = selectedHeading.headingName,
             readOnly = true,
             onValueChange = {
 
@@ -88,7 +89,7 @@ fun QuestionTitleDropDown(
             ),
             decorationBox = { innerTextField ->
                 Row(modifier = Modifier.fillMaxWidth().clickable { onClick() }) {
-                    if (mSelectedText.isEmpty()) {
+                    if (selectedHeading == null) {
                         Text(
                             text = stringResource(id = R.string.select_your_post),
                             color = HintColor,
@@ -117,12 +118,12 @@ fun QuestionTitleDropDown(
             modifier = Modifier
                 .width(with(LocalDensity.current) { mTextFieldSize.width.toDp() })
         ) {
-            items.forEach { label ->
+            items.forEach { heading ->
                 DropdownMenuItem(onClick = {
-                    onItemSelect(label)
+                    onItemSelect(heading)
                 },
                 text = {
-                    Text(text = label)
+                    Text(text = heading.headingName)
                 })
             }
         }

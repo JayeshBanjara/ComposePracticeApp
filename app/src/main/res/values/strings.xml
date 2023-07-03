@@ -18,7 +18,11 @@
     <string name="select_your_post">Select your role</string>
     <string name="enter_your_mobile_number">Enter your mobile number</string>
     <string name="enter_address">Enter address</string>
+    <string name="enter_city">Enter City</string>
+    <string name="enter_state">Enter State</string>
     <string name="please_enter_address">Please enter address</string>
+    <string name="please_enter_city">Please enter city</string>
+    <string name="please_enter_state">Please enter state</string>
     <string name="please_enter_valid_mobile_number">Please enter valid mobile number</string>
     <string name="please_enter_password">Please enter password</string>
     <string name="enter_password">Enter password</string>

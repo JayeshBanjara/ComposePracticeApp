@@ -24,6 +24,7 @@ class MainActivity : ComponentActivity() {
 
         var isLoggedIn: Int? = 0
         var userId: String? = null
+        var profilePicUrl: String? = null
 
         lifecycleScope.launch {
             withContext(lifecycleScope.coroutineContext) {
@@ -32,12 +33,13 @@ class MainActivity : ComponentActivity() {
                 isLoggedIn.let {
                     if (isLoggedIn == 1) {
                         userId = prefManager.getUserId.first()
+                        profilePicUrl = prefManager.getUserProfileImage.first()
                         setContent {
-                            App(isLoggedIn = true, userId = userId)
+                            App(isLoggedIn = true, userId = userId, profilePicUrl = profilePicUrl)
                         }
                     } else {
                         setContent {
-                            App(isLoggedIn = false, userId = userId)
+                            App(isLoggedIn = false, userId = userId, profilePicUrl = profilePicUrl)
                         }
                     }
                 }

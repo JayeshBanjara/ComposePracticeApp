@@ -10,20 +10,16 @@ import com.example.demoappcompose.ui.components.CustomTopAppBar
 import com.example.demoappcompose.ui.subject.components.SubjectList
 
 @Composable
-fun SubjectScreen(navController: NavController, std: String) {
-
-    val subjects: List<String> = listOf(
-        "Mathematics",
-        "Computer",
-        "Hindi",
-        "Social Science",
-        "English",
-        "Science & Technology"
-    )
-
+fun SubjectScreen(
+    navController: NavController,
+    subjectsViewModel: SubjectsViewModel,
+    className: String,
+    classId: String,
+    isStream: String
+) {
     Scaffold(
         topBar = {
-            CustomTopAppBar(title = std,
+            CustomTopAppBar(title = className,
                 showBack = true,
                 onBackClick = {
                     navController.popBackStack()
@@ -31,10 +27,18 @@ fun SubjectScreen(navController: NavController, std: String) {
         }
     ) { innerPadding ->
         Surface(modifier = Modifier.padding(innerPadding)) {
-            if (std.toInt() > 10) {
-                TabScreen(navController = navController, subjects = subjects)
+            if (isStream == "1") {
+                TabScreen(
+                    navController = navController,
+                    subjectsViewModel = subjectsViewModel,
+                    classId = classId
+                )
             } else {
-                SubjectList(subjects = subjects, navController = navController)
+                SubjectList(
+                    navController = navController,
+                    subjectsViewModel = subjectsViewModel,
+                    classId = classId
+                )
             }
         }
     }

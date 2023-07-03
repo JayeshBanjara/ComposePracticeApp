@@ -7,15 +7,14 @@ import com.example.demoappcompose.data.requests.CommonRequest
 import com.example.demoappcompose.data.requests.LogoutRequest
 import com.example.demoappcompose.data.responses.dashboard_response.DashboardResponse
 import com.example.demoappcompose.data.responses.logout.LogoutResponse
-import com.example.demoappcompose.di.network.ApiException
-import com.example.demoappcompose.di.network.UnAuthorisedException
+import com.example.demoappcompose.network.ApiException
+import com.example.demoappcompose.network.UnAuthorisedException
 import com.example.demoappcompose.repository.HomeRepository
 import com.example.demoappcompose.utility.Constants
 import com.example.demoappcompose.utility.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -52,15 +51,17 @@ class HomeViewModel @Inject constructor(
         )
 
         try {
-            homeRepository.getDashboardData(headerMap = headers, request = request).collect { response ->
-                if (response.statusCode == 200) {
-                    _uiState.value = UiState.Success(response)
-                } else {
-                    _uiState.value = UiState.Error(response.message)
-                }
+            val response = homeRepository.getDashboardData(headerMap = headers, request = request)
+            if (response.statusCode == 200) {
+                _uiState.value = UiState.Success(response)
+            } else {
+                _uiState.value = UiState.Error(response.message)
             }
         } catch (e: ApiException) {
             _uiState.value = UiState.Error(e.message)
+        } catch (e: UnAuthorisedException) {
+            prefManager.clearData()
+            _uiState.value = UiState.UnAuthorised(e.message)
         } catch (e: Exception) {
             _uiState.value = UiState.Error(e.message)
         }
@@ -93,6 +94,9 @@ class HomeViewModel @Inject constructor(
             }
         } catch (e: ApiException) {
             _logoutState.value = UiState.Error(e.message)
+        } catch (e: UnAuthorisedException) {
+            prefManager.clearData()
+            _uiState.value = UiState.UnAuthorised(e.message)
         } catch (e: Exception) {
             _logoutState.value = UiState.Error(e.message)
         }

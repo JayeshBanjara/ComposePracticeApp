@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.demoappcompose.R
+import com.example.demoappcompose.data.responses.subjects.Subject
 import com.example.demoappcompose.ui.VerticalSpacer
 import com.example.demoappcompose.ui.navigation.Screens
 import com.example.demoappcompose.ui.theme.Blue
@@ -34,7 +35,7 @@ import com.example.demoappcompose.ui.theme.LightBlue
 import com.example.demoappcompose.ui.theme.TitleColor
 
 @Composable
-fun SubjectItem(navController: NavController, item: String) {
+fun SubjectItem(navController: NavController, subject: Subject) {
     Box(
         modifier = Modifier
             .padding(10.dp)
@@ -46,7 +47,13 @@ fun SubjectItem(navController: NavController, item: String) {
             )
             .background(color = LightBlue, shape = RoundedCornerShape(10.dp))
             .clickable {
-                navController.navigate(Screens.CreateQuestion.withArgs(item))
+                navController.navigate(
+                    Screens.CreateQuestion.withArgs(
+                        subject.classId.toString(),
+                        subject.sId.toString(),
+                        subject.subjectName
+                    )
+                )
             },
         contentAlignment = Alignment.Center
     ) {
@@ -63,7 +70,7 @@ fun SubjectItem(navController: NavController, item: String) {
             )
             VerticalSpacer(size = 5)
             Text(
-                text = item,
+                text = subject.subjectName,
                 style = TextStyle(
                     color = TitleColor,
                     fontSize = 14.sp,

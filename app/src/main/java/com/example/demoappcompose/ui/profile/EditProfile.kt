@@ -27,15 +27,18 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -48,6 +51,8 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.demoappcompose.R
@@ -55,14 +60,24 @@ import com.example.demoappcompose.ui.HorizontalSpacer
 import com.example.demoappcompose.ui.VerticalSpacer
 import com.example.demoappcompose.ui.components.CustomTextFieldDialog
 import com.example.demoappcompose.ui.components.CustomTopAppBar
+import com.example.demoappcompose.ui.components.Loader
 import com.example.demoappcompose.ui.components.MainButton
+import com.example.demoappcompose.ui.components.ScreenBackground
+import com.example.demoappcompose.ui.navigation.Screens
+import com.example.demoappcompose.ui.popUpToTop
 import com.example.demoappcompose.ui.print_settings.HeaderText
 import com.example.demoappcompose.ui.screenPadding
 import com.example.demoappcompose.ui.theme.Blue
 import com.example.demoappcompose.ui.theme.TitleColor
+import com.example.demoappcompose.utility.UiState
+import com.example.demoappcompose.utility.toast
+import kotlinx.coroutines.launch
 
 @Composable
-fun EditProfile(navController: NavController) {
+fun EditProfile(
+    navController: NavController,
+    editProfileViewModel: EditProfileViewModel
+) {
     Scaffold(
         topBar = {
             CustomTopAppBar(
@@ -76,12 +91,22 @@ fun EditProfile(navController: NavController) {
     ) { innerPadding ->
 
         val localFocusManager = LocalFocusManager.current
-        var mobileNum by remember { mutableStateOf("9874561200") }
+        val context = LocalContext.current
+        val coroutineScope = rememberCoroutineScope()
+
+        val savedMobile = editProfileViewModel.numberState.collectAsStateWithLifecycle()
+        var mobileNum by remember { mutableStateOf(savedMobile.value) }
         var emptyNumError by remember { mutableStateOf(false) }
-        var name by remember { mutableStateOf("Suraj Lodhi") }
+
+        val savedName = editProfileViewModel.nameState.collectAsStateWithLifecycle()
+        var name by remember { mutableStateOf(savedName.value) }
         var nameError by remember { mutableStateOf(false) }
-        var email by remember { mutableStateOf("suraj@gmail.com") }
+
+        val savedEmail = editProfileViewModel.emailState.collectAsStateWithLifecycle()
+        var email by remember { mutableStateOf(savedEmail.value) }
         var emailError by remember { mutableStateOf(false) }
+
+        val savedProfilePicUrl = editProfileViewModel.profilePicState.collectAsStateWithLifecycle()
         var selectedUri by remember { mutableStateOf("") }
         val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.PickVisualMedia(),
@@ -95,11 +120,7 @@ fun EditProfile(navController: NavController) {
 
         Box(modifier = Modifier.fillMaxSize()) {
 
-            Image(
-                painter = painterResource(id = R.drawable.screen_bg),
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize()
-            )
+            ScreenBackground()
 
             Column(
                 modifier = Modifier
@@ -181,7 +202,8 @@ fun EditProfile(navController: NavController) {
                     ) {
                         Box(
                             modifier = Modifier
-                                .wrapContentSize()
+                                .width(logoImageSize)
+                                .height(logoImageSize)
                                 .border(
                                     width = 1.dp,
                                     color = Blue,
@@ -191,24 +213,29 @@ fun EditProfile(navController: NavController) {
                                     color = Color.White,
                                     shape = RoundedCornerShape(8.dp)
                                 )
+                                .padding(5.dp),
+                            contentAlignment = Alignment.Center
                         ) {
                             if (selectedUri.isEmpty()) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.ic_app_logo),
-                                    contentDescription = null,
-                                    contentScale = ContentScale.FillBounds,
-                                    modifier = Modifier
-                                        .width(logoImageSize)
-                                        .height(logoImageSize)
-                                )
+
+                                if (savedProfilePicUrl.value.isNotEmpty()) {
+                                    AsyncImage(
+                                        model = savedProfilePicUrl.value,
+                                        contentDescription = null,
+                                        contentScale = ContentScale.Fit
+                                    )
+                                } else {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.ic_app_logo),
+                                        contentDescription = null,
+                                        contentScale = ContentScale.Fit
+                                    )
+                                }
                             } else {
                                 AsyncImage(
                                     model = selectedUri,
                                     contentDescription = null,
-                                    contentScale = ContentScale.FillBounds,
-                                    modifier = Modifier
-                                        .width(logoImageSize)
-                                        .height(logoImageSize)
+                                    contentScale = ContentScale.Fit
                                 )
                             }
 
@@ -265,7 +292,47 @@ fun EditProfile(navController: NavController) {
                     emailError = email.isEmpty()
 
                     if ((!emptyNumError) and (!nameError) and (!emailError)) {
-                        navController.popBackStack()
+                        coroutineScope.launch {
+                            editProfileViewModel.updateProfile(
+                                email = email,
+                                fullName = name,
+                                mobileNo = mobileNum,
+                                insLogoUri = if (selectedUri.isNotEmpty()) selectedUri.toUri() else null
+                            )
+                        }
+                    }
+                }
+            }
+
+            val state by remember { editProfileViewModel.uiState }.collectAsStateWithLifecycle()
+            when (state) {
+                is UiState.Empty -> {}
+
+                is UiState.UnAuthorised -> {
+                    LaunchedEffect(Unit) {
+                        val errorMessage = (state as UiState.UnAuthorised).errorMessage
+                        context.toast(message = errorMessage)
+                        navController.navigate(Screens.LoginScreen.route) {
+                            popUpToTop(navController)
+                        }
+                    }
+                }
+
+                is UiState.Error -> {
+                    val errorMessage = (state as UiState.Error).errorMessage
+                    LaunchedEffect(Unit) {
+                        context.toast(message = errorMessage)
+                    }
+                }
+
+                is UiState.Loading -> {
+                    Loader()
+                }
+
+                is UiState.Success -> {
+                    val message = (state as UiState.Success).data.message
+                    LaunchedEffect(Unit) {
+                        context.toast(message = message)
                     }
                 }
             }

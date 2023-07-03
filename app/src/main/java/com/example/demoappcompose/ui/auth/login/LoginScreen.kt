@@ -14,17 +14,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
@@ -56,7 +53,11 @@ import com.example.demoappcompose.ui.theme.Blue
 import com.example.demoappcompose.ui.theme.HintColor
 import com.example.demoappcompose.ui.theme.TitleColor
 import com.example.demoappcompose.utility.UiState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @Composable
 fun LoginScreen(
@@ -81,12 +82,16 @@ fun LoginScreen(
         MainContent(navController = navController, loginViewModel = loginViewModel)
 
         when (state) {
-            is UiState.Loading -> { Loader() }
+            is UiState.Loading -> {
+                Loader()
+            }
 
-            UiState.Empty -> {}
+            is UiState.Empty -> {}
+
+            is UiState.UnAuthorised -> {}
 
             is UiState.Error -> {
-                val errorMessage = (state as UiState.Error).data
+                val errorMessage = (state as UiState.Error).errorMessage
                 LaunchedEffect(Unit) {
                     Toast.makeText(
                         context,
@@ -99,7 +104,21 @@ fun LoginScreen(
             is UiState.Success -> {
                 LaunchedEffect(Unit) {
                     val loginData = (state as UiState.Success).data.loginData
-                    navController.navigate(Screens.Dashboard.withArgs(loginData.userData[0].userId.toString())) {
+
+                    var encodedUrl = ""
+                    withContext(Dispatchers.IO) {
+                        encodedUrl = URLEncoder.encode(
+                            loginData.userData[0].largeImageUrl,
+                            StandardCharsets.UTF_8.toString()
+                        )
+                    }
+
+                    navController.navigate(
+                        Screens.Dashboard.withArgs(
+                            loginData.userData[0].userId.toString(),
+                            encodedUrl
+                        )
+                    ) {
                         popUpTo(Screens.SplashScreen.route) {
                             inclusive = true
                         }
@@ -121,7 +140,7 @@ fun MainContent(
             .fillMaxSize()
     ) {
 
-       var mobileNum by remember { mutableStateOf("") }
+        var mobileNum by remember { mutableStateOf("") }
         //var mobileNum by remember { mutableStateOf("7226941148") }
         var emptyNumError by remember { mutableStateOf(false) }
         var password by remember { mutableStateOf("") }

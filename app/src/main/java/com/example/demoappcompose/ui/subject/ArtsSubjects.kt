@@ -6,8 +6,13 @@ import com.example.demoappcompose.ui.subject.components.SubjectList
 
 @Composable
 fun ArtsSubjects(
-    subjects: List<String>,
-    navController: NavController
+    navController: NavController,
+    subjectsViewModel: SubjectsViewModel,
+    classId: String
 ) {
-    SubjectList(subjects = subjects, navController = navController)
+    SubjectList(
+        navController = navController,
+        subjectsViewModel = subjectsViewModel,
+        classId = classId
+    )
 }

@@ -8,7 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.demoappcompose.data.PreferencesManager
 import com.example.demoappcompose.data.requests.LoginRequest
 import com.example.demoappcompose.data.responses.login_response.LoginResponse
-import com.example.demoappcompose.di.network.ApiException
+import com.example.demoappcompose.network.ApiException
+import com.example.demoappcompose.network.UnAuthorisedException
 import com.example.demoappcompose.repository.LoginRepository
 import com.example.demoappcompose.utility.Constants
 import com.example.demoappcompose.utility.UiState
@@ -50,16 +51,29 @@ class LoginViewModel @Inject constructor(
         try {
             val response = loginRepository.login(request = request)
             if (response.statusCode == 200) {
-                preferencesManager.setLoggedIn(isLoggedIn = 1)
-                preferencesManager.setUserId(userId = response.loginData.userData[0].userId.toString())
-                preferencesManager.setToken(token = response.loginData.token)
-                preferencesManager.setToken(token = response.loginData.userData[0].loginLogId.toString())
+                preferencesManager.apply {
+
+                    response.loginData.userData[0].let {
+                        setLoggedIn(isLoggedIn = 1)
+                        setUserId(userId = it.userId.toString())
+                        setToken(token = response.loginData.token)
+                        setLoginLogId(loginLogId = it.loginLogId.toString())
+                        setUserMobileNumber(mobileNumber = it.mobileNo)
+                        setUserFullName(fullName = it.fullName)
+                        setEmail(email = it.email)
+                        setUserProfileImage(imageUrl = it.largeImageUrl)
+                    }
+
+                }
+
                 _uiState.value = UiState.Success(response)
             } else {
                 _uiState.value = UiState.Error(response.message)
             }
         } catch (e: ApiException) {
             _uiState.value = UiState.Error(e.message)
+        } catch (e: UnAuthorisedException) {
+            _uiState.value = UiState.UnAuthorised(e.message)
         } catch (e: Exception) {
             _uiState.value = UiState.Error(e.message)
         }

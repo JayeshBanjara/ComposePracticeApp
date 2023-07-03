@@ -68,15 +68,19 @@ fun HomeScreen(
         val state by remember { homeViewModel.uiState }.collectAsStateWithLifecycle()
         when (state) {
             is UiState.Empty -> {}
-            is UiState.Error -> {
-                val errorMessage = (state as UiState.Error).data
+            is UiState.UnAuthorised -> {
                 LaunchedEffect(Unit) {
-                    Toast.makeText(
-                        context,
-                        errorMessage,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    val errorMessage = (state as UiState.UnAuthorised).errorMessage
+                    context.toast(message = errorMessage)
+                    navController.navigate(Screens.LoginScreen.route) {
+                        popUpToTop(navController)
+                    }
                 }
+            }
+
+            is UiState.Error -> {
+                val errorMessage = (state as UiState.Error).errorMessage
+                context.toast(message = errorMessage)
             }
 
             is UiState.Loading -> {
@@ -191,7 +195,6 @@ fun MainContent(
                     LogoutPopup(
                         onLogoutConfirmed = {
                             coroutineScope.launch {
-                                showLogoutPopup = false
                                 homeViewModel.logout()
                             }
                         },
@@ -199,8 +202,18 @@ fun MainContent(
                     )
                 }
 
+                is UiState.UnAuthorised -> {
+                    LaunchedEffect(Unit) {
+                        val errorMessage = (logoutState as UiState.UnAuthorised).errorMessage
+                        context.toast(message = errorMessage)
+                        navController.navigate(Screens.LoginScreen.route) {
+                            popUpToTop(navController)
+                        }
+                    }
+                }
+
                 is UiState.Error -> {
-                    val errorMessage = (logoutState as UiState.Error).data
+                    val errorMessage = (logoutState as UiState.Error).errorMessage
                     LaunchedEffect(Unit) {
                         context.toast(errorMessage)
                     }
@@ -211,6 +224,7 @@ fun MainContent(
                 }
 
                 is UiState.Success -> {
+                    showLogoutPopup = false
                     navController.navigate(Screens.LoginScreen.route) {
                         popUpToTop(navController)
                     }
