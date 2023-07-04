@@ -1,12 +1,13 @@
 package com.example.demoappcompose.ui.create_question
 
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.demoappcompose.data.PreferencesManager
 import com.example.demoappcompose.data.requests.HeadingListRequest
+import com.example.demoappcompose.data.responses.questions.HeadingData
 import com.example.demoappcompose.data.responses.questions.HeadingListResponse
 import com.example.demoappcompose.network.ApiException
 import com.example.demoappcompose.network.UnAuthorisedException
@@ -29,6 +30,24 @@ class CreateQuestionViewModel @Inject constructor(
 
     private val _getHeadingState = MutableStateFlow<UiState<HeadingListResponse>>(UiState.Empty)
     val getHeadingState: StateFlow<UiState<HeadingListResponse>> get() = _getHeadingState
+
+    val sectionWiseCheckedState = mutableStateOf(false)
+    val newQueSameSectionCheckedState = mutableStateOf(false)
+    val lastSectionName = mutableIntStateOf(65)
+    val sectionList = mutableStateListOf<Section>()
+    var headingList = mutableListOf<HeadingData>()
+
+    init {
+        val section = Section(
+            hasSectionName = true,
+            sectionName = lastSectionName.value.toChar().toString(),
+            headingList = headingList,
+            selectedHeading = null,
+            marks = null
+        )
+
+        sectionList.add(section)
+    }
 
     suspend fun getHeadingList(classId: String, subjectId: String) = viewModelScope.launch {
 

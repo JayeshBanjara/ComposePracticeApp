@@ -13,6 +13,7 @@ import com.example.demoappcompose.ui.auth.login.LoginViewModel
 import com.example.demoappcompose.ui.auth.register.RegisterScreen
 import com.example.demoappcompose.ui.auth.register.RegisterViewModel
 import com.example.demoappcompose.ui.create_question.ChapterList
+import com.example.demoappcompose.ui.create_question.ChapterListViewModel
 import com.example.demoappcompose.ui.create_question.CreateQuestion
 import com.example.demoappcompose.ui.create_question.CreateQuestionViewModel
 import com.example.demoappcompose.ui.create_question.QuestionList
@@ -146,7 +147,7 @@ fun AppNavigation(
 
             CreateQuestion(
                 navController = navController,
-                createQuestionViewModel = createQuestionViewModel,
+                viewModel = createQuestionViewModel,
                 classId = entry.arguments?.getString("classId") ?: "",
                 subjectId = entry.arguments?.getString("subjectId") ?: "",
                 subjectName = entry.arguments?.getString("subjectName") ?: ""
@@ -158,14 +159,23 @@ fun AppNavigation(
         }
 
         composable(
-            route = Screens.ChapterList.route + "/{subjectName}",
-            arguments = listOf(navArgument("subjectName") {
+            route = Screens.ChapterList.route + "/{classId}/{subjectId}/{subjectName}",
+            arguments = listOf(navArgument("classId") {
                 type = NavType.StringType
-            })
-        ) { entry ->
+            }, navArgument("subjectId") {
+                type = NavType.StringType
+            }, navArgument("subjectName") {
+                type = NavType.StringType
+            })) { entry ->
+
+            val chapterListViewModel = hiltViewModel<ChapterListViewModel>()
+
             ChapterList(
                 navController = navController,
-                subjectName = entry.arguments?.getString("subjectName") ?: ""
+                classId = entry.arguments?.getString("classId") ?: "",
+                subjectId = entry.arguments?.getString("subjectId") ?: "",
+                subjectName = entry.arguments?.getString("subjectName") ?: "",
+                chapterListViewModel = chapterListViewModel
             )
         }
 

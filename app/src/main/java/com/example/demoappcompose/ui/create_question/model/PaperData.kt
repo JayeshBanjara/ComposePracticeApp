@@ -14,5 +14,5 @@ data class Section(
     var sectionName: String,
     val headingList: List<HeadingData>,
     var selectedHeading: HeadingData?,
-    var marks: String
+    var marks: String?
 )

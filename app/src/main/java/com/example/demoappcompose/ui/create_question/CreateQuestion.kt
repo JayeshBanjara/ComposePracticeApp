@@ -12,8 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -27,11 +26,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,7 +49,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.demoappcompose.R
-import com.example.demoappcompose.data.responses.questions.HeadingData
 import com.example.demoappcompose.ui.HorizontalSpacer
 import com.example.demoappcompose.ui.VerticalSpacer
 import com.example.demoappcompose.ui.components.CustomTopAppBar
@@ -61,7 +57,6 @@ import com.example.demoappcompose.ui.components.ScreenBackground
 import com.example.demoappcompose.ui.create_question.components.QuestionPreferenceCheckBox
 import com.example.demoappcompose.ui.create_question.components.QuestionTitleDropDown
 import com.example.demoappcompose.ui.create_question.components.WhiteTextField
-import com.example.demoappcompose.ui.create_question.model.PaperData
 import com.example.demoappcompose.ui.create_question.model.Section
 import com.example.demoappcompose.ui.navigation.Screens
 import com.example.demoappcompose.ui.popUpToTop
@@ -76,87 +71,48 @@ import kotlinx.coroutines.launch
 @Composable
 fun CreateQuestion(
     navController: NavController,
-    createQuestionViewModel: CreateQuestionViewModel,
+    viewModel: CreateQuestionViewModel,
     classId: String,
     subjectId: String,
     subjectName: String
 ) {
 
-    //val listState = rememberLazyListState()
-    var headingList = mutableListOf<HeadingData>()
-    val sectionList = remember { mutableStateListOf<Section>() }
-
-    var sectionWiseCheckedState by rememberSaveable { mutableStateOf(false) }
-
-    var newQueSameSectionCheckedState by rememberSaveable { mutableStateOf(false) }
-    //var sectionCounter = "1"
-    var lastSectionName = 65
-
-    LaunchedEffect(Unit) {
-        val section = Section(
-            hasSectionName = true,
-            sectionName = lastSectionName.toChar().toString(),
-            headingList = headingList,
-            selectedHeading = null,
-            marks = ""
-        )
-
-        sectionList.add(section)
-
-        val paperData = PaperData(
-            isSectionWise = false,
-            isAddNewInSameSection = false,
-            lastSectionName = section.sectionName,
-            sectionList = sectionList
-        )
-    }
-
-    Scaffold(
-        topBar = {
-            CustomTopAppBar(
-                title = "Generate Exam Paper",
-                showBack = true,
-                onBackClick = {
-                    navController.popBackStack()
-                },
-                actionIcon = painterResource(id = R.drawable.ic_print),
-                onIconClick = {
-                    navController.navigate(Screens.PrintSettings.route)
-                }
-            )
-        },
-        floatingActionButton = {
-            ExtendedFloatingActionButton(
-                onClick = {
-                    val newSection = Section(
-                        hasSectionName = sectionWiseCheckedState,
-                        sectionName = if (sectionWiseCheckedState && !newQueSameSectionCheckedState) {
-                            "${(lastSectionName + 1).toChar()}"
-                        } else {
-                            lastSectionName.toChar().toString()
-                        },
-                        headingList = headingList,
-                        selectedHeading = headingList[0],
-                        marks = ""
-                    )
-
-                    sectionList.add(newSection)
-                    lastSectionName = newSection.sectionName[0].code
-                },
-                containerColor = Blue,
-            ) {
-                Text(
-                    text = "Add Question Title",
-                    style = TextStyle(
-                        color = Color.White,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.W500,
-                        fontFamily = FontFamily(Font(R.font.quicksand_medium))
-                    )
+    Scaffold(topBar = {
+        CustomTopAppBar(title = "Generate Exam Paper", showBack = true, onBackClick = {
+            navController.popBackStack()
+        }, actionIcon = painterResource(id = R.drawable.ic_print), onIconClick = {
+            navController.navigate(Screens.PrintSettings.route)
+        })
+    }, floatingActionButton = {
+        ExtendedFloatingActionButton(
+            onClick = {
+                val newSection = Section(
+                    hasSectionName = viewModel.sectionWiseCheckedState.value,
+                    sectionName = if (viewModel.sectionWiseCheckedState.value and viewModel.newQueSameSectionCheckedState.value.not()) {
+                        "${(viewModel.lastSectionName.value + 1).toChar()}"
+                    } else {
+                        viewModel.lastSectionName.value.toChar().toString()
+                    },
+                    headingList = viewModel.headingList,
+                    selectedHeading = viewModel.headingList[0],
+                    marks = ""
                 )
-            }
+
+                viewModel.sectionList.add(newSection)
+                viewModel.lastSectionName.value = newSection.sectionName[0].code
+            },
+            containerColor = Blue,
+        ) {
+            Text(
+                text = "Add Question Title", style = TextStyle(
+                    color = Color.White,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.W500,
+                    fontFamily = FontFamily(Font(R.font.quicksand_medium))
+                )
+            )
         }
-    ) { innerPadding ->
+    }) { innerPadding ->
 
         val localFocusManager = LocalFocusManager.current
         val context = LocalContext.current
@@ -168,14 +124,13 @@ fun CreateQuestion(
 
             LaunchedEffect(Unit) {
                 coroutineScope.launch {
-                    createQuestionViewModel.getHeadingList(
-                        classId = classId,
-                        subjectId = subjectId
+                    viewModel.getHeadingList(
+                        classId = classId, subjectId = subjectId
                     )
                 }
             }
 
-            val getHeadingState by remember { createQuestionViewModel.getHeadingState }.collectAsStateWithLifecycle()
+            val getHeadingState by remember { viewModel.getHeadingState }.collectAsStateWithLifecycle()
             when (getHeadingState) {
                 is UiState.Empty -> {}
                 is UiState.UnAuthorised -> {
@@ -201,8 +156,8 @@ fun CreateQuestion(
 
                 is UiState.Success -> {
 
-                    headingList.clear()
-                    headingList =
+                    viewModel.headingList.clear()
+                    viewModel.headingList =
                         (getHeadingState as UiState.Success).data.headingListData.headingList.toMutableList()
 
                     Column(
@@ -216,48 +171,42 @@ fun CreateQuestion(
 
                         VerticalSpacer(size = 8)
 
-                        QuestionPreferenceCheckBox(
-                            text = "Section wise paper?",
-                            checkedState = sectionWiseCheckedState,
+                        QuestionPreferenceCheckBox(text = "Section wise paper?",
+                            checkedState = viewModel.sectionWiseCheckedState.value,
                             onCheckedChange = {
-                                sectionWiseCheckedState = it
-                            }
-                        )
+                                viewModel.sectionWiseCheckedState.value = it
+                            })
 
                         VerticalSpacer(size = 3)
 
-                        if (sectionWiseCheckedState) {
-                            QuestionPreferenceCheckBox(
-                                text = "Add new question in same section?",
-                                checkedState = newQueSameSectionCheckedState,
+                        if (viewModel.sectionWiseCheckedState.value) {
+                            QuestionPreferenceCheckBox(text = "Add new question in same section?",
+                                checkedState = viewModel.newQueSameSectionCheckedState.value,
                                 onCheckedChange = {
-                                    newQueSameSectionCheckedState = it
-                                }
-                            )
+                                    viewModel.newQueSameSectionCheckedState.value = it
+                                })
                         }
 
                         VerticalSpacer(size = 25)
 
-                        LazyColumn(
-                            /*state = listState,*/
-                            verticalArrangement = Arrangement.spacedBy(10.dp),
-                            content = {
-                                items(sectionList) { section ->
+                        LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp), content = {
 
-                                    var mExpanded by remember { mutableStateOf(false) }
-                                    var selectedHeading by remember { mutableStateOf(headingList[0]) }
-                                    var marks by remember { mutableStateOf("") }
+                            itemsIndexed(viewModel.sectionList) { index, section ->
 
-                                    Column(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .background(
-                                                color = LightBlue,
-                                                shape = RoundedCornerShape(corner = CornerSize(5.dp))
-                                            )
-                                            .padding(8.dp)
-                                    ) {
-                                        if (sectionWiseCheckedState and section.hasSectionName) {
+                                var mExpanded by remember { mutableStateOf(false) }
+                                var selectedHeading by remember { mutableStateOf(viewModel.headingList[0]) }
+                                var marks by remember { mutableStateOf("") }
+
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .background(
+                                            color = LightBlue,
+                                            shape = RoundedCornerShape(corner = CornerSize(5.dp))
+                                        )
+                                        .padding(8.dp)
+                                ) {
+                                    if (viewModel.sectionWiseCheckedState.value and section.hasSectionName) {
                                         Text(
                                             text = "Section ${section.sectionName}",
                                             style = TextStyle(
@@ -271,69 +220,98 @@ fun CreateQuestion(
                                         )
                                     }
 
-                                        Column(
+                                    Column(
+                                        modifier = Modifier
+                                            .wrapContentHeight()
+                                            .fillMaxWidth()
+                                    ) {
+                                        Text(
+                                            text = "Question Title", style = TextStyle(
+                                                color = TitleColor,
+                                                fontSize = 14.sp,
+                                                fontWeight = FontWeight.W600,
+                                                fontFamily = FontFamily(Font(R.font.quicksand_semi_bold))
+                                            )
+                                        )
+
+                                        VerticalSpacer(size = 5)
+                                        QuestionTitleDropDown(modifier = Modifier.fillMaxWidth(),
+                                            mExpanded = mExpanded,
+                                            items = viewModel.headingList,
+                                            selectedHeading = section.selectedHeading
+                                                ?: selectedHeading,
+                                            onClick = { mExpanded = mExpanded.not() },
+                                            onDismissRequest = { mExpanded = false },
+                                            onItemSelect = {
+                                                selectedHeading = it
+                                                mExpanded = false
+                                                section.selectedHeading = it
+                                            })
+
+                                        VerticalSpacer(size = 8)
+
+                                        Row(
                                             modifier = Modifier
                                                 .wrapContentHeight()
-                                                .fillMaxWidth()
+                                                .fillMaxWidth(),
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.SpaceBetween
                                         ) {
-                                            Text(
-                                                text = "Question Title",
-                                                style = TextStyle(
-                                                    color = TitleColor,
-                                                    fontSize = 14.sp,
-                                                    fontWeight = FontWeight.W600,
-                                                    fontFamily = FontFamily(Font(R.font.quicksand_semi_bold))
-                                                )
-                                            )
 
-                                            VerticalSpacer(size = 5)
-                                            QuestionTitleDropDown(
-                                                modifier = Modifier.fillMaxWidth(),
-                                                mExpanded = mExpanded,
-                                                items = headingList,
-                                                selectedHeading = selectedHeading,
-                                                onClick = { mExpanded = mExpanded.not() },
-                                                onDismissRequest = { mExpanded = false },
-                                                onItemSelect = {
-                                                    selectedHeading = it
-                                                    mExpanded = false
-                                                    section.selectedHeading = it
-                                                }
-                                            )
+                                            WhiteTextField(modifier = Modifier.width(70.dp),
+                                                text = section.marks ?: marks,
+                                                placeholderText = "Marks",
+                                                keyboardType = KeyboardType.NumberPassword,
+                                                imeAction = ImeAction.Done,
+                                                onNext = {
+                                                    localFocusManager.moveFocus(FocusDirection.Down)
+                                                },
+                                                onValueChange = {
+                                                    marks = it
+                                                    viewModel.sectionList[index] =
+                                                        section.copy(marks = it)
+                                                })
 
-                                            VerticalSpacer(size = 8)
+                                            HorizontalSpacer(size = 10)
 
                                             Row(
-                                                modifier = Modifier
-                                                    .wrapContentHeight()
-                                                    .fillMaxWidth(),
-                                                verticalAlignment = Alignment.CenterVertically,
-                                                horizontalArrangement = Arrangement.SpaceBetween
+                                                verticalAlignment = Alignment.CenterVertically
                                             ) {
-
-                                                WhiteTextField(
+                                                Box(
                                                     modifier = Modifier
-                                                        .width(70.dp),
-                                                    text = marks,
-                                                    placeholderText = "Marks",
-                                                    keyboardType = KeyboardType.NumberPassword,
-                                                    imeAction = ImeAction.Done,
-                                                    onNext = {
-                                                        localFocusManager.moveFocus(FocusDirection.Down)
-                                                    },
-                                                    onValueChange = {
-                                                        if (it.length < 5) {
-                                                            marks = it
-                                                            section.marks = it
-                                                        }
-                                                    }
-                                                )
-
-                                                HorizontalSpacer(size = 10)
-
-                                                Row(
-                                                    verticalAlignment = Alignment.CenterVertically
+                                                        .size(40.dp)
+                                                        .background(
+                                                            color = Blue,
+                                                            shape = RoundedCornerShape(8.dp)
+                                                        ), contentAlignment = Alignment.Center
                                                 ) {
+                                                    IconButton(
+                                                        onClick = {
+                                                            coroutineScope.launch {
+                                                                navController.navigate(
+                                                                    Screens.ChapterList.withArgs(
+                                                                        classId,
+                                                                        subjectId,
+                                                                        subjectName
+                                                                    )
+                                                                )
+                                                            }
+                                                        }, modifier = Modifier.size(30.dp)
+                                                    ) {
+                                                        Icon(
+                                                            imageVector = Icons.Filled.Add,
+                                                            contentDescription = null,
+                                                            tint = Color.White
+                                                        )
+                                                    }
+                                                }
+
+                                                if (viewModel.sectionList.size > 0) {
+                                                    HorizontalSpacer(size = 10)
+                                                }
+
+                                                if (viewModel.sectionList.size > 0) {
+
                                                     Box(
                                                         modifier = Modifier
                                                             .size(40.dp)
@@ -345,50 +323,17 @@ fun CreateQuestion(
                                                     ) {
                                                         IconButton(
                                                             onClick = {
-                                                                navController.navigate(
-                                                                    Screens.ChapterList.withArgs(
-                                                                        subjectName
-                                                                    )
+                                                                viewModel.sectionList.remove(
+                                                                    section
                                                                 )
-                                                            },
-                                                            modifier = Modifier.size(30.dp)
+                                                                viewModel.lastSectionName.value -= 1
+                                                            }, modifier = Modifier.size(30.dp)
                                                         ) {
                                                             Icon(
-                                                                imageVector = Icons.Filled.Add,
+                                                                imageVector = Icons.Filled.Delete,
                                                                 contentDescription = null,
                                                                 tint = Color.White
                                                             )
-                                                        }
-                                                    }
-
-                                                    if (sectionList.size > 0) {
-                                                        HorizontalSpacer(size = 10)
-                                                    }
-
-                                                    if (sectionList.size > 0) {
-
-                                                        Box(
-                                                            modifier = Modifier
-                                                                .size(40.dp)
-                                                                .background(
-                                                                    color = Blue,
-                                                                    shape = RoundedCornerShape(8.dp)
-                                                                ),
-                                                            contentAlignment = Alignment.Center
-                                                        ) {
-                                                            IconButton(
-                                                                onClick = {
-                                                                    sectionList.remove(section)
-                                                                    lastSectionName -= 1
-                                                                },
-                                                                modifier = Modifier.size(30.dp)
-                                                            ) {
-                                                                Icon(
-                                                                    imageVector = Icons.Filled.Delete,
-                                                                    contentDescription = null,
-                                                                    tint = Color.White
-                                                                )
-                                                            }
                                                         }
                                                     }
                                                 }
@@ -396,7 +341,8 @@ fun CreateQuestion(
                                         }
                                     }
                                 }
-                            })
+                            }
+                        })
                     }
                 }
             }
