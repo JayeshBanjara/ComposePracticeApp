@@ -5,7 +5,9 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class ChapterListData(
-    @Json(name = "chapter_data")
-    val chapterList: List<Chapter>
+data class QrCodeData(
+    @Json(name = "name")
+    val name: String,
+    @Json(name = "value")
+    val value: String
 )

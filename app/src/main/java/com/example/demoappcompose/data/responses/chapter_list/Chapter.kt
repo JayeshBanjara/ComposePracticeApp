@@ -6,8 +6,6 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class Chapter(
-    @Json(name = "amount")
-    val amount: Int,
     @Json(name = "chapter_name")
     val chapterName: String,
     @Json(name = "chapter_title")
@@ -20,12 +18,10 @@ data class Chapter(
     val classId: Int,
     @Json(name = "class_name")
     val className: String,
-    @Json(name = "is_free")
-    val isFree: Int,
+    @Json(name = "qr_code_data")
+    val qrCodeData: List<QrCodeData>,
     @Json(name = "subject_id")
     val subjectId: Int,
     @Json(name = "subject_name")
-    val subjectName: String,
-    @Json(name = "subscription_month")
-    val subscriptionMonth: Int
+    val subjectName: String
 )

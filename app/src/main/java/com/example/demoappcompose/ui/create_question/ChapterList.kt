@@ -54,7 +54,6 @@ import com.example.demoappcompose.ui.VerticalSpacer
 import com.example.demoappcompose.ui.components.CustomTopAppBar
 import com.example.demoappcompose.ui.components.Loader
 import com.example.demoappcompose.ui.components.ScreenBackground
-import com.example.demoappcompose.ui.create_question.model.Chapter
 import com.example.demoappcompose.ui.navigation.Screens
 import com.example.demoappcompose.ui.popUpToTop
 import com.example.demoappcompose.ui.screenPadding
@@ -135,7 +134,7 @@ fun ChapterList(
 
                     is UiState.Success -> {
 
-                        val chapterList = (state as UiState.Success).data.chapterListData.chapterList
+                        val chapterList = (state as UiState.Success).data.chapterData.chapterList
 
                         Column(
                             modifier = Modifier.padding(
@@ -165,12 +164,12 @@ fun ChapterList(
                                                 )
                                                 .padding(10.dp)
                                                 .clickable {
-                                                    if (chapter.isFree == 1) {
+                                                    //if (chapter.qrCodeData.isEmpty()) {
                                                         navController.navigate(Screens.QuestionList.withArgs(chapter.chapterName))
-                                                    } else {
+                                                    /*} else {
                                                         showQRView = showQRView.not()
                                                         clickedPos = index
-                                                    }
+                                                    }*/
                                                 }
                                         ) {
                                             Row(
@@ -211,10 +210,10 @@ fun ChapterList(
                                                     VerticalSpacer(size = 5)
                                                 }
 
-                                                if (chapter.isFree == 0) {
+                                                if (chapter.qrCodeData.isNotEmpty()) {
                                                     HorizontalSpacer(size = 5)
                                                 }
-                                                if (chapter.isFree == 0) {
+                                                if (chapter.qrCodeData.isNotEmpty()) {
                                                     IconButton(onClick = {
                                                         showQRView = showQRView.not()
                                                         clickedPos = index
@@ -231,7 +230,7 @@ fun ChapterList(
 
                                             VerticalSpacer(size = 10)
 
-                                            AnimatedVisibility(visible = (chapter.isFree == 0) and (clickedPos == index) and  showQRView) {
+                                            AnimatedVisibility(visible = (chapter.qrCodeData.isNotEmpty()) and (clickedPos == index) and  showQRView) {
                                                 Column(
                                                     modifier = Modifier.fillMaxWidth(),
                                                     horizontalAlignment = Alignment.CenterHorizontally
@@ -260,7 +259,7 @@ fun ChapterList(
                                                         verticalAlignment = Alignment.CenterVertically
                                                     ) {
                                                         Text(
-                                                            text = "₹ ${chapter.amount}",
+                                                            text = "₹ ${chapter.qrCodeData.first { it.name == "FINAL_PRICE" }.value}",
                                                             style = TextStyle(
                                                                 color = Blue,
                                                                 fontSize = 22.sp,
@@ -272,7 +271,7 @@ fun ChapterList(
                                                         HorizontalSpacer(size = 5)
 
                                                         Text(
-                                                            text = "700",
+                                                            text = chapter.qrCodeData.first { it.name == "CUT_PRICE" }.value,
                                                             style = TextStyle(
                                                                 color = Color.DarkGray,
                                                                 fontSize = 16.sp,
@@ -291,21 +290,38 @@ fun ChapterList(
                                                             .padding(horizontal = 20.dp),
                                                         horizontalAlignment = Alignment.Start
                                                     ) {
-                                                        PaymentInstructionText("Online Payment (Validity: 30/04/2024)")
-                                                        PaymentInstructionText("Paytm Number: 1234567890")
-                                                        PaymentInstructionText("PhonePe Number: 1234567890")
-                                                        PaymentInstructionText("Google Pay Number: 1234567890")
-                                                        PaymentInstructionText("BHIM UPI: 1234567890@upi")
+
+                                                        if(chapter.qrCodeData.find { it.name ==  "ONLINE_PAYMENT_VALIDITY"} != null)
+                                                        PaymentInstructionText("Online Payment (Validity: ${chapter.qrCodeData.first { it.name == "ONLINE_PAYMENT_VALIDITY" }.value})")
+
+                                                        if(chapter.qrCodeData.find { it.name ==  "PAYTM_NUMBER"} != null)
+                                                        PaymentInstructionText("Paytm Number: ${chapter.qrCodeData.first { it.name == "PAYTM_NUMBER" }.value}")
+
+                                                        if(chapter.qrCodeData.find { it.name ==  "PHONEPE_NUMBER"} != null)
+                                                        PaymentInstructionText("PhonePe Number: ${chapter.qrCodeData.first { it.name == "PHONEPE_NUMBER" }.value}")
+
+                                                        if(chapter.qrCodeData.find { it.name ==  "GOOGLE_PAY_NUMBER"} != null)
+                                                        PaymentInstructionText("Google Pay Number: ${chapter.qrCodeData.first { it.name == "GOOGLE_PAY_NUMBER" }.value}")
+
+                                                        if(chapter.qrCodeData.find { it.name ==  "BHIM_UPI"} != null)
+                                                        PaymentInstructionText("BHIM UPI: ${chapter.qrCodeData.first { it.name == "BHIM_UPI" }.value}")
+
                                                         PaymentInstructionText("Bank Details:")
-                                                        PaymentInstructionText("Account Holder Name: Ravi Education")
-                                                        PaymentInstructionText("Account Number: 3194123859674515")
-                                                        PaymentInstructionText("IFSC Code: UTIX00000015")
-                                                        PaymentInstructionText("BRANCH: Axis Bank - Naroda, Ahmedabad")
+                                                        if(chapter.qrCodeData.find { it.name ==  "ACCOUNT_HOLDER_NAME"} != null)
+                                                        PaymentInstructionText("Account Holder Name: ${chapter.qrCodeData.first { it.name == "ACCOUNT_HOLDER_NAME" }.value}")
+
+                                                        if(chapter.qrCodeData.find { it.name ==  "ACCOUNT_NUMBER"} != null)
+                                                        PaymentInstructionText("Account Number: ${chapter.qrCodeData.first { it.name == "ACCOUNT_NUMBER" }.value}")
+
+                                                        if(chapter.qrCodeData.find { it.name ==  "IFSC_CODE"} != null)
+                                                        PaymentInstructionText("IFSC Code: ${chapter.qrCodeData.first { it.name == "IFSC_CODE" }.value}")
+
+                                                        PaymentInstructionText("BRANCH: ${chapter.qrCodeData.first { it.name == "BRANCH_NAME" }.value}")
                                                         VerticalSpacer(size = 5)
-                                                        PaymentInstructionText("જે વિષય કે બુક માટે પેમેન્ટ કર્યું હોય તેનો સ્ક્રીન શોટ પાડી 1234567890 / 1234567890 નંબર પર WhatsApp કરી દેવું.")
+                                                        PaymentInstructionText(chapter.qrCodeData.first { it.name == "PAYMENT_RELATED_NOTE" }.value)
                                                         VerticalSpacer(size = 20)
                                                         Text(
-                                                            text = "Payment ને આધારિત કોઈ Help માટે +91 12345 67890 પર સંપર્ક કરવો. (9:00 AM - 8:00 PM)",
+                                                            text = chapter.qrCodeData.first { it.name == "PAYMENT_RELATED_ISSUE_NOTE" }.value,
                                                             style = TextStyle(
                                                                 color = Color.DarkGray,
                                                                 fontSize = 12.sp,

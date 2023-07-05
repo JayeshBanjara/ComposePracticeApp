@@ -6,6 +6,7 @@ import com.example.demoappcompose.data.requests.HeadingListRequest
 import com.example.demoappcompose.data.requests.LoginRequest
 import com.example.demoappcompose.data.requests.LogoutRequest
 import com.example.demoappcompose.data.requests.MasterDataRequest
+import com.example.demoappcompose.data.requests.PaymentApproveRejectRequest
 import com.example.demoappcompose.data.requests.PurchaseBookRequest
 import com.example.demoappcompose.data.requests.RegisterRequest
 import com.example.demoappcompose.data.requests.SubjectListRequest
@@ -19,6 +20,8 @@ import com.example.demoappcompose.data.responses.login_response.LoginResponse
 import com.example.demoappcompose.data.responses.logout.LogoutResponse
 import com.example.demoappcompose.data.responses.my_subscription.SubscriptionListResponse
 import com.example.demoappcompose.data.responses.paper_history.PaperHistoryResponse
+import com.example.demoappcompose.data.responses.payment.PaymentApproveRejectResponse
+import com.example.demoappcompose.data.responses.payment.PaymentListResponse
 import com.example.demoappcompose.data.responses.profile.ProfileResponse
 import com.example.demoappcompose.data.responses.purchase_book.BooksResponse
 import com.example.demoappcompose.data.responses.questions.HeadingListResponse
@@ -115,4 +118,16 @@ interface ApiInterface {
         @HeaderMap headerMap: Map<String, String>,
         @Body request: HeadingListRequest
     ): Response<ChapterListResponse>
+
+    @POST("user/get-payment-data")
+    suspend fun getPaymentList(
+        @HeaderMap headerMap: Map<String, String>,
+        @Body request: CommonRequest
+    ): Response<PaymentListResponse>
+
+    @POST("user/subscription-approve-or-reject")
+    suspend fun approveRejectPayment(
+        @HeaderMap headerMap: Map<String, String>,
+        @Body request: PaymentApproveRejectRequest
+    ): Response<PaymentApproveRejectResponse>
 }
