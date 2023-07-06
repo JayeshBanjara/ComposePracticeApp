@@ -13,6 +13,7 @@ import com.example.demoappcompose.ui.dashboard.contact_us.ContactUsScreen
 import com.example.demoappcompose.ui.dashboard.home.HomeScreen
 import com.example.demoappcompose.ui.dashboard.home.HomeViewModel
 import com.example.demoappcompose.ui.payment.PaymentScreen
+import com.example.demoappcompose.ui.payment.PaymentViewModel
 
 @Composable
 fun DashboardNavHost(
@@ -45,7 +46,13 @@ fun DashboardNavHost(
             )
         }
         composable(route = BottomNavigationScreens.PaymentScreen.route) {
-            PaymentScreen()
+
+            val paymentViewModel = hiltViewModel<PaymentViewModel>()
+
+            PaymentScreen(
+                navController = navController,
+                viewModel = paymentViewModel
+            )
         }
     }
 }

@@ -21,14 +21,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.demoappcompose.R
+import com.example.demoappcompose.data.responses.payment.Payment
 import com.example.demoappcompose.ui.HorizontalSpacer
 import com.example.demoappcompose.ui.VerticalSpacer
 import com.example.demoappcompose.ui.theme.Blue
-import com.example.demoappcompose.ui.theme.HintColor
 import com.example.demoappcompose.ui.theme.TitleColor
 
 @Composable
-fun MyPaymentItem(item: NotesItem) {
+fun MyPaymentItem(payment: Payment) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -53,7 +53,7 @@ fun MyPaymentItem(item: NotesItem) {
                     .wrapContentHeight()
                     .padding(10.dp)
             ) {
-                Text(
+                /*Text(
                     text = "Txn Id: 5934793215",
                     style = TextStyle(
                         color = HintColor,
@@ -64,7 +64,7 @@ fun MyPaymentItem(item: NotesItem) {
                     textAlign = TextAlign.Start,
                     modifier = Modifier.fillMaxWidth()
                 )
-                VerticalSpacer(size = 8)
+                VerticalSpacer(size = 8)*/
                 Row(
                     modifier = Modifier.fillMaxWidth()
                 ) {
@@ -79,7 +79,7 @@ fun MyPaymentItem(item: NotesItem) {
                     )
                     HorizontalSpacer(size = 10)
                     Text(
-                        text = "Computer",
+                        text = payment.subjectName,
                         style = TextStyle(
                             color = Blue,
                             fontSize = 14.sp,
@@ -90,9 +90,9 @@ fun MyPaymentItem(item: NotesItem) {
                 }
                 VerticalSpacer(size = 10)
                 Text(
-                    text = "Status: ${item.status}",
+                    text = "Status: ${payment.paymentStatusName}",
                     style = TextStyle(
-                        color = getStatusColor(item.status),
+                        color = getStatusColor(payment.paymentStatus),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.W500,
                         fontFamily = FontFamily(Font(R.font.quicksand_medium))
@@ -106,10 +106,10 @@ fun MyPaymentItem(item: NotesItem) {
     }
 }
 
-fun getStatusColor(status: String): Color {
+fun getStatusColor(status: Int): Color {
     return when (status) {
-        "Pending" -> Color.DarkGray
-        "Approved" -> Color.DarkGray
+        1 -> Color.Blue
+        2 -> Color.DarkGray
         else -> Color.DarkGray
     }
 }

@@ -1,7 +1,6 @@
 package com.example.demoappcompose
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.lifecycle.lifecycleScope
@@ -35,11 +34,21 @@ class MainActivity : ComponentActivity() {
                         userId = prefManager.getUserId.first()
                         profilePicUrl = prefManager.getUserProfileImage.first()
                         setContent {
-                            App(isLoggedIn = true, userId = userId, profilePicUrl = profilePicUrl)
+                            App(
+                                isLoggedIn = true,
+                                userId = userId,
+                                profilePicUrl = profilePicUrl,
+                                prefManager = prefManager
+                            )
                         }
                     } else {
                         setContent {
-                            App(isLoggedIn = false, userId = userId, profilePicUrl = profilePicUrl)
+                            App(
+                                isLoggedIn = false,
+                                userId = userId,
+                                profilePicUrl = profilePicUrl,
+                                prefManager = prefManager
+                            )
                         }
                     }
                 }

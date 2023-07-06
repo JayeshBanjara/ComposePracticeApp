@@ -297,7 +297,7 @@ fun RegisterToPurchaseBook(
                                     selectedQty = label
                                     qtyExpanded = false
 
-                                    selectedBook.finalAmount = (selectedBook.price + selectedBook.courierCharge) - selectedBook.discount
+                                    selectedBook.finalAmount = ((selectedBook.price * selectedQty.toDouble()) + selectedBook.courierCharge) - selectedBook.discount
                                 }
 
                                 VerticalSpacer(size = 15)

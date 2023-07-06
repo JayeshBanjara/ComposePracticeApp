@@ -5,11 +5,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
+import com.example.demoappcompose.data.PreferencesManager
 import com.example.demoappcompose.ui.navigation.AppNavigation
 import com.example.demoappcompose.ui.theme.AppTheme
 
 @Composable
-fun App(isLoggedIn: Boolean, userId: String?, profilePicUrl: String?) {
+fun App(
+    isLoggedIn: Boolean,
+    userId: String?,
+    profilePicUrl: String?,
+    prefManager: PreferencesManager
+) {
     AppTheme(darkTheme = false) {
         val navController = rememberNavController()
 
@@ -19,7 +25,8 @@ fun App(isLoggedIn: Boolean, userId: String?, profilePicUrl: String?) {
                 navController = navController,
                 isLoggedIn = isLoggedIn,
                 userId = userId,
-                profilePicUrl = profilePicUrl
+                profilePicUrl = profilePicUrl,
+                prefManager = prefManager
             )
         }
     }

@@ -92,6 +92,12 @@ class EditProfileViewModel @Inject constructor(
                     setUserFullName(profile.fullName)
                     setUserProfileImage(profile.largeImageUrl)
                 }
+
+                _numberState.value = prefManager.getUserMobileNumber.first()!!
+                _nameState.value = prefManager.getUserFullName.first()!!
+                _emailState.value = prefManager.getEmail.first()!!
+                _profilePicState.value = prefManager.getUserProfileImage.first()!!
+
                 _uiState.value = UiState.Success(response)
             } else {
                 _uiState.value = UiState.Error(response.message)

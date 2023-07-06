@@ -1,5 +1,6 @@
 package com.example.demoappcompose.ui.profile
 
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -78,12 +79,26 @@ fun EditProfile(
     navController: NavController,
     editProfileViewModel: EditProfileViewModel
 ) {
+
+    val updatedProfilePic by remember { mutableStateOf(editProfileViewModel.profilePicState) }
+
+
+    BackHandler {
+        navController.previousBackStackEntry
+            ?.savedStateHandle
+            ?.set("updated_profile_pic", updatedProfilePic.value)
+        navController.popBackStack()
+    }
+
     Scaffold(
         topBar = {
             CustomTopAppBar(
                 title = "Edit Profile",
                 showBack = true,
                 onBackClick = {
+                    navController.previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.set("updated_profile_pic", updatedProfilePic.value)
                     navController.popBackStack()
                 }
             )

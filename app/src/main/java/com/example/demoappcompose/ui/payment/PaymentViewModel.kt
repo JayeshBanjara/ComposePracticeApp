@@ -1,15 +1,17 @@
-package com.example.demoappcompose.ui.dashboard.home
+package com.example.demoappcompose.ui.payment
 
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.demoappcompose.data.PreferencesManager
 import com.example.demoappcompose.data.requests.CommonRequest
-import com.example.demoappcompose.data.requests.LogoutRequest
-import com.example.demoappcompose.data.responses.dashboard_response.DashboardResponse
-import com.example.demoappcompose.data.responses.logout.LogoutResponse
+import com.example.demoappcompose.data.requests.PaymentApproveRejectRequest
+import com.example.demoappcompose.data.responses.payment.Payment
+import com.example.demoappcompose.data.responses.payment.PaymentApproveRejectResponse
+import com.example.demoappcompose.data.responses.payment.PaymentListResponse
 import com.example.demoappcompose.network.ApiException
 import com.example.demoappcompose.network.UnAuthorisedException
-import com.example.demoappcompose.repository.HomeRepository
+import com.example.demoappcompose.repository.UserRepository
 import com.example.demoappcompose.utility.Constants
 import com.example.demoappcompose.utility.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,24 +22,29 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+class PaymentViewModel @Inject constructor(
     private val prefManager: PreferencesManager,
-    private val homeRepository: HomeRepository
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<UiState<DashboardResponse>>(UiState.Loading)
-    val uiState: StateFlow<UiState<DashboardResponse>> get() = _uiState
+    private val _uiState = MutableStateFlow<UiState<PaymentListResponse>>(UiState.Empty)
+    val uiState: StateFlow<UiState<PaymentListResponse>> get() = _uiState
 
-    private val _logoutState = MutableStateFlow<UiState<LogoutResponse>>(UiState.Empty)
-    val logoutState: StateFlow<UiState<LogoutResponse>> get() = _logoutState
+    private val _approveRejectState = MutableStateFlow<UiState<PaymentApproveRejectResponse>>(UiState.Empty)
+    val approveRejectState: StateFlow<UiState<PaymentApproveRejectResponse>> get() = _approveRejectState
+
+    val paymentList = mutableStateListOf<Payment>()
+
 
     init {
         viewModelScope.launch {
-            getDashboardData()
+            getPaymentList()
         }
     }
 
-    suspend fun getDashboardData() = viewModelScope.launch {
+    private suspend fun getPaymentList() = viewModelScope.launch {
+
+        _uiState.value = UiState.Loading
 
         val userId = prefManager.getUserId.first()!!
         val token = prefManager.getToken.first()!!
@@ -47,12 +54,15 @@ class HomeViewModel @Inject constructor(
 
         val request = CommonRequest(
             deviceType = Constants.DEVICE_TYPE,
-            userId = userId,
+            userId = userId
         )
 
         try {
-            val response = homeRepository.getDashboardData(headerMap = headers, request = request)
+            val response =
+                userRepository.getPaymentList(headerMap = headers, request = request)
             if (response.statusCode == 200) {
+                paymentList.clear()
+                paymentList.addAll(response.paymentData.paymentList)
                 _uiState.value = UiState.Success(response)
             } else {
                 _uiState.value = UiState.Error(response.message)
@@ -67,38 +77,41 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    suspend fun logout() = viewModelScope.launch {
+    suspend fun approveRejectPayment(tempSubId: Int, paymentStatus: Int) = viewModelScope.launch {
 
-        _logoutState.value = UiState.Loading
+        _approveRejectState.value = UiState.Loading
 
         val userId = prefManager.getUserId.first()!!
         val token = prefManager.getToken.first()!!
-        val loginLogId = prefManager.getLoginLogId.first()!!
 
         val headers = HashMap<String, String>()
         headers[Constants.TOKEN_KEY] = token
 
-        val request = LogoutRequest(
+        val request = PaymentApproveRejectRequest(
             deviceType = Constants.DEVICE_TYPE,
             userId = userId,
-            loginLogId = loginLogId,
+            tempSubId = tempSubId.toString(),
+            paymentStatus = paymentStatus
         )
 
         try {
-            val response = homeRepository.logout(headerMap = headers, request = request)
+            val response =
+                userRepository.approveRejectPayment(headerMap = headers, request = request)
             if (response.statusCode == 200) {
-                prefManager.clearData()
-                _logoutState.value = UiState.Success(response)
+                getPaymentList()
+                _approveRejectState.value = UiState.Success(response)
             } else {
-                _logoutState.value = UiState.Error(response.statusMessage)
+                _approveRejectState.value = UiState.Error(response.message)
             }
         } catch (e: ApiException) {
-            _logoutState.value = UiState.Error(e.message)
+            _approveRejectState.value = UiState.Error(e.message)
         } catch (e: UnAuthorisedException) {
             prefManager.clearData()
-            _uiState.value = UiState.UnAuthorised(e.message)
+            _approveRejectState.value = UiState.UnAuthorised(e.message)
         } catch (e: Exception) {
-            _logoutState.value = UiState.Error(e.message)
+            _approveRejectState.value = UiState.Error(e.message)
         }
     }
+
+
 }

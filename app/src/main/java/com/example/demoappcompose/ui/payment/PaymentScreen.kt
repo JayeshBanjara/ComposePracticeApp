@@ -1,6 +1,5 @@
 package com.example.demoappcompose.ui.payment
 
-import android.widget.Toast
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
@@ -26,37 +25,43 @@ import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.example.demoappcompose.ui.components.CustomTopAppBar
+import com.example.demoappcompose.ui.components.Loader
 import com.example.demoappcompose.ui.components.ScreenBackground
+import com.example.demoappcompose.ui.navigation.Screens
+import com.example.demoappcompose.ui.popUpToTop
 import com.example.demoappcompose.ui.screenPadding
+import com.example.demoappcompose.utility.UiState
+import com.example.demoappcompose.utility.toast
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PaymentScreen() {
+fun PaymentScreen(
+    navController: NavController,
+    viewModel: PaymentViewModel
+) {
+
+    val coroutineScope = rememberCoroutineScope()
+
     Scaffold(topBar = {
         CustomTopAppBar(
             title = "Payment"
         )
     }) { innerPadding ->
-
-        val notesList = remember {
-            mutableStateListOf<NotesItem>()
-        }
-
-        for (i in 1..10) {
-            notesList.add(NotesItem(id = i, title = "Title $i", "Pending"))
-        }
 
         val context = LocalContext.current
 
@@ -66,58 +71,94 @@ fun PaymentScreen() {
 
             ScreenBackground()
 
-            Surface(
-                modifier = Modifier.padding(
-                        start = screenPadding(),
-                        top = innerPadding.calculateTopPadding(),
-                        end = screenPadding(),
-                        bottom = screenPadding()
-                    )
-            ) {
+            val listState by remember { viewModel.uiState }.collectAsStateWithLifecycle()
+            when(listState) {
+                is UiState.Empty -> {}
+                is UiState.UnAuthorised -> {
+                    LaunchedEffect(Unit) {
+                        val errorMessage = (listState as UiState.UnAuthorised).errorMessage
+                        context.toast(message = errorMessage)
+                        navController.navigate(Screens.LoginScreen.route) {
+                            popUpToTop(navController)
+                        }
+                    }
+                }
 
-                LazyColumn(content = {
-                    item { Spacer(modifier = Modifier.height(10.dp)) }
-                    items(items = notesList,
-                        key = { toDoItem -> toDoItem.id },
-                        itemContent = { item ->
+                is UiState.Error -> {
+                    val errorMessage = (listState as UiState.Error).errorMessage
+                    LaunchedEffect(Unit) {
+                        context.toast(message = errorMessage)
+                    }
+                }
 
-                            val currentItem by rememberUpdatedState(newValue = item)
-                            val dismissState = rememberDismissState(confirmValueChange = {
-                                when (it) {
-                                    DismissValue.DismissedToEnd -> {
-                                        //Do something when swipe Start to End
-                                        currentItem.status = "Rejected"
-                                        notesList.add(NotesItem(0, "", ""))
-                                        notesList.remove(NotesItem(0, "", ""))
-                                        Toast.makeText(
-                                            context, "Rejected", Toast.LENGTH_SHORT
-                                        ).show()
-                                        true
-                                    }
+                is UiState.Loading -> {
+                    Loader()
+                }
+                is UiState.Success -> {
 
-                                    DismissValue.DismissedToStart -> {
-                                        //Do something when swipe End to Start
-                                        currentItem.status = "Approved"
-                                        Toast.makeText(
-                                            context, "Approved", Toast.LENGTH_SHORT
-                                        ).show()
-                                        true
-                                    }
+                    Surface(
+                        modifier = Modifier.padding(
+                            start = screenPadding(),
+                            top = innerPadding.calculateTopPadding(),
+                            end = screenPadding(),
+                            bottom = screenPadding()
+                        )
+                    ) {
 
-                                    else -> {
-                                        false
-                                    }
-                                }
-                            })
+                        LazyColumn(content = {
+                            item { Spacer(modifier = Modifier.height(10.dp)) }
+                            items(items = viewModel.paymentList,
+                                key = { payment -> payment.amount },
+                                itemContent = { item ->
 
-                            SwipeToDismiss(state = dismissState, background = {
-                                SwipeBackground(dismissState = dismissState)
-                            }, dismissContent = {
-                                MyPaymentItem(item = item)
-                            })
+                                    val currentItem by rememberUpdatedState(newValue = item)
+                                    val dismissState = rememberDismissState(confirmValueChange = {
+                                        when (it) {
+                                            DismissValue.DismissedToEnd -> {
+                                                //Do something when swipe Start to End
+                                                //currentItem.paymentStatusName = "Rejected"
+                                                //context.toast(message = "Rejected")
 
+                                                coroutineScope.launch {
+                                                    viewModel.approveRejectPayment(
+                                                        tempSubId = currentItem.tempSubId,
+                                                        paymentStatus = currentItem.paymentStatus
+                                                    )
+                                                }
+
+                                                true
+                                            }
+
+                                            DismissValue.DismissedToStart -> {
+                                                //Do something when swipe End to Start
+                                                //currentItem.paymentStatusName = "Approved"
+                                                //context.toast(message = "Approved")
+
+                                                coroutineScope.launch {
+                                                    viewModel.approveRejectPayment(
+                                                        tempSubId = currentItem.tempSubId,
+                                                        paymentStatus = currentItem.paymentStatus
+                                                    )
+                                                }
+                                                true
+                                            }
+
+                                            else -> {
+                                                false
+                                            }
+                                        }
+                                    })
+
+                                    SwipeToDismiss(state = dismissState, background = {
+                                        SwipeBackground(dismissState = dismissState)
+                                    }, dismissContent = {
+                                        MyPaymentItem(payment = item)
+                                    })
+
+                                })
                         })
-                })
+                    }
+                }
             }
         }
     }

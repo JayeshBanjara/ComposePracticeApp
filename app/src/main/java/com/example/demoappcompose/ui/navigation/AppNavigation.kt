@@ -1,6 +1,8 @@
 package com.example.demoappcompose.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -8,6 +10,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.demoappcompose.data.PreferencesManager
 import com.example.demoappcompose.ui.auth.login.LoginScreen
 import com.example.demoappcompose.ui.auth.login.LoginViewModel
 import com.example.demoappcompose.ui.auth.register.RegisterScreen
@@ -32,6 +35,11 @@ import com.example.demoappcompose.ui.splash.SplashScreen
 import com.example.demoappcompose.ui.splash.SplashViewModel
 import com.example.demoappcompose.ui.subject.SubjectScreen
 import com.example.demoappcompose.ui.subject.SubjectsViewModel
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 @Composable
 fun AppNavigation(
@@ -39,7 +47,8 @@ fun AppNavigation(
     navController: NavHostController,
     isLoggedIn: Boolean,
     userId: String?,
-    profilePicUrl: String?
+    profilePicUrl: String?,
+    prefManager: PreferencesManager
 ) {
 
     val startScreen: String =
@@ -75,14 +84,18 @@ fun AppNavigation(
                 type = NavType.StringType
             })) { entry ->
 
+            val updatedProfilePic = entry.savedStateHandle.get<String>("updated_profile_pic")
+
+            val url = updatedProfilePic
+                ?: if (isLoggedIn) profilePicUrl!! else entry.arguments?.getString("profilePicUrl") ?: ""
+
             val homeViewModel = hiltViewModel<HomeViewModel>()
 
             Dashboard(
                 mainNavController = navController,
                 homeViewModel = homeViewModel,
                 userId = if (isLoggedIn) userId!! else entry.arguments?.getString("userId") ?: "",
-                profilePicUrl = if (isLoggedIn) profilePicUrl!! else entry.arguments?.getString("profilePicUrl")
-                    ?: ""
+                profilePicUrl = url
             )
         }
 
