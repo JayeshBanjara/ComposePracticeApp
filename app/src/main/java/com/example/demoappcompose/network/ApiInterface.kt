@@ -13,7 +13,6 @@ import com.example.demoappcompose.data.requests.SubjectListRequest
 import com.example.demoappcompose.data.requests.UpdateProfileRequest
 import com.example.demoappcompose.data.responses.SuccessResponse
 import com.example.demoappcompose.data.responses.about_us.AboutUsResponse
-import com.example.demoappcompose.data.responses.chapter_list.ChapterListResponse
 import com.example.demoappcompose.data.responses.config.ConfigResponse
 import com.example.demoappcompose.data.responses.dashboard_response.DashboardResponse
 import com.example.demoappcompose.data.responses.login_response.LoginResponse

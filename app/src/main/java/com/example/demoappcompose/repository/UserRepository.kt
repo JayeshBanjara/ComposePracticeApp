@@ -6,7 +6,6 @@ import com.example.demoappcompose.data.requests.PaymentApproveRejectRequest
 import com.example.demoappcompose.data.requests.PurchaseBookRequest
 import com.example.demoappcompose.data.requests.UpdateProfileRequest
 import com.example.demoappcompose.data.responses.SuccessResponse
-import com.example.demoappcompose.data.responses.chapter_list.ChapterListResponse
 import com.example.demoappcompose.data.responses.paper_history.PaperHistoryResponse
 import com.example.demoappcompose.data.responses.payment.PaymentApproveRejectResponse
 import com.example.demoappcompose.data.responses.payment.PaymentListResponse

@@ -6,8 +6,8 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class QrCodeData(
-    @Json(name = "name")
-    val name: String,
+    @Json(name = "label")
+    val label: String,
     @Json(name = "value")
     val value: String
 )

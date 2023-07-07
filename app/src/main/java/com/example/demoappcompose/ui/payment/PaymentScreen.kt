@@ -122,7 +122,7 @@ fun PaymentScreen(
                                                 coroutineScope.launch {
                                                     viewModel.approveRejectPayment(
                                                         tempSubId = currentItem.tempSubId,
-                                                        paymentStatus = currentItem.paymentStatus
+                                                        paymentStatus = 0
                                                     )
                                                 }
 
@@ -137,7 +137,7 @@ fun PaymentScreen(
                                                 coroutineScope.launch {
                                                     viewModel.approveRejectPayment(
                                                         tempSubId = currentItem.tempSubId,
-                                                        paymentStatus = currentItem.paymentStatus
+                                                        paymentStatus = 1
                                                     )
                                                 }
                                                 true

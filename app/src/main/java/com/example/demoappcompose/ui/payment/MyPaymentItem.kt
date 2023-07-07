@@ -1,6 +1,5 @@
 package com.example.demoappcompose.ui.payment
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,7 +32,6 @@ fun MyPaymentItem(payment: Payment) {
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .background(color = Color.White)
     ) {
         Card(
             modifier = Modifier
