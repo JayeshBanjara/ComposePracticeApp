@@ -164,12 +164,12 @@ fun ChapterList(
                                                 )
                                                 .padding(10.dp)
                                                 .clickable {
-                                                    //if (chapter.qrCodeData.isEmpty()) {
+                                                    if (chapter.qrCodeData.isEmpty()) {
                                                         navController.navigate(Screens.QuestionList.withArgs(chapter.chapterName))
-                                                    /*} else {
+                                                    } else {
                                                         showQRView = showQRView.not()
                                                         clickedPos = index
-                                                    }*/
+                                                    }
                                                 }
                                         ) {
                                             Row(
@@ -254,7 +254,7 @@ fun ChapterList(
                                                         )
                                                     )
 
-                                                    Row(
+                                                    /*Row(
                                                         horizontalArrangement = Arrangement.Center,
                                                         verticalAlignment = Alignment.CenterVertically
                                                     ) {
@@ -329,7 +329,7 @@ fun ChapterList(
                                                                 fontFamily = FontFamily(Font(R.font.quicksand_medium))
                                                             )
                                                         )
-                                                    }
+                                                    }*/
                                                 }
                                             }
                                         }

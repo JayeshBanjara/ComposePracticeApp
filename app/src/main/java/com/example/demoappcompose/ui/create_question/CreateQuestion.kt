@@ -323,10 +323,13 @@ fun CreateQuestion(
                                                     ) {
                                                         IconButton(
                                                             onClick = {
+                                                                if(index == viewModel.sectionList.size - 1) {
+                                                                    viewModel.lastSectionName.value -= 1
+                                                                }
+
                                                                 viewModel.sectionList.remove(
                                                                     section
                                                                 )
-                                                                viewModel.lastSectionName.value -= 1
                                                             }, modifier = Modifier.size(30.dp)
                                                         ) {
                                                             Icon(
