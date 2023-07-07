@@ -203,6 +203,7 @@ fun MainContent(
                 },
                 onValueChange = {
                     if (it.length <= 10) mobileNum = it
+                    emptyNumError = false
                 })
 
             VerticalSpacer(size = 10)
@@ -217,6 +218,7 @@ fun MainContent(
                 onNext = { localFocusManager.moveFocus(FocusDirection.Exit) },
                 onValueChange = {
                     password = it
+                    passwordError = false
                 }
             )
 

@@ -175,6 +175,7 @@ fun RegisterToPurchaseBook(
                                     },
                                     onValueChange = {
                                         if (it.length <= 50) firstName = it
+                                        firstNameError = false
                                     })
 
                                 VerticalSpacer(size = 15)
@@ -192,6 +193,7 @@ fun RegisterToPurchaseBook(
                                     },
                                     onValueChange = {
                                         if (it.length <= 50) lastName = it
+                                        lastNameError = false
                                     })
 
                                 VerticalSpacer(size = 15)
@@ -206,7 +208,10 @@ fun RegisterToPurchaseBook(
                                     onNext = {
                                         localFocusManager.moveFocus(FocusDirection.Down)
                                     },
-                                    onValueChange = { if (it.length <= 50) email = it })
+                                    onValueChange = {
+                                        if (it.length <= 50) email = it
+                                        emailError = false
+                                    })
 
                                 VerticalSpacer(size = 15)
 
@@ -222,6 +227,7 @@ fun RegisterToPurchaseBook(
                                     },
                                     onValueChange = {
                                         if (it.length <= 10) mobileNum = it
+                                        emptyNumError = false
                                     })
 
                                 VerticalSpacer(size = 15)
@@ -236,7 +242,10 @@ fun RegisterToPurchaseBook(
                                     onNext = {
                                         localFocusManager.moveFocus(FocusDirection.Down)
                                     },
-                                    onValueChange = { address = it })
+                                    onValueChange = {
+                                        address = it
+                                        addressError = false
+                                    })
 
                                 VerticalSpacer(size = 15)
 
@@ -250,7 +259,10 @@ fun RegisterToPurchaseBook(
                                     onNext = {
                                         localFocusManager.moveFocus(FocusDirection.Down)
                                     },
-                                    onValueChange = { city = it })
+                                    onValueChange = {
+                                        city = it
+                                        cityError = false
+                                    })
 
                                 VerticalSpacer(size = 15)
 
@@ -264,7 +276,10 @@ fun RegisterToPurchaseBook(
                                     onNext = {
                                         localFocusManager.moveFocus(FocusDirection.Down)
                                     },
-                                    onValueChange = { state = it })
+                                    onValueChange = {
+                                        state = it
+                                        stateError = false
+                                    })
 
                                 VerticalSpacer(size = 15)
 

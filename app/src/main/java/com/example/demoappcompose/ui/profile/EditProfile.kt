@@ -172,6 +172,7 @@ fun EditProfile(
                         },
                         onValueChange = {
                             if (it.length <= 10) mobileNum = it
+                            emptyNumError = false
                         })
                     VerticalSpacer(size = 8)
                     HeaderText(text = "Enter Your Name")
@@ -190,6 +191,7 @@ fun EditProfile(
                         },
                         onValueChange = {
                             if (it.length <= 50) name = it
+                            nameError = false
                         })
                     VerticalSpacer(size = 8)
                     HeaderText(text = "Enter Your Mail-ID")
@@ -205,7 +207,10 @@ fun EditProfile(
                         onNext = {
                             localFocusManager.moveFocus(FocusDirection.Down)
                         },
-                        onValueChange = { if (it.length <= 50) email = it })
+                        onValueChange = {
+                            if (it.length <= 50) email = it
+                            emailError = false
+                        })
 
                     VerticalSpacer(size = 12)
 

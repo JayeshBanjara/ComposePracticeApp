@@ -263,6 +263,7 @@ fun MainContent(
                     },
                     onValueChange = {
                         if (it.length <= 10) mobileNum = it
+                        emptyNumError = false
                     })
 
                 VerticalSpacer(size = 15)
@@ -280,6 +281,7 @@ fun MainContent(
                     },
                     onValueChange = {
                         if (it.length <= 50) name = it
+                        nameError = false
                     })
 
                 VerticalSpacer(size = 15)
@@ -294,7 +296,10 @@ fun MainContent(
                     onNext = {
                         localFocusManager.moveFocus(FocusDirection.Down)
                     },
-                    onValueChange = { if (it.length <= 50) email = it })
+                    onValueChange = {
+                        if (it.length <= 50) email = it
+                        emailError = false
+                    })
 
                 VerticalSpacer(size = 15)
 
@@ -308,7 +313,10 @@ fun MainContent(
                     onNext = {
                         localFocusManager.moveFocus(FocusDirection.Down)
                     },
-                    onValueChange = { password = it })
+                    onValueChange = {
+                        password = it
+                        passwordError = false
+                    })
 
                 VerticalSpacer(size = 15)
 
@@ -322,7 +330,10 @@ fun MainContent(
                     onNext = {
                         localFocusManager.moveFocus(FocusDirection.Down)
                     },
-                    onValueChange = { cnfPwd = it })
+                    onValueChange = {
+                        cnfPwd = it
+                        cnfPwdError = false
+                    })
 
                 VerticalSpacer(size = 15)
 
@@ -338,6 +349,7 @@ fun MainContent(
                     },
                     onValueChange = {
                         if (it.length <= 50) instituteName = it
+                        instituteError = false
                     })
 
                 VerticalSpacer(size = 15)
@@ -425,6 +437,7 @@ fun MainContent(
                     },
                     onValueChange = {
                         if (it.length <= 50) city = it
+                        cityError = false
                     })
 
                 VerticalSpacer(size = 15)
