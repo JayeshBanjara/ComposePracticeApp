@@ -88,11 +88,7 @@ fun CreateQuestion(
             onClick = {
                 val newSection = Section(
                     hasSectionName = viewModel.sectionWiseCheckedState.value,
-                    sectionName = if (viewModel.sectionWiseCheckedState.value and viewModel.newQueSameSectionCheckedState.value.not()) {
-                        "${(viewModel.lastSectionName.value + 1).toChar()}"
-                    } else {
-                        viewModel.lastSectionName.value.toChar().toString()
-                    },
+                    sectionName = viewModel.getSectionName(),
                     headingList = viewModel.headingList,
                     selectedHeading = viewModel.headingList[0],
                     marks = ""
@@ -318,14 +314,17 @@ fun CreateQuestion(
                                                             .background(
                                                                 color = Blue,
                                                                 shape = RoundedCornerShape(8.dp)
-                                                            ),
-                                                        contentAlignment = Alignment.Center
+                                                            ), contentAlignment = Alignment.Center
                                                     ) {
                                                         IconButton(
                                                             onClick = {
-                                                                if(index == viewModel.sectionList.size - 1) {
+                                                                /*if(index == viewModel.sectionList.size - 1) {
                                                                     viewModel.lastSectionName.value -= 1
-                                                                }
+                                                                }*/
+
+                                                                viewModel.deletedSections.add(
+                                                                    section.sectionName[0].toInt()
+                                                                )
 
                                                                 viewModel.sectionList.remove(
                                                                     section

@@ -36,6 +36,7 @@ class CreateQuestionViewModel @Inject constructor(
     val lastSectionName = mutableIntStateOf(65)
     val sectionList = mutableStateListOf<Section>()
     var headingList = mutableListOf<HeadingData>()
+    val deletedSections = mutableListOf<Int>()
 
     init {
         val section = Section(
@@ -79,5 +80,31 @@ class CreateQuestionViewModel @Inject constructor(
         } catch (e: Exception) {
             _getHeadingState.value = UiState.Error(e.message)
         }
+    }
+
+    fun getSectionName(): String {
+
+        var sectionName = ""
+
+        if (sectionWiseCheckedState.value and newQueSameSectionCheckedState.value.not()) {
+
+            if (deletedSections.isNotEmpty()) {
+                sectionName = (deletedSections.min()).toChar().toString()
+                val isExist = sectionList.find { it.sectionName == sectionName }
+                if(isExist != null) {
+                    sectionName = (lastSectionName.value + 1).toChar().toString()
+                }
+            } else {
+                sectionName = (lastSectionName.value + 1).toChar().toString()
+            }
+        } else {
+            sectionName = if (deletedSections.isNotEmpty()) {
+                (deletedSections.min()).toChar().toString()
+            } else {
+                lastSectionName.value.toChar().toString()
+            }
+        }
+
+        return sectionName
     }
 }
