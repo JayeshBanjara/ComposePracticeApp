@@ -1,8 +1,6 @@
 package com.example.demoappcompose.ui.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -10,7 +8,6 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.demoappcompose.data.PreferencesManager
 import com.example.demoappcompose.ui.auth.login.LoginScreen
 import com.example.demoappcompose.ui.auth.login.LoginViewModel
 import com.example.demoappcompose.ui.auth.register.RegisterScreen
@@ -27,6 +24,7 @@ import com.example.demoappcompose.ui.dashboard.my_subscription.MySubscriptionVie
 import com.example.demoappcompose.ui.paper_history.PaperHistory
 import com.example.demoappcompose.ui.paper_history.PaperHistoryViewModel
 import com.example.demoappcompose.ui.print_settings.PrintSettings
+import com.example.demoappcompose.ui.print_settings.PrintSettingsViewModel
 import com.example.demoappcompose.ui.profile.EditProfile
 import com.example.demoappcompose.ui.profile.EditProfileViewModel
 import com.example.demoappcompose.ui.register_purchase_book.PurchaseBookViewModel
@@ -35,11 +33,6 @@ import com.example.demoappcompose.ui.splash.SplashScreen
 import com.example.demoappcompose.ui.splash.SplashViewModel
 import com.example.demoappcompose.ui.subject.SubjectScreen
 import com.example.demoappcompose.ui.subject.SubjectsViewModel
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
 @Composable
 fun AppNavigation(
@@ -76,17 +69,20 @@ fun AppNavigation(
             )
         }
 
-        composable(route = Screens.Dashboard.route + "/{roleId}/{profilePicUrl}",
+        composable(
+            route = Screens.Dashboard.route + "/{roleId}/{profilePicUrl}",
             arguments = listOf(navArgument("roleId") {
                 type = NavType.StringType
             }, navArgument("profilePicUrl") {
                 type = NavType.StringType
-            })) { entry ->
+            })
+        ) { entry ->
 
             val updatedProfilePic = entry.savedStateHandle.get<String>("updated_profile_pic")
 
             val url = updatedProfilePic
-                ?: if (isLoggedIn) profilePicUrl!! else entry.arguments?.getString("profilePicUrl") ?: ""
+                ?: if (isLoggedIn) profilePicUrl!! else entry.arguments?.getString("profilePicUrl")
+                    ?: ""
 
             val homeViewModel = hiltViewModel<HomeViewModel>()
 
@@ -98,14 +94,16 @@ fun AppNavigation(
             )
         }
 
-        composable(route = Screens.SubjectScreen.route + "/{className}/{classId}/{isStream}",
+        composable(
+            route = Screens.SubjectScreen.route + "/{className}/{classId}/{isStream}",
             arguments = listOf(navArgument("className") {
                 type = NavType.StringType
             }, navArgument("classId") {
                 type = NavType.StringType
             }, navArgument("isStream") {
                 type = NavType.StringType
-            })) { entry ->
+            })
+        ) { entry ->
 
             val subjectsViewModel = hiltViewModel<SubjectsViewModel>()
 
@@ -146,14 +144,16 @@ fun AppNavigation(
             )
         }
 
-        composable(route = Screens.CreateQuestion.route + "/{classId}/{subjectId}/{subjectName}",
+        composable(
+            route = Screens.CreateQuestion.route + "/{classId}/{subjectId}/{subjectName}",
             arguments = listOf(navArgument("classId") {
                 type = NavType.StringType
             }, navArgument("subjectId") {
                 type = NavType.StringType
             }, navArgument("subjectName") {
                 type = NavType.StringType
-            })) { entry ->
+            })
+        ) { entry ->
 
             val createQuestionViewModel = hiltViewModel<CreateQuestionViewModel>()
 
@@ -167,7 +167,11 @@ fun AppNavigation(
         }
 
         composable(route = Screens.PrintSettings.route) {
-            PrintSettings(navController = navController)
+            val viewModel = hiltViewModel<PrintSettingsViewModel>()
+            PrintSettings(
+                navController = navController,
+                viewModel = viewModel
+            )
         }
 
         composable(
@@ -178,7 +182,8 @@ fun AppNavigation(
                 type = NavType.StringType
             }, navArgument("subjectName") {
                 type = NavType.StringType
-            })) { entry ->
+            })
+        ) { entry ->
 
             val chapterListViewModel = hiltViewModel<ChapterListViewModel>()
 
