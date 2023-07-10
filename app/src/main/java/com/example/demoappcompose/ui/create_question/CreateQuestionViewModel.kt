@@ -95,13 +95,13 @@ class CreateQuestionViewModel @Inject constructor(
                     sectionName = (lastSectionName.value + 1).toChar().toString()
                 }
             } else {
-                sectionName = (lastSectionName.value + 1).toChar().toString()
+                sectionName = (sectionList.last().sectionName.toInt() + 1).toChar().toString()
             }
         } else {
             sectionName = if (deletedSections.isNotEmpty()) {
                 (deletedSections.min()).toChar().toString()
             } else {
-                lastSectionName.value.toChar().toString()
+                sectionList.last().sectionName
             }
         }
 

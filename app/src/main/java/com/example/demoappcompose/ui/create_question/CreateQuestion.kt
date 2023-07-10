@@ -95,6 +95,7 @@ fun CreateQuestion(
                 )
 
                 viewModel.sectionList.add(newSection)
+                viewModel.sectionList.sortBy { it.sectionName[0].code }
                 viewModel.lastSectionName.value = newSection.sectionName[0].code
             },
             containerColor = Blue,
@@ -302,11 +303,11 @@ fun CreateQuestion(
                                                     }
                                                 }
 
-                                                if (viewModel.sectionList.size > 0) {
+                                                if (viewModel.sectionList.size > 1) {
                                                     HorizontalSpacer(size = 10)
                                                 }
 
-                                                if (viewModel.sectionList.size > 0) {
+                                                if (viewModel.sectionList.size > 1) {
 
                                                     Box(
                                                         modifier = Modifier
@@ -318,9 +319,6 @@ fun CreateQuestion(
                                                     ) {
                                                         IconButton(
                                                             onClick = {
-                                                                /*if(index == viewModel.sectionList.size - 1) {
-                                                                    viewModel.lastSectionName.value -= 1
-                                                                }*/
 
                                                                 viewModel.deletedSections.add(
                                                                     section.sectionName[0].toInt()
