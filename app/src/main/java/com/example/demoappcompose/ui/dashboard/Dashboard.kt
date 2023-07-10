@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -20,7 +19,7 @@ import com.example.demoappcompose.ui.navigation.Screens
 fun Dashboard(
     mainNavController: NavController,
     homeViewModel: HomeViewModel,
-    userId: String,
+    roleId: String,
     profilePicUrl: String
 ) {
     val navController: NavHostController = rememberNavController()
@@ -34,7 +33,12 @@ fun Dashboard(
                 }
             )
         },
-        bottomBar = { DashboardBottomNavigation(navController = navController, userId = userId) }
+        bottomBar = {
+            DashboardBottomNavigation(
+                navController = navController,
+                roleId = roleId
+            )
+        }
     ) { innerPadding ->
         DashboardNavHost(
             mainNavController = mainNavController,

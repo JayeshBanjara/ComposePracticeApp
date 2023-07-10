@@ -37,7 +37,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    suspend fun getDashboardData() = viewModelScope.launch {
+    private suspend fun getDashboardData() = viewModelScope.launch {
 
         val userId = prefManager.getUserId.first()!!
         val token = prefManager.getToken.first()!!

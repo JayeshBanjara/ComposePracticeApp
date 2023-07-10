@@ -2,7 +2,6 @@ package com.example.demoappcompose.ui.create_question
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -36,8 +35,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -48,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.example.demoappcompose.R
 import com.example.demoappcompose.ui.HorizontalSpacer
 import com.example.demoappcompose.ui.VerticalSpacer
@@ -109,7 +109,7 @@ fun ChapterList(
                 }
 
                 val state by remember { chapterListViewModel.uiState }.collectAsStateWithLifecycle()
-                when(state) {
+                when (state) {
                     is UiState.Empty -> {}
                     is UiState.UnAuthorised -> {
                         LaunchedEffect(Unit) {
@@ -165,7 +165,11 @@ fun ChapterList(
                                                 .padding(10.dp)
                                                 .clickable {
                                                     if (chapter.qrCodeData.isEmpty()) {
-                                                        navController.navigate(Screens.QuestionList.withArgs(chapter.chapterName))
+                                                        navController.navigate(
+                                                            Screens.QuestionList.withArgs(
+                                                                chapter.chapterName
+                                                            )
+                                                        )
                                                     } else {
                                                         showQRView = showQRView.not()
                                                         clickedPos = index
@@ -230,17 +234,28 @@ fun ChapterList(
 
                                             VerticalSpacer(size = 10)
 
-                                            AnimatedVisibility(visible = (chapter.qrCodeData.isNotEmpty()) and (clickedPos == index) and  showQRView) {
+                                            AnimatedVisibility(visible = (chapter.qrCodeData.isNotEmpty()) and (clickedPos == index) and showQRView) {
                                                 Column(
                                                     modifier = Modifier.fillMaxWidth(),
                                                     horizontalAlignment = Alignment.CenterHorizontally
                                                 ) {
-                                                    VerticalSpacer(size = 10)
 
-                                                    Image(
-                                                        painter = painterResource(id = R.drawable.ic_qr),
-                                                        contentDescription = null
-                                                    )
+                                                    val qrCodeImage =
+                                                        chapter.qrCodeData.find { it.name == "QR_CODE" }
+
+                                                    if (qrCodeImage != null) {
+                                                        VerticalSpacer(size = 10)
+                                                    }
+
+                                                    if (qrCodeImage != null) {
+                                                        AsyncImage(
+                                                            model = qrCodeImage.value,
+                                                            contentDescription = "QR Code",
+                                                            contentScale = ContentScale.Fit,
+                                                            modifier = Modifier
+                                                                .size(200.dp)
+                                                        )
+                                                    }
 
                                                     VerticalSpacer(size = 10)
 
@@ -254,7 +269,7 @@ fun ChapterList(
                                                         )
                                                     )
 
-                                                    /*Row(
+                                                    Row(
                                                         horizontalArrangement = Arrangement.Center,
                                                         verticalAlignment = Alignment.CenterVertically
                                                     ) {
@@ -291,45 +306,54 @@ fun ChapterList(
                                                         horizontalAlignment = Alignment.Start
                                                     ) {
 
-                                                        if(chapter.qrCodeData.find { it.name ==  "ONLINE_PAYMENT_VALIDITY"} != null)
-                                                        PaymentInstructionText("Online Payment (Validity: ${chapter.qrCodeData.first { it.name == "ONLINE_PAYMENT_VALIDITY" }.value})")
+                                                        if (chapter.qrCodeData.find { it.name == "ONLINE_PAYMENT_VALIDITY" } != null)
+                                                            PaymentInstructionText("Online Payment (Validity: ${chapter.qrCodeData.first { it.name == "ONLINE_PAYMENT_VALIDITY" }.value})")
 
-                                                        if(chapter.qrCodeData.find { it.name ==  "PAYTM_NUMBER"} != null)
-                                                        PaymentInstructionText("Paytm Number: ${chapter.qrCodeData.first { it.name == "PAYTM_NUMBER" }.value}")
+                                                        if (chapter.qrCodeData.find { it.name == "PAYTM_NUMBER" } != null)
+                                                            PaymentInstructionText("Paytm Number: ${chapter.qrCodeData.first { it.name == "PAYTM_NUMBER" }.value}")
 
-                                                        if(chapter.qrCodeData.find { it.name ==  "PHONEPE_NUMBER"} != null)
-                                                        PaymentInstructionText("PhonePe Number: ${chapter.qrCodeData.first { it.name == "PHONEPE_NUMBER" }.value}")
+                                                        if (chapter.qrCodeData.find { it.name == "PHONEPE_NUMBER" } != null)
+                                                            PaymentInstructionText("PhonePe Number: ${chapter.qrCodeData.first { it.name == "PHONEPE_NUMBER" }.value}")
 
-                                                        if(chapter.qrCodeData.find { it.name ==  "GOOGLE_PAY_NUMBER"} != null)
-                                                        PaymentInstructionText("Google Pay Number: ${chapter.qrCodeData.first { it.name == "GOOGLE_PAY_NUMBER" }.value}")
+                                                        if (chapter.qrCodeData.find { it.name == "GOOGLE_PAY_NUMBER" } != null)
+                                                            PaymentInstructionText("Google Pay Number: ${chapter.qrCodeData.first { it.name == "GOOGLE_PAY_NUMBER" }.value}")
 
-                                                        if(chapter.qrCodeData.find { it.name ==  "BHIM_UPI"} != null)
-                                                        PaymentInstructionText("BHIM UPI: ${chapter.qrCodeData.first { it.name == "BHIM_UPI" }.value}")
+                                                        if (chapter.qrCodeData.find { it.name == "BHIM_UPI" } != null)
+                                                            PaymentInstructionText("BHIM UPI: ${chapter.qrCodeData.first { it.name == "BHIM_UPI" }.value}")
 
                                                         PaymentInstructionText("Bank Details:")
-                                                        if(chapter.qrCodeData.find { it.name ==  "ACCOUNT_HOLDER_NAME"} != null)
-                                                        PaymentInstructionText("Account Holder Name: ${chapter.qrCodeData.first { it.name == "ACCOUNT_HOLDER_NAME" }.value}")
+                                                        if (chapter.qrCodeData.find { it.name == "ACCOUNT_HOLDER_NAME" } != null)
+                                                            PaymentInstructionText("Account Holder Name: ${chapter.qrCodeData.first { it.name == "ACCOUNT_HOLDER_NAME" }.value}")
 
-                                                        if(chapter.qrCodeData.find { it.name ==  "ACCOUNT_NUMBER"} != null)
-                                                        PaymentInstructionText("Account Number: ${chapter.qrCodeData.first { it.name == "ACCOUNT_NUMBER" }.value}")
+                                                        if (chapter.qrCodeData.find { it.name == "ACCOUNT_NUMBER" } != null)
+                                                            PaymentInstructionText("Account Number: ${chapter.qrCodeData.first { it.name == "ACCOUNT_NUMBER" }.value}")
 
-                                                        if(chapter.qrCodeData.find { it.name ==  "IFSC_CODE"} != null)
-                                                        PaymentInstructionText("IFSC Code: ${chapter.qrCodeData.first { it.name == "IFSC_CODE" }.value}")
+                                                        if (chapter.qrCodeData.find { it.name == "IFSC_CODE" } != null)
+                                                            PaymentInstructionText("IFSC Code: ${chapter.qrCodeData.first { it.name == "IFSC_CODE" }.value}")
 
-                                                        PaymentInstructionText("BRANCH: ${chapter.qrCodeData.first { it.name == "BRANCH_NAME" }.value}")
-                                                        VerticalSpacer(size = 5)
-                                                        PaymentInstructionText(chapter.qrCodeData.first { it.name == "PAYMENT_RELATED_NOTE" }.value)
-                                                        VerticalSpacer(size = 20)
-                                                        Text(
-                                                            text = chapter.qrCodeData.first { it.name == "PAYMENT_RELATED_ISSUE_NOTE" }.value,
-                                                            style = TextStyle(
-                                                                color = Color.DarkGray,
-                                                                fontSize = 12.sp,
-                                                                fontWeight = FontWeight.W500,
-                                                                fontFamily = FontFamily(Font(R.font.quicksand_medium))
+                                                        if (chapter.qrCodeData.find { it.name == "BRANCH_NAME" } != null)
+                                                            PaymentInstructionText("BRANCH: ${chapter.qrCodeData.first { it.name == "BRANCH_NAME" }.value}")
+
+                                                        if (chapter.qrCodeData.find { it.name == "PAYMENT_RELATED_NOTE" } != null)
+                                                            VerticalSpacer(size = 5)
+
+                                                        if (chapter.qrCodeData.find { it.name == "PAYMENT_RELATED_NOTE" } != null)
+                                                            PaymentInstructionText(chapter.qrCodeData.first { it.name == "PAYMENT_RELATED_NOTE" }.value)
+
+                                                        if (chapter.qrCodeData.find { it.name == "PAYMENT_RELATED_ISSUE_NOTE" } != null)
+                                                            VerticalSpacer(size = 20)
+
+                                                        if (chapter.qrCodeData.find { it.name == "PAYMENT_RELATED_ISSUE_NOTE" } != null)
+                                                            Text(
+                                                                text = chapter.qrCodeData.first { it.name == "PAYMENT_RELATED_ISSUE_NOTE" }.value,
+                                                                style = TextStyle(
+                                                                    color = Color.DarkGray,
+                                                                    fontSize = 12.sp,
+                                                                    fontWeight = FontWeight.W500,
+                                                                    fontFamily = FontFamily(Font(R.font.quicksand_medium))
+                                                                )
                                                             )
-                                                        )
-                                                    }*/
+                                                    }
                                                 }
                                             }
                                         }

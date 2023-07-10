@@ -46,9 +46,8 @@ fun AppNavigation(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     isLoggedIn: Boolean,
-    userId: String?,
-    profilePicUrl: String?,
-    prefManager: PreferencesManager
+    roleId: String?,
+    profilePicUrl: String?
 ) {
 
     val startScreen: String =
@@ -77,8 +76,8 @@ fun AppNavigation(
             )
         }
 
-        composable(route = Screens.Dashboard.route + "/{userId}/{profilePicUrl}",
-            arguments = listOf(navArgument("userId") {
+        composable(route = Screens.Dashboard.route + "/{roleId}/{profilePicUrl}",
+            arguments = listOf(navArgument("roleId") {
                 type = NavType.StringType
             }, navArgument("profilePicUrl") {
                 type = NavType.StringType
@@ -94,7 +93,7 @@ fun AppNavigation(
             Dashboard(
                 mainNavController = navController,
                 homeViewModel = homeViewModel,
-                userId = if (isLoggedIn) userId!! else entry.arguments?.getString("userId") ?: "",
+                roleId = if (isLoggedIn) roleId!! else entry.arguments?.getString("roleId") ?: "",
                 profilePicUrl = url
             )
         }

@@ -2,11 +2,7 @@ package com.example.demoappcompose.ui.print_settings
 
 import android.app.DatePickerDialog
 import android.widget.DatePicker
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,7 +25,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -208,7 +203,10 @@ fun PrintSettings(navController: NavController) {
                     isError = instituteNameError,
                     errorText = "Please enter institute name",
                     onNext = { localFocusManager.moveFocus(FocusDirection.Down) },
-                    onValueChange = { instituteName = it }
+                    onValueChange = {
+                        instituteName = it
+                        instituteNameError = false
+                    }
                 )
 
                 VerticalSpacer(size = 8)
@@ -224,7 +222,10 @@ fun PrintSettings(navController: NavController) {
                     isError = examNameError,
                     errorText = "Please enter exam name",
                     onNext = { localFocusManager.moveFocus(FocusDirection.Down) },
-                    onValueChange = { examName = it }
+                    onValueChange = {
+                        examName = it
+                        examNameError = false
+                    }
                 )
 
                 VerticalSpacer(size = 8)
@@ -240,7 +241,10 @@ fun PrintSettings(navController: NavController) {
                     isError = chapterNumberError,
                     errorText = "Please enter chapter number",
                     onNext = { localFocusManager.moveFocus(FocusDirection.Down) },
-                    onValueChange = { chapterNumber = it }
+                    onValueChange = {
+                        chapterNumber = it
+                        chapterNumberError = false
+                    }
                 )
 
                 VerticalSpacer(size = 8)
@@ -250,13 +254,16 @@ fun PrintSettings(navController: NavController) {
                 CustomTextField(
                     modifier = Modifier.fillMaxWidth(),
                     text = examTime,
-                    placeholderText = "30 Min / 1 Hour / 1 Hr 30 Min / 2 Hours",
+                    placeholderText = "30 Min/1 Hour/1 Hr 30 Min/2 Hours",
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Next,
                     isError = examTimeError,
                     errorText = "Please enter exam time",
                     onNext = { localFocusManager.moveFocus(FocusDirection.Down) },
-                    onValueChange = { examTime = it }
+                    onValueChange = {
+                        examTime = it
+                        examTimeError = false
+                    }
                 )
 
                 VerticalSpacer(size = 8)
@@ -272,7 +279,10 @@ fun PrintSettings(navController: NavController) {
                     isError = examMarksError,
                     errorText = "Please enter exam marks",
                     onNext = { localFocusManager.moveFocus(FocusDirection.Down) },
-                    onValueChange = { examMarks = it }
+                    onValueChange = {
+                        examMarks = it
+                        examMarksError = false
+                    }
                 )
 
                 VerticalSpacer(size = 8)
@@ -329,7 +339,10 @@ fun PrintSettings(navController: NavController) {
                         isError = waterMarkError,
                         errorText = "Please enter water mark",
                         onNext = { localFocusManager.moveFocus(FocusDirection.Down) },
-                        onValueChange = { waterMarkText = it }
+                        onValueChange = {
+                            waterMarkText = it
+                            waterMarkError = false
+                        }
                     )
                 }
 
@@ -346,7 +359,10 @@ fun PrintSettings(navController: NavController) {
                     isError = endPaperMsgError,
                     errorText = "Please enter message",
                     onNext = { localFocusManager.moveFocus(FocusDirection.Down) },
-                    onValueChange = { endPaperMsg = it }
+                    onValueChange = {
+                        endPaperMsg = it
+                        endPaperMsgError = false
+                    }
                 )
                 VerticalSpacer(size = 8)
 
@@ -379,7 +395,10 @@ fun PrintSettings(navController: NavController) {
                             isError = pageFooterError,
                             errorText = "Please enter page footer",
                             onNext = { localFocusManager.moveFocus(FocusDirection.Down) },
-                            onValueChange = { pageFooter = it }
+                            onValueChange = {
+                                pageFooter = it
+                                pageFooterError = false
+                            }
                         )
                     }
                 }

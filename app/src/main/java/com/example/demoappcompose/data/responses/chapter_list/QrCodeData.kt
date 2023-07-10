@@ -8,6 +8,8 @@ import com.squareup.moshi.JsonClass
 data class QrCodeData(
     @Json(name = "label")
     val label: String,
+    @Json(name = "name")
+    val name: String,
     @Json(name = "value")
     val value: String
 )

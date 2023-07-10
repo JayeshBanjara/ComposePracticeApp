@@ -31,6 +31,7 @@ class PreferencesManager @Inject constructor(@ApplicationContext private val app
         val USER_FULL_NAME = stringPreferencesKey("full_name")
         val USER_PROFILE_IMAGE = stringPreferencesKey("user_profile_image")
         val USER_ID = stringPreferencesKey("user_id")
+        val ROLE_ID = stringPreferencesKey("role_id")
 
         private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "my-pref")
     }
@@ -178,6 +179,24 @@ class PreferencesManager @Inject constructor(@ApplicationContext private val app
         }
         .map { preferences ->
             preferences[USER_ID]
+        }
+
+    suspend fun setRoleId(roleId: String) {
+        appContext.dataStore.edit { preferences ->
+            preferences[ROLE_ID] = roleId
+        }
+    }
+
+    val getRoleId: Flow<String?> = appContext.dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emptyPreferences()
+            } else {
+                throw exception
+            }
+        }
+        .map { preferences ->
+            preferences[ROLE_ID]
         }
 
     suspend fun clearData() {

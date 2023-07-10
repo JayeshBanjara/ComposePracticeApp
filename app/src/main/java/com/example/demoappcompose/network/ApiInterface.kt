@@ -130,4 +130,10 @@ interface ApiInterface {
         @HeaderMap headerMap: Map<String, String>,
         @Body request: PaymentApproveRejectRequest
     ): Response<PaymentApproveRejectResponse>
+
+    @POST("get-settings")
+    suspend fun approveRejectPayment(
+        @HeaderMap headerMap: Map<String, String>,
+        @Body request: PaymentApproveRejectRequest
+    ): Response<PaymentApproveRejectResponse>
 }

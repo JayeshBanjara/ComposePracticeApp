@@ -56,6 +56,7 @@ class LoginViewModel @Inject constructor(
                     response.loginData.userData[0].let {
                         setLoggedIn(isLoggedIn = 1)
                         setUserId(userId = it.userId.toString())
+                        setRoleId(roleId = it.roleId.toString())
                         setToken(token = response.loginData.token)
                         setLoginLogId(loginLogId = it.loginLogId.toString())
                         setUserMobileNumber(mobileNumber = it.mobileNo)

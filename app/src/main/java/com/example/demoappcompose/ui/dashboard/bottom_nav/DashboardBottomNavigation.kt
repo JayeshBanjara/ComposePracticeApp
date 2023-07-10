@@ -16,7 +16,6 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -24,19 +23,18 @@ import com.example.demoappcompose.ui.theme.NoRippleTheme
 import com.example.demoappcompose.ui.theme.WhiteText
 
 @Composable
-fun DashboardBottomNavigation(navController: NavController, userId: String) {
+fun DashboardBottomNavigation(navController: NavController, roleId: String) {
 
     val items = listOf(
         BottomNavigationScreens.Home,
         BottomNavigationScreens.AboutUs,
         BottomNavigationScreens.ContactUs,
-        if (userId == "1") BottomNavigationScreens.PaymentScreen else BottomNavigationScreens.Feedback
+        if (roleId == "1") BottomNavigationScreens.PaymentScreen else BottomNavigationScreens.Feedback
     )
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    val context = LocalContext.current
     // Create the launcher for the activity result contract
     val sendEmailLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
@@ -60,7 +58,6 @@ fun DashboardBottomNavigation(navController: NavController, userId: String) {
                     isSelected = currentRoute == item.route
                 ) {
                     if (item.route == BottomNavigationScreens.Feedback.route) {
-                        //context.sendMail()
 
                         val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
                             data = Uri.parse("mailto:example@example.com")
