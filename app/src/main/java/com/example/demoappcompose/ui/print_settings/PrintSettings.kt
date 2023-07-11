@@ -2,11 +2,7 @@ package com.example.demoappcompose.ui.print_settings
 
 import android.app.DatePickerDialog
 import android.widget.DatePicker
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,6 +18,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,26 +26,34 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.demoappcompose.R
 import com.example.demoappcompose.ui.VerticalSpacer
 import com.example.demoappcompose.ui.components.CustomDropDown
 import com.example.demoappcompose.ui.components.CustomTextField
 import com.example.demoappcompose.ui.components.CustomTopAppBar
+import com.example.demoappcompose.ui.components.Loader
 import com.example.demoappcompose.ui.components.MainButton
+import com.example.demoappcompose.ui.navigation.Screens
+import com.example.demoappcompose.ui.popUpToTop
 import com.example.demoappcompose.ui.screenPadding
 import com.example.demoappcompose.ui.theme.Blue
+import com.example.demoappcompose.utility.UiState
+import com.example.demoappcompose.utility.toast
 import java.util.Calendar
 import java.util.Date
 
 @Composable
-fun PrintSettings(navController: NavController) {
+fun PrintSettings(
+    navController: NavController,
+    viewModel: PrintSettingsViewModel
+) {
     Scaffold(topBar = {
         CustomTopAppBar(
             title = "Print Settings",
@@ -59,6 +64,7 @@ fun PrintSettings(navController: NavController) {
         )
     }) { innerPadding ->
 
+        val context = LocalContext.current
         val localFocusManager = LocalFocusManager.current
         val scrollState = rememberScrollState()
         /*var imgName by remember { mutableStateOf("") }
@@ -151,293 +157,350 @@ fun PrintSettings(navController: NavController) {
             }
         )*/
 
-        Box(
-            modifier = Modifier.fillMaxSize()
-        ) {
-
-            Image(
-                painter = painterResource(id = R.drawable.screen_bg),
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize()
-            )
-
-            Column(
-                modifier = Modifier
-                    .verticalScroll(scrollState)
-                    .padding(
-                        start = screenPadding(),
-                        top = innerPadding.calculateTopPadding(),
-                        end = screenPadding(),
-                        bottom = screenPadding()
-                    )
-            ) {
-
-                VerticalSpacer(size = 5)
-
-                /*HeaderText(text = "Institute Logo Title (Size: 180 x 40 mm)")
-                VerticalSpacer(size = 5)
-                CustomTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = imgName,
-                    trailingIcon = painterResource(id = R.drawable.ic_upload),
-                    onTrailingIconClick = {
-                        singlePhotoPickerLauncher.launch(
-                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                        )
-                    },
-                    readOnly = true,
-                    placeholderText = "Image Upload",
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next,
-                    isError = imgError,
-                    errorText = "",
-                    onNext = { localFocusManager.moveFocus(FocusDirection.Down) },
-                    onValueChange = { imgName = it }
-                )
-
-                VerticalSpacer(size = 8)*/
-
-                HeaderText(text = "Institute Name")
-                VerticalSpacer(size = 5)
-                CustomTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = instituteName,
-                    placeholderText = "Ravi Education",
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next,
-                    isError = instituteNameError,
-                    errorText = "Please enter institute name",
-                    onNext = { localFocusManager.moveFocus(FocusDirection.Down) },
-                    onValueChange = { instituteName = it }
-                )
-
-                VerticalSpacer(size = 8)
-
-                HeaderText(text = "Exam Name")
-                VerticalSpacer(size = 5)
-                CustomTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = examName,
-                    placeholderText = "Monthly Exam",
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next,
-                    isError = examNameError,
-                    errorText = "Please enter exam name",
-                    onNext = { localFocusManager.moveFocus(FocusDirection.Down) },
-                    onValueChange = { examName = it }
-                )
-
-                VerticalSpacer(size = 8)
-
-                HeaderText(text = "Chapter Number")
-                VerticalSpacer(size = 5)
-                CustomTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = chapterNumber,
-                    placeholderText = "1, 2, 3 OR All",
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next,
-                    isError = chapterNumberError,
-                    errorText = "Please enter chapter number",
-                    onNext = { localFocusManager.moveFocus(FocusDirection.Down) },
-                    onValueChange = { chapterNumber = it }
-                )
-
-                VerticalSpacer(size = 8)
-
-                HeaderText(text = "Exam Time")
-                VerticalSpacer(size = 5)
-                CustomTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = examTime,
-                    placeholderText = "30 Min / 1 Hour / 1 Hr 30 Min / 2 Hours",
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next,
-                    isError = examTimeError,
-                    errorText = "Please enter exam time",
-                    onNext = { localFocusManager.moveFocus(FocusDirection.Down) },
-                    onValueChange = { examTime = it }
-                )
-
-                VerticalSpacer(size = 8)
-
-                HeaderText(text = "Exam Marks")
-                VerticalSpacer(size = 5)
-                CustomTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = examMarks,
-                    placeholderText = "Exam Marks",
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next,
-                    isError = examMarksError,
-                    errorText = "Please enter exam marks",
-                    onNext = { localFocusManager.moveFocus(FocusDirection.Down) },
-                    onValueChange = { examMarks = it }
-                )
-
-                VerticalSpacer(size = 8)
-
-                HeaderText(text = "Exam Date")
-                VerticalSpacer(size = 5)
-                CustomTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            mDatePickerDialog.show()
-                        },
-                    text = examDate,
-                    placeholderText = "DD/MM/YYYY",
-                    readOnly = true,
-                    enabled = false,
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next,
-                    isError = examDateError,
-                    errorText = "Please enter exam date",
-                    onNext = { localFocusManager.moveFocus(FocusDirection.Down) },
-                    onValueChange = { }
-                )
-
-                VerticalSpacer(size = 8)
-
-                HeaderText(text = "Water Mark")
-                VerticalSpacer(size = 5)
-                HorizontalRadioGroup(
-                    mItems = waterMarkTypes,
-                    selected = selectedWaterMarkType,
-                    setSelected = setSelectedWaterMark
-                )
-                if (selectedWaterMarkType == "Institute Logo") {
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.Start
-                    ) {
-                        HorizontalRadioGroup(
-                            mItems = logoSizes,
-                            selected = selectedLogoSize,
-                            setSelected = setSelectedLogoSize
-                        )
-                        VerticalSpacer(size = 5)
+        val state by remember { viewModel.uiState }.collectAsStateWithLifecycle()
+        when(state) {
+            is UiState.Empty -> {}
+            is UiState.UnAuthorised -> {
+                LaunchedEffect(Unit) {
+                    val errorMessage = (state as UiState.UnAuthorised).errorMessage
+                    context.toast(message = errorMessage)
+                    navController.navigate(Screens.LoginScreen.route) {
+                        popUpToTop(navController)
                     }
                 }
-                if (selectedWaterMarkType == "Text") {
-                    CustomTextField(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = waterMarkText,
-                        placeholderText = "Water Mark",
-                        keyboardType = KeyboardType.Text,
-                        imeAction = ImeAction.Next,
-                        isError = waterMarkError,
-                        errorText = "Please enter water mark",
-                        onNext = { localFocusManager.moveFocus(FocusDirection.Down) },
-                        onValueChange = { waterMarkText = it }
-                    )
+            }
+
+            is UiState.Error -> {
+                val errorMessage = (state as UiState.Error).errorMessage
+                context.toast(message = errorMessage)
+            }
+
+            is UiState.Loading -> {
+                Loader()
+            }
+
+            is UiState.Success -> {
+
+                LaunchedEffect(Unit) {
+
+                    val configList = (state as UiState.Success).data.configList
+
+                    instituteName = configList.first { it.name == "ACCOUNT_HOLDER_NAME" }.value
                 }
 
-                VerticalSpacer(size = 8)
-
-                HeaderText(text = "Message for end of the Paper")
-                VerticalSpacer(size = 5)
-                CustomTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = endPaperMsg,
-                    placeholderText = "ALL THE BEST",
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next,
-                    isError = endPaperMsgError,
-                    errorText = "Please enter message",
-                    onNext = { localFocusManager.moveFocus(FocusDirection.Down) },
-                    onValueChange = { endPaperMsg = it }
-                )
-                VerticalSpacer(size = 8)
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start
+                Box(
+                    modifier = Modifier.fillMaxSize()
                 ) {
-                    Checkbox(
-                        checked = pageFooterCheckedState,
-                        onCheckedChange = { pageFooterCheckedState = it },
-                        colors = CheckboxDefaults.colors(
-                            checkedColor = Blue,
-                            uncheckedColor = Blue
-                        )
+
+                    Image(
+                        painter = painterResource(id = R.drawable.screen_bg),
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize()
                     )
-                    HeaderText(text = "Page Footer")
-                }
-                if (pageFooterCheckedState) {
-                    Column {
+
+                    Column(
+                        modifier = Modifier
+                            .verticalScroll(scrollState)
+                            .padding(
+                                start = screenPadding(),
+                                top = innerPadding.calculateTopPadding(),
+                                end = screenPadding(),
+                                bottom = screenPadding()
+                            )
+                    ) {
+
+                        VerticalSpacer(size = 5)
+
+                        /*HeaderText(text = "Institute Logo Title (Size: 180 x 40 mm)")
                         VerticalSpacer(size = 5)
                         CustomTextField(
                             modifier = Modifier.fillMaxWidth(),
-                            text = pageFooter,
-                            placeholderText = "Page Footer",
+                            text = imgName,
+                            trailingIcon = painterResource(id = R.drawable.ic_upload),
+                            onTrailingIconClick = {
+                                singlePhotoPickerLauncher.launch(
+                                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                )
+                            },
+                            readOnly = true,
+                            placeholderText = "Image Upload",
                             keyboardType = KeyboardType.Text,
                             imeAction = ImeAction.Next,
-                            isError = pageFooterError,
-                            errorText = "Please enter page footer",
+                            isError = imgError,
+                            errorText = "",
                             onNext = { localFocusManager.moveFocus(FocusDirection.Down) },
-                            onValueChange = { pageFooter = it }
+                            onValueChange = { imgName = it }
                         )
-                    }
-                }
 
-                VerticalSpacer(size = 8)
+                        VerticalSpacer(size = 8)*/
 
-                HeaderText(text = "Font Size")
-                VerticalSpacer(size = 5)
-                CustomDropDown(
-                    mExpanded = isFontSizeExpanded,
-                    items = items,
-                    mSelectedText = selectedFontSize,
-                    onClick = {
-                        isFontSizeExpanded = isFontSizeExpanded.not()
-                    },
-                    onDismissRequest = {
-                        isFontSizeExpanded = false
-                    }
-                ) { label ->
-                    selectedFontSize = label
-                    isFontSizeExpanded = false
-                }
-
-                VerticalSpacer(size = 8)
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start
-                ) {
-                    Checkbox(
-                        checked = pageBorderCheckedState,
-                        onCheckedChange = { pageBorderCheckedState = it },
-                        colors = CheckboxDefaults.colors(
-                            checkedColor = Blue,
-                            uncheckedColor = Blue
+                        HeaderText(text = "Institute Name")
+                        VerticalSpacer(size = 5)
+                        CustomTextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = instituteName,
+                            placeholderText = "Ravi Education",
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Next,
+                            isError = instituteNameError,
+                            errorText = "Please enter institute name",
+                            onNext = { localFocusManager.moveFocus(FocusDirection.Down) },
+                            onValueChange = {
+                                instituteName = it
+                                instituteNameError = false
+                            }
                         )
-                    )
-                    HeaderText(text = "Page Border")
-                }
 
-                VerticalSpacer(size = 8)
+                        VerticalSpacer(size = 8)
 
-                VerticalRadioGroup(
-                    mItems = paperTypes,
-                    selected = selectedPaperTypes,
-                    setSelected = setSelectedPaperTypes
-                )
+                        HeaderText(text = "Exam Name")
+                        VerticalSpacer(size = 5)
+                        CustomTextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = examName,
+                            placeholderText = "Monthly Exam",
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Next,
+                            isError = examNameError,
+                            errorText = "Please enter exam name",
+                            onNext = { localFocusManager.moveFocus(FocusDirection.Down) },
+                            onValueChange = {
+                                examName = it
+                                examNameError = false
+                            }
+                        )
 
-                VerticalSpacer(size = 8)
+                        VerticalSpacer(size = 8)
 
-                MainButton(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = "Download PDF Exam Paper"
-                ) {
+                        HeaderText(text = "Chapter Number")
+                        VerticalSpacer(size = 5)
+                        CustomTextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = chapterNumber,
+                            placeholderText = "1, 2, 3 OR All",
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Next,
+                            isError = chapterNumberError,
+                            errorText = "Please enter chapter number",
+                            onNext = { localFocusManager.moveFocus(FocusDirection.Down) },
+                            onValueChange = {
+                                chapterNumber = it
+                                chapterNumberError = false
+                            }
+                        )
 
+                        VerticalSpacer(size = 8)
+
+                        HeaderText(text = "Exam Time")
+                        VerticalSpacer(size = 5)
+                        CustomTextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = examTime,
+                            placeholderText = "30 Min/1 Hour/1 Hr 30 Min/2 Hours",
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Next,
+                            isError = examTimeError,
+                            errorText = "Please enter exam time",
+                            onNext = { localFocusManager.moveFocus(FocusDirection.Down) },
+                            onValueChange = {
+                                examTime = it
+                                examTimeError = false
+                            }
+                        )
+
+                        VerticalSpacer(size = 8)
+
+                        HeaderText(text = "Exam Marks")
+                        VerticalSpacer(size = 5)
+                        CustomTextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = examMarks,
+                            placeholderText = "Exam Marks",
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Next,
+                            isError = examMarksError,
+                            errorText = "Please enter exam marks",
+                            onNext = { localFocusManager.moveFocus(FocusDirection.Down) },
+                            onValueChange = {
+                                examMarks = it
+                                examMarksError = false
+                            }
+                        )
+
+                        VerticalSpacer(size = 8)
+
+                        HeaderText(text = "Exam Date")
+                        VerticalSpacer(size = 5)
+                        CustomTextField(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    mDatePickerDialog.show()
+                                },
+                            text = examDate,
+                            placeholderText = "DD/MM/YYYY",
+                            readOnly = true,
+                            enabled = false,
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Next,
+                            isError = examDateError,
+                            errorText = "Please enter exam date",
+                            onNext = { localFocusManager.moveFocus(FocusDirection.Down) },
+                            onValueChange = { }
+                        )
+
+                        VerticalSpacer(size = 8)
+
+                        HeaderText(text = "Water Mark")
+                        VerticalSpacer(size = 5)
+                        HorizontalRadioGroup(
+                            mItems = waterMarkTypes,
+                            selected = selectedWaterMarkType,
+                            setSelected = setSelectedWaterMark
+                        )
+                        if (selectedWaterMarkType == "Institute Logo") {
+                            Column(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalAlignment = Alignment.Start
+                            ) {
+                                HorizontalRadioGroup(
+                                    mItems = logoSizes,
+                                    selected = selectedLogoSize,
+                                    setSelected = setSelectedLogoSize
+                                )
+                                VerticalSpacer(size = 5)
+                            }
+                        }
+                        if (selectedWaterMarkType == "Text") {
+                            CustomTextField(
+                                modifier = Modifier.fillMaxWidth(),
+                                text = waterMarkText,
+                                placeholderText = "Water Mark",
+                                keyboardType = KeyboardType.Text,
+                                imeAction = ImeAction.Next,
+                                isError = waterMarkError,
+                                errorText = "Please enter water mark",
+                                onNext = { localFocusManager.moveFocus(FocusDirection.Down) },
+                                onValueChange = {
+                                    waterMarkText = it
+                                    waterMarkError = false
+                                }
+                            )
+                        }
+
+                        VerticalSpacer(size = 8)
+
+                        HeaderText(text = "Message for end of the Paper")
+                        VerticalSpacer(size = 5)
+                        CustomTextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = endPaperMsg,
+                            placeholderText = "ALL THE BEST",
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Next,
+                            isError = endPaperMsgError,
+                            errorText = "Please enter message",
+                            onNext = { localFocusManager.moveFocus(FocusDirection.Down) },
+                            onValueChange = {
+                                endPaperMsg = it
+                                endPaperMsgError = false
+                            }
+                        )
+                        VerticalSpacer(size = 8)
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentHeight(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Start
+                        ) {
+                            Checkbox(
+                                checked = pageFooterCheckedState,
+                                onCheckedChange = { pageFooterCheckedState = it },
+                                colors = CheckboxDefaults.colors(
+                                    checkedColor = Blue,
+                                    uncheckedColor = Blue
+                                )
+                            )
+                            HeaderText(text = "Page Footer")
+                        }
+                        if (pageFooterCheckedState) {
+                            Column {
+                                VerticalSpacer(size = 5)
+                                CustomTextField(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    text = pageFooter,
+                                    placeholderText = "Page Footer",
+                                    keyboardType = KeyboardType.Text,
+                                    imeAction = ImeAction.Next,
+                                    isError = pageFooterError,
+                                    errorText = "Please enter page footer",
+                                    onNext = { localFocusManager.moveFocus(FocusDirection.Down) },
+                                    onValueChange = {
+                                        pageFooter = it
+                                        pageFooterError = false
+                                    }
+                                )
+                            }
+                        }
+
+                        VerticalSpacer(size = 8)
+
+                        HeaderText(text = "Font Size")
+                        VerticalSpacer(size = 5)
+                        CustomDropDown(
+                            mExpanded = isFontSizeExpanded,
+                            items = items,
+                            mSelectedText = selectedFontSize,
+                            onClick = {
+                                isFontSizeExpanded = isFontSizeExpanded.not()
+                            },
+                            onDismissRequest = {
+                                isFontSizeExpanded = false
+                            }
+                        ) { label ->
+                            selectedFontSize = label
+                            isFontSizeExpanded = false
+                        }
+
+                        VerticalSpacer(size = 8)
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentHeight(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Start
+                        ) {
+                            Checkbox(
+                                checked = pageBorderCheckedState,
+                                onCheckedChange = { pageBorderCheckedState = it },
+                                colors = CheckboxDefaults.colors(
+                                    checkedColor = Blue,
+                                    uncheckedColor = Blue
+                                )
+                            )
+                            HeaderText(text = "Page Border")
+                        }
+
+                        VerticalSpacer(size = 8)
+
+                        VerticalRadioGroup(
+                            mItems = paperTypes,
+                            selected = selectedPaperTypes,
+                            setSelected = setSelectedPaperTypes
+                        )
+
+                        VerticalSpacer(size = 8)
+
+                        MainButton(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = "Download PDF Exam Paper"
+                        ) {
+
+                        }
+                    }
                 }
             }
         }

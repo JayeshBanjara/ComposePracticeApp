@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         var isLoggedIn: Int? = 0
-        var userId: String? = null
+        var roleId: String? = null
         var profilePicUrl: String? = null
 
         lifecycleScope.launch {
@@ -31,23 +31,21 @@ class MainActivity : ComponentActivity() {
 
                 isLoggedIn.let {
                     if (isLoggedIn == 1) {
-                        userId = prefManager.getUserId.first()
+                        roleId = prefManager.getRoleId.first()
                         profilePicUrl = prefManager.getUserProfileImage.first()
                         setContent {
                             App(
                                 isLoggedIn = true,
-                                userId = userId,
-                                profilePicUrl = profilePicUrl,
-                                prefManager = prefManager
+                                roleId = roleId,
+                                profilePicUrl = profilePicUrl
                             )
                         }
                     } else {
                         setContent {
                             App(
                                 isLoggedIn = false,
-                                userId = userId,
-                                profilePicUrl = profilePicUrl,
-                                prefManager = prefManager
+                                roleId = roleId,
+                                profilePicUrl = profilePicUrl
                             )
                         }
                     }
