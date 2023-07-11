@@ -115,7 +115,7 @@ fun LoginScreen(
 
                     navController.navigate(
                         Screens.Dashboard.withArgs(
-                            loginData.userData[0].userId.toString(),
+                            loginData.userData[0].roleId.toString(),
                             encodedUrl
                         )
                     ) {
