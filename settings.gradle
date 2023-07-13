@@ -10,6 +10,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+
+        //For AndroidPDFViewer library
+        gradlePluginPortal()
     }
 }
 rootProject.name = "DemoAppCompose"

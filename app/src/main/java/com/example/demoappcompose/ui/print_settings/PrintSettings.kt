@@ -1,6 +1,7 @@
 package com.example.demoappcompose.ui.print_settings
 
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.widget.DatePicker
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -40,6 +41,7 @@ import com.example.demoappcompose.ui.components.CustomTextField
 import com.example.demoappcompose.ui.components.CustomTopAppBar
 import com.example.demoappcompose.ui.components.Loader
 import com.example.demoappcompose.ui.components.MainButton
+import com.example.demoappcompose.ui.create_question.PDFViewerActivity
 import com.example.demoappcompose.ui.navigation.Screens
 import com.example.demoappcompose.ui.popUpToTop
 import com.example.demoappcompose.ui.screenPadding
@@ -496,9 +498,9 @@ fun PrintSettings(
 
                         MainButton(
                             modifier = Modifier.fillMaxWidth(),
-                            text = "Download PDF Exam Paper"
+                            text = "Preview Exam Paper"
                         ) {
-
+                            context.startActivity(Intent(context, PDFViewerActivity::class.java))
                         }
                     }
                 }

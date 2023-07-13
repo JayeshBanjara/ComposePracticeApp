@@ -77,9 +77,9 @@ fun LoginScreen(
             modifier = Modifier.fillMaxSize()
         )
 
-        val state by remember { loginViewModel.uiState }.collectAsStateWithLifecycle()
-
         MainContent(navController = navController, loginViewModel = loginViewModel)
+
+        val state by remember { loginViewModel.uiState }.collectAsStateWithLifecycle()
 
         when (state) {
             is UiState.Loading -> {
