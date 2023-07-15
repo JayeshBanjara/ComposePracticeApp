@@ -17,6 +17,7 @@ import com.example.demoappcompose.ui.create_question.ChapterListViewModel
 import com.example.demoappcompose.ui.create_question.CreateQuestion
 import com.example.demoappcompose.ui.create_question.CreateQuestionViewModel
 import com.example.demoappcompose.ui.create_question.QuestionList
+import com.example.demoappcompose.ui.create_question.QuestionListViewModel
 import com.example.demoappcompose.ui.dashboard.Dashboard
 import com.example.demoappcompose.ui.dashboard.home.HomeViewModel
 import com.example.demoappcompose.ui.dashboard.my_subscription.MySubscription
@@ -169,8 +170,7 @@ fun AppNavigation(
         composable(route = Screens.PrintSettings.route) {
             val viewModel = hiltViewModel<PrintSettingsViewModel>()
             PrintSettings(
-                navController = navController,
-                viewModel = viewModel
+                navController = navController, viewModel = viewModel
             )
         }
 
@@ -196,15 +196,30 @@ fun AppNavigation(
             )
         }
 
-        composable(
-            route = Screens.QuestionList.route + "/{chapterName}",
+        composable(route = Screens.QuestionList.route + "/{chapterName}/{classId}/{subjectId}/{chapterId}",
             arguments = listOf(navArgument("chapterName") {
                 type = NavType.StringType
-            })
-        ) { entry ->
+            }, navArgument("classId") {
+                type = NavType.StringType
+            },
+
+                navArgument("subjectId") {
+                    type = NavType.StringType
+                },
+
+                navArgument("chapterId") {
+                    type = NavType.StringType
+                })) { entry ->
+
+            val questionListViewModel = hiltViewModel<QuestionListViewModel>()
+
             QuestionList(
                 navController = navController,
-                chapterName = entry.arguments?.getString("chapterName") ?: ""
+                viewModel = questionListViewModel,
+                chapterName = entry.arguments?.getString("chapterName") ?: "",
+                classId = entry.arguments?.getString("classId") ?: "",
+                subjectId = entry.arguments?.getString("subjectId") ?: "",
+                chapterId = entry.arguments?.getString("chapterId") ?: "",
             )
         }
     }

@@ -5,14 +5,10 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
@@ -23,20 +19,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.demoappcompose.R
+import com.example.demoappcompose.data.responses.question_list.QuestionData
 import com.example.demoappcompose.ui.HorizontalSpacer
-import com.example.demoappcompose.ui.VerticalSpacer
-import com.example.demoappcompose.ui.create_question.model.QuestionData
 import com.example.demoappcompose.ui.theme.AppDarkGreen
 import com.example.demoappcompose.ui.theme.AppLightGreen
 import com.example.demoappcompose.ui.theme.Blue
 import com.example.demoappcompose.ui.theme.HintColor
 import com.example.demoappcompose.ui.theme.WhiteText
+import com.example.demoappcompose.ui.theme.WhiteText2
 
 @Composable
 fun QuestionItem(
     questionData: QuestionData,
     isSelected: Boolean,
-    isMCQ: Boolean,
     onSelect: () -> Unit
 ) {
     Row(
@@ -54,7 +49,7 @@ fun QuestionItem(
                 color = if (isSelected) {
                     AppLightGreen
                 } else {
-                    WhiteText
+                    if(questionData.fromBook == 1) WhiteText else WhiteText2
                 }
             )
             .padding(10.dp)
@@ -76,7 +71,7 @@ fun QuestionItem(
                 .weight(1f)
         ) {
             Text(
-                text = "And the Himalaya’s green calm and serece. What does it mean’? It means that it",
+                text = questionData.question,
                 style = TextStyle(
                     color = Color.Black,
                     fontSize = 13.sp,
@@ -85,8 +80,19 @@ fun QuestionItem(
                 )
             )
 
-            if(isMCQ) {
-                Column(modifier = Modifier.fillMaxWidth()) {
+            if(questionData.options != null) {
+
+                Text(
+                    text = questionData.options,
+                    style = TextStyle(
+                        color = HintColor,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.W500,
+                        fontFamily = FontFamily(Font(R.font.quicksand_medium))
+                    )
+                )
+
+                /*Column(modifier = Modifier.fillMaxWidth()) {
                     VerticalSpacer(size = 8)
 
                     Text(
@@ -133,7 +139,7 @@ fun QuestionItem(
                     )
 
                     VerticalSpacer(size = 2)
-                }
+                }*/
             }
         }
     }

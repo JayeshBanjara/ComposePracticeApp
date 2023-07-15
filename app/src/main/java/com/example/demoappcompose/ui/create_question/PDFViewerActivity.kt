@@ -1,10 +1,14 @@
 package com.example.demoappcompose.ui.create_question
 
 import android.annotation.SuppressLint
+import android.app.DownloadManager
+import android.content.Context
+import android.net.Uri
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.ProgressBar
 import androidx.compose.ui.graphics.Color
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -24,17 +28,31 @@ class PDFViewerActivity : AppCompatActivity() {
     private lateinit var idPDFView: PDFView
     private lateinit var progressBar: ProgressBar
     private lateinit var clPdfRoot: ConstraintLayout
+    private lateinit var btnDownload: Button
+    private lateinit var downloadManager: DownloadManager
+    private lateinit var pdfUrl: String
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pdfviewer)
 
+        pdfUrl = "https://ravieducation.com/public/paper_history/1689177716_paper.pdf"
+
         idPDFView = findViewById(R.id.idPDFView)
         progressBar = findViewById(R.id.progress_bar)
         clPdfRoot = findViewById(R.id.clPdfRoot)
+        btnDownload = findViewById(R.id.btn_download)
 
-        loadPDFFromURL(pdfUrl = "https://ravieducation.com/public/paper_history/1689177716_paper.pdf")
+        btnDownload.setOnClickListener {
+            downloadManager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+            val uri = Uri.parse(pdfUrl)
+            val request = DownloadManager.Request(uri)
+            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            downloadManager.enqueue(request)
+        }
+
+        loadPDFFromURL(pdfUrl = pdfUrl)
     }
 
     private fun loadPDFFromURL(pdfUrl: String) {

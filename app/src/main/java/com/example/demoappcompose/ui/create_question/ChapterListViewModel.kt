@@ -3,7 +3,9 @@ package com.example.demoappcompose.ui.create_question
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.demoappcompose.data.PreferencesManager
+import com.example.demoappcompose.data.requests.GeneratePaymentRequest
 import com.example.demoappcompose.data.requests.HeadingListRequest
+import com.example.demoappcompose.data.responses.SuccessResponse
 import com.example.demoappcompose.data.responses.chapter_list.ChapterListResponse
 import com.example.demoappcompose.network.ApiException
 import com.example.demoappcompose.network.UnAuthorisedException
@@ -25,6 +27,9 @@ class ChapterListViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow<UiState<ChapterListResponse>>(UiState.Empty)
     val uiState: StateFlow<UiState<ChapterListResponse>> get() = _uiState
+
+    private val _generatePaymentState = MutableStateFlow<UiState<SuccessResponse>>(UiState.Empty)
+    val generatePaymentState: StateFlow<UiState<SuccessResponse>> get() = _generatePaymentState
 
     suspend fun getChapterList(classId: String, subjectId: String) = viewModelScope.launch {
 
@@ -55,6 +60,39 @@ class ChapterListViewModel @Inject constructor(
             _uiState.value = UiState.Error(e.message)
         } catch (e: Exception) {
             _uiState.value = UiState.Error(e.message)
+        }
+    }
+
+    suspend fun generaTePaymentRequest(classId: String, subjectId: String, amount: String) = viewModelScope.launch {
+
+        val userId = prefManager.getUserId.first()!!
+        val token = prefManager.getToken.first()!!
+
+        val headers = HashMap<String, String>()
+        headers[Constants.TOKEN_KEY] = token
+
+        val request = GeneratePaymentRequest(
+            deviceType = Constants.DEVICE_TYPE,
+            userId = userId,
+            classId = classId,
+            subjectId = subjectId,
+            amount = amount
+        )
+
+        try {
+            val response = userRepository.generaTePaymentRequest(headerMap = headers, request = request)
+            if (response.statusCode == 200) {
+                _generatePaymentState.value = UiState.Success(response)
+            } else {
+                _generatePaymentState.value = UiState.Error(response.message)
+            }
+        } catch (e: UnAuthorisedException) {
+            prefManager.clearData()
+            _generatePaymentState.value = UiState.UnAuthorised(e.message)
+        } catch (e: ApiException) {
+            _generatePaymentState.value = UiState.Error(e.message)
+        } catch (e: Exception) {
+            _generatePaymentState.value = UiState.Error(e.message)
         }
     }
 }

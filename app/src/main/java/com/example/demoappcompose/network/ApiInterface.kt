@@ -2,12 +2,14 @@ package com.example.demoappcompose.network
 
 import com.example.demoappcompose.data.requests.CommonRequest
 import com.example.demoappcompose.data.requests.ConfigRequest
+import com.example.demoappcompose.data.requests.GeneratePaymentRequest
 import com.example.demoappcompose.data.requests.HeadingListRequest
 import com.example.demoappcompose.data.requests.LoginRequest
 import com.example.demoappcompose.data.requests.LogoutRequest
 import com.example.demoappcompose.data.requests.MasterDataRequest
 import com.example.demoappcompose.data.requests.PaymentApproveRejectRequest
 import com.example.demoappcompose.data.requests.PurchaseBookRequest
+import com.example.demoappcompose.data.requests.QuestionListRequest
 import com.example.demoappcompose.data.requests.RegisterRequest
 import com.example.demoappcompose.data.requests.SubjectListRequest
 import com.example.demoappcompose.data.requests.UpdateProfileRequest
@@ -24,6 +26,7 @@ import com.example.demoappcompose.data.responses.payment.PaymentApproveRejectRes
 import com.example.demoappcompose.data.responses.payment.PaymentListResponse
 import com.example.demoappcompose.data.responses.profile.ProfileResponse
 import com.example.demoappcompose.data.responses.purchase_book.BooksResponse
+import com.example.demoappcompose.data.responses.question_list.QuestionListResponse
 import com.example.demoappcompose.data.responses.questions.HeadingListResponse
 import com.example.demoappcompose.data.responses.register_response.GetRoleMediumDataResponse
 import com.example.demoappcompose.data.responses.register_response.RegisterResponse
@@ -57,26 +60,22 @@ interface ApiInterface {
 
     @POST("user/get-dashboard-data")
     suspend fun getDashboardData(
-        @HeaderMap headerMap: Map<String, String>,
-        @Body request: CommonRequest
+        @HeaderMap headerMap: Map<String, String>, @Body request: CommonRequest
     ): Response<DashboardResponse>
 
     @POST("user/get-my-subscription-data")
     suspend fun getSubscriptionList(
-        @HeaderMap headerMap: Map<String, String>,
-        @Body request: CommonRequest
+        @HeaderMap headerMap: Map<String, String>, @Body request: CommonRequest
     ): Response<SubscriptionListResponse>
 
     @POST("user/logout")
     suspend fun logout(
-        @HeaderMap headerMap: Map<String, String>,
-        @Body request: LogoutRequest
+        @HeaderMap headerMap: Map<String, String>, @Body request: LogoutRequest
     ): Response<LogoutResponse>
 
     @POST("user/get-subject-data")
     suspend fun getSubjects(
-        @HeaderMap headerMap: Map<String, String>,
-        @Body request: SubjectListRequest
+        @HeaderMap headerMap: Map<String, String>, @Body request: SubjectListRequest
     ): Response<SubjectListResponse>
 
     @POST("get-master-data")
@@ -86,14 +85,12 @@ interface ApiInterface {
 
     @POST("user/get-my-paper-history-data")
     suspend fun getPaperHistory(
-        @HeaderMap headerMap: Map<String, String>,
-        @Body request: CommonRequest
+        @HeaderMap headerMap: Map<String, String>, @Body request: CommonRequest
     ): Response<PaperHistoryResponse>
 
     @POST("user/update-user-profile-data")
     suspend fun updateProfile(
-        @HeaderMap headerMap: Map<String, String>,
-        @Body request: UpdateProfileRequest
+        @HeaderMap headerMap: Map<String, String>, @Body request: UpdateProfileRequest
     ): Response<ProfileResponse>
 
     @POST("get-master-data")
@@ -103,32 +100,37 @@ interface ApiInterface {
 
     @POST("user/register-to-book-purchase")
     suspend fun registerToPurchaseBook(
-        @HeaderMap headerMap: Map<String, String>,
-        @Body request: PurchaseBookRequest
+        @HeaderMap headerMap: Map<String, String>, @Body request: PurchaseBookRequest
     ): Response<SuccessResponse>
 
     @POST("user/get-subject-heading-data")
     suspend fun getHeadingList(
-        @HeaderMap headerMap: Map<String, String>,
-        @Body request: HeadingListRequest
+        @HeaderMap headerMap: Map<String, String>, @Body request: HeadingListRequest
     ): Response<HeadingListResponse>
 
     @POST("user/get-chapter-data")
     suspend fun getChapterList(
-        @HeaderMap headerMap: Map<String, String>,
-        @Body request: HeadingListRequest
+        @HeaderMap headerMap: Map<String, String>, @Body request: HeadingListRequest
     ): Response<ChapterListResponse>
 
     @POST("user/get-payment-data")
     suspend fun getPaymentList(
-        @HeaderMap headerMap: Map<String, String>,
-        @Body request: CommonRequest
+        @HeaderMap headerMap: Map<String, String>, @Body request: CommonRequest
     ): Response<PaymentListResponse>
 
     @POST("user/subscription-approve-or-reject")
     suspend fun approveRejectPayment(
-        @HeaderMap headerMap: Map<String, String>,
-        @Body request: PaymentApproveRejectRequest
+        @HeaderMap headerMap: Map<String, String>, @Body request: PaymentApproveRejectRequest
     ): Response<PaymentApproveRejectResponse>
+
+    @POST("user/get-question-data")
+    suspend fun getQuestionList(
+        @HeaderMap headerMap: Map<String, String>, @Body request: QuestionListRequest
+    ): Response<QuestionListResponse>
+
+    @POST("user/generate-payment-data")
+    suspend fun generaTePaymentRequest(
+        @HeaderMap headerMap: Map<String, String>, @Body request: GeneratePaymentRequest
+    ): Response<SuccessResponse>
 
 }
