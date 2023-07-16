@@ -1,5 +1,6 @@
 package com.example.demoappcompose.ui.create_question
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -49,11 +50,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.demoappcompose.R
+import com.example.demoappcompose.data.responses.question_list.QuestionData
 import com.example.demoappcompose.ui.HorizontalSpacer
 import com.example.demoappcompose.ui.VerticalSpacer
 import com.example.demoappcompose.ui.components.CustomTopAppBar
 import com.example.demoappcompose.ui.components.Loader
 import com.example.demoappcompose.ui.components.ScreenBackground
+import com.example.demoappcompose.ui.create_question.model.Section
+import com.example.demoappcompose.ui.create_question.model.Serializer
 import com.example.demoappcompose.ui.navigation.Screens
 import com.example.demoappcompose.ui.popUpToTop
 import com.example.demoappcompose.ui.screenPadding
@@ -62,6 +66,7 @@ import com.example.demoappcompose.ui.theme.Blue
 import com.example.demoappcompose.ui.theme.LightBlue
 import com.example.demoappcompose.ui.theme.NoRippleTheme
 import com.example.demoappcompose.ui.theme.TitleColor
+import com.example.demoappcompose.utility.Constants
 import com.example.demoappcompose.utility.UiState
 import com.example.demoappcompose.utility.toast
 import kotlinx.coroutines.launch
@@ -72,14 +77,31 @@ fun ChapterList(
     chapterListViewModel: ChapterListViewModel,
     classId: String,
     subjectId: String,
-    subjectName: String
+    subjectName: String,
+    section: String
 ) {
+
+    BackHandler {
+        navController.previousBackStackEntry
+            ?.savedStateHandle
+            ?.set(Constants.QUESTIONS, section)
+        navController.popBackStack()
+    }
+
+    val questions = Serializer.deserialize(section)?.questions
 
     Scaffold(topBar = {
         CustomTopAppBar(
-            title = subjectName, showBack = true, onBackClick = {
+            title = subjectName,
+            showBack = true,
+            onBackClick = {
+                navController.previousBackStackEntry
+                    ?.savedStateHandle
+                    ?.set(Constants.QUESTIONS, section)
                 navController.popBackStack()
-            }, questionCounts = 5
+            },
+
+            questionCounts = questions?.size ?: 0
         )
     }) { innerPadding ->
 
@@ -162,7 +184,8 @@ fun ChapterList(
                                                             chapter.chapterName,
                                                             chapter.classId,
                                                             chapter.subjectId,
-                                                            chapter.chpId
+                                                            chapter.chpId,
+                                                            section
                                                         )
                                                     )
                                                 } else {

@@ -8,6 +8,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.demoappcompose.data.responses.question_list.QuestionData
 import com.example.demoappcompose.ui.auth.login.LoginScreen
 import com.example.demoappcompose.ui.auth.login.LoginViewModel
 import com.example.demoappcompose.ui.auth.register.RegisterScreen
@@ -34,6 +35,7 @@ import com.example.demoappcompose.ui.splash.SplashScreen
 import com.example.demoappcompose.ui.splash.SplashViewModel
 import com.example.demoappcompose.ui.subject.SubjectScreen
 import com.example.demoappcompose.ui.subject.SubjectsViewModel
+import com.example.demoappcompose.utility.Constants
 
 @Composable
 fun AppNavigation(
@@ -156,6 +158,9 @@ fun AppNavigation(
             })
         ) { entry ->
 
+            val questions =
+                entry.savedStateHandle.get<String>(Constants.QUESTIONS)
+
             val createQuestionViewModel = hiltViewModel<CreateQuestionViewModel>()
 
             CreateQuestion(
@@ -163,7 +168,8 @@ fun AppNavigation(
                 viewModel = createQuestionViewModel,
                 classId = entry.arguments?.getString("classId") ?: "",
                 subjectId = entry.arguments?.getString("subjectId") ?: "",
-                subjectName = entry.arguments?.getString("subjectName") ?: ""
+                subjectName = entry.arguments?.getString("subjectName") ?: "",
+                questions = questions
             )
         }
 
@@ -175,28 +181,35 @@ fun AppNavigation(
         }
 
         composable(
-            route = Screens.ChapterList.route + "/{classId}/{subjectId}/{subjectName}",
+            route = Screens.ChapterList.route + "/{classId}/{subjectId}/{subjectName}/{section}",
             arguments = listOf(navArgument("classId") {
                 type = NavType.StringType
             }, navArgument("subjectId") {
                 type = NavType.StringType
             }, navArgument("subjectName") {
                 type = NavType.StringType
+            }, navArgument("section") {
+                type = NavType.StringType
             })
         ) { entry ->
 
+            val questions =
+                entry.savedStateHandle.get<String>(Constants.QUESTIONS)
+
             val chapterListViewModel = hiltViewModel<ChapterListViewModel>()
+
 
             ChapterList(
                 navController = navController,
                 classId = entry.arguments?.getString("classId") ?: "",
                 subjectId = entry.arguments?.getString("subjectId") ?: "",
                 subjectName = entry.arguments?.getString("subjectName") ?: "",
-                chapterListViewModel = chapterListViewModel
+                chapterListViewModel = chapterListViewModel,
+                section = entry.arguments?.getString("section") ?: ""
             )
         }
 
-        composable(route = Screens.QuestionList.route + "/{chapterName}/{classId}/{subjectId}/{chapterId}",
+        composable(route = Screens.QuestionList.route + "/{chapterName}/{classId}/{subjectId}/{chapterId}/{section}",
             arguments = listOf(navArgument("chapterName") {
                 type = NavType.StringType
             }, navArgument("classId") {
@@ -209,7 +222,10 @@ fun AppNavigation(
 
                 navArgument("chapterId") {
                     type = NavType.StringType
-                })) { entry ->
+                }, navArgument("section") {
+                    type = NavType.StringType
+                })
+        ) { entry ->
 
             val questionListViewModel = hiltViewModel<QuestionListViewModel>()
 
@@ -220,6 +236,7 @@ fun AppNavigation(
                 classId = entry.arguments?.getString("classId") ?: "",
                 subjectId = entry.arguments?.getString("subjectId") ?: "",
                 chapterId = entry.arguments?.getString("chapterId") ?: "",
+                section = entry.arguments?.getString("section") ?: ""
             )
         }
     }

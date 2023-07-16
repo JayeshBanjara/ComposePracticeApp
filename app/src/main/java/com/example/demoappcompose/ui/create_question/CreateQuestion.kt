@@ -1,5 +1,7 @@
 package com.example.demoappcompose.ui.create_question
 
+import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -49,6 +51,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.demoappcompose.R
+import com.example.demoappcompose.data.responses.question_list.QuestionData
 import com.example.demoappcompose.ui.HorizontalSpacer
 import com.example.demoappcompose.ui.VerticalSpacer
 import com.example.demoappcompose.ui.components.CustomTopAppBar
@@ -58,6 +61,7 @@ import com.example.demoappcompose.ui.create_question.components.QuestionPreferen
 import com.example.demoappcompose.ui.create_question.components.QuestionTitleDropDown
 import com.example.demoappcompose.ui.create_question.components.WhiteTextField
 import com.example.demoappcompose.ui.create_question.model.Section
+import com.example.demoappcompose.ui.create_question.model.Serializer
 import com.example.demoappcompose.ui.navigation.Screens
 import com.example.demoappcompose.ui.popUpToTop
 import com.example.demoappcompose.ui.screenPadding
@@ -74,15 +78,32 @@ fun CreateQuestion(
     viewModel: CreateQuestionViewModel,
     classId: String,
     subjectId: String,
-    subjectName: String
+    subjectName: String,
+    questions: String?
 ) {
 
+    LaunchedEffect(key1 = questions) {
+        if(questions != null) {
+
+            val updatedSection = Serializer.deserialize(questions)
+
+           viewModel.sectionList.find { it.sectionId == viewModel.activeSection }?.questions = updatedSection?.questions
+        }
+    }
+
     Scaffold(topBar = {
-        CustomTopAppBar(title = "Generate Exam Paper", showBack = true, onBackClick = {
-            navController.popBackStack()
-        }, actionIcon = painterResource(id = R.drawable.ic_print), onIconClick = {
-            navController.navigate(Screens.PrintSettings.route)
-        })
+        CustomTopAppBar(
+            title = "Generate Exam Paper",
+            showBack = true,
+            onBackClick = {
+                navController.popBackStack()
+            },
+            actionIcon = painterResource(id = R.drawable.ic_print),
+            onIconClick = {
+                navController.navigate(Screens.PrintSettings.route)
+                Log.e("Paper", viewModel.sectionList.toList().toString())
+            }
+        )
     }, floatingActionButton = {
         ExtendedFloatingActionButton(
             onClick = {
@@ -285,11 +306,17 @@ fun CreateQuestion(
                                                     IconButton(
                                                         onClick = {
                                                             coroutineScope.launch {
+
+                                                                viewModel.activeSection = viewModel.sectionList[index].sectionId
+
+                                                                val sectionStr = Serializer.serialize(section)
+
                                                                 navController.navigate(
                                                                     Screens.ChapterList.withArgs(
                                                                         classId,
                                                                         subjectId,
-                                                                        subjectName
+                                                                        subjectName,
+                                                                        sectionStr
                                                                     )
                                                                 )
                                                             }

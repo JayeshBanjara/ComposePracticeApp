@@ -37,6 +37,7 @@ class CreateQuestionViewModel @Inject constructor(
     val sectionList = mutableStateListOf<Section>()
     var headingList = mutableListOf<HeadingData>()
     val deletedSections = mutableListOf<Int>()
+    var activeSection = 0
 
     init {
         val section = Section(
@@ -48,6 +49,7 @@ class CreateQuestionViewModel @Inject constructor(
         )
 
         sectionList.add(section)
+        activeSection = section.sectionId
     }
 
     suspend fun getHeadingList(classId: String, subjectId: String) = viewModelScope.launch {

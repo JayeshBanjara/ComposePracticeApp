@@ -7,4 +7,5 @@ object Constants {
     const val DEVICE_TYPE: Int = 1 // 1 - Android, 2 - Web
     const val DEVICE_PLATFORM = "Android"
     const val TOKEN_KEY = "username"
+    const val QUESTIONS = "questions"
 }
