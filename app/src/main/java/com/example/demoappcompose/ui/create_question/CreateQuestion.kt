@@ -100,6 +100,8 @@ fun CreateQuestion(
             onIconClick = {
                 navController.navigate(Screens.PrintSettings.route)
                 Log.e("Paper", viewModel.sectionList.toList().toString())
+
+                viewModel.prepareRequest()
             }
         )
     }, floatingActionButton = {
