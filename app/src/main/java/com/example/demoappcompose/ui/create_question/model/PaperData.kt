@@ -26,10 +26,13 @@ data class Section(
     var questions: MutableList<QuestionData>? = null
 )
 
+/*
 object Serializer {
-    /*private val moshi = Moshi.Builder().build()
+    */
+/*private val moshi = Moshi.Builder().build()
     private val adapter: JsonAdapter<Section> =
-        moshi.adapter(Types.newParameterizedType(Section::class.java))*/
+        moshi.adapter(Types.newParameterizedType(Section::class.java))*//*
+
 
     private val moshi = Moshi.Builder().add(com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory()).build()
     private val adapter: JsonAdapter<Section> =
@@ -42,4 +45,4 @@ object Serializer {
     fun deserialize(json: String): Section? {
         return adapter.fromJson(json)
     }
-}
+}*/

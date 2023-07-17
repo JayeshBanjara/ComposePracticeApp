@@ -1,7 +1,6 @@
 package com.example.demoappcompose.ui.create_question
 
 import android.util.Log
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -51,7 +50,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.demoappcompose.R
-import com.example.demoappcompose.data.responses.question_list.QuestionData
 import com.example.demoappcompose.ui.HorizontalSpacer
 import com.example.demoappcompose.ui.VerticalSpacer
 import com.example.demoappcompose.ui.components.CustomTopAppBar
@@ -61,7 +59,6 @@ import com.example.demoappcompose.ui.create_question.components.QuestionPreferen
 import com.example.demoappcompose.ui.create_question.components.QuestionTitleDropDown
 import com.example.demoappcompose.ui.create_question.components.WhiteTextField
 import com.example.demoappcompose.ui.create_question.model.Section
-import com.example.demoappcompose.ui.create_question.model.Serializer
 import com.example.demoappcompose.ui.navigation.Screens
 import com.example.demoappcompose.ui.popUpToTop
 import com.example.demoappcompose.ui.screenPadding
@@ -70,6 +67,7 @@ import com.example.demoappcompose.ui.theme.LightBlue
 import com.example.demoappcompose.ui.theme.TitleColor
 import com.example.demoappcompose.utility.UiState
 import com.example.demoappcompose.utility.toast
+import com.google.gson.Gson
 import kotlinx.coroutines.launch
 
 @Composable
@@ -79,15 +77,15 @@ fun CreateQuestion(
     classId: String,
     subjectId: String,
     subjectName: String,
-    questions: String?
+    updatedSection: String?
 ) {
 
-    LaunchedEffect(key1 = questions) {
-        if(questions != null) {
+    LaunchedEffect(key1 = updatedSection) {
+        if(updatedSection != null) {
 
-            val updatedSection = Serializer.deserialize(questions)
+            val updatedSectionX = Gson().fromJson(updatedSection, Section::class.java)
 
-           viewModel.sectionList.find { it.sectionId == viewModel.activeSection }?.questions = updatedSection?.questions
+           viewModel.sectionList.find { it.sectionId == viewModel.activeSection }?.questions = updatedSectionX?.questions
         }
     }
 
@@ -309,7 +307,7 @@ fun CreateQuestion(
 
                                                                 viewModel.activeSection = viewModel.sectionList[index].sectionId
 
-                                                                val sectionStr = Serializer.serialize(section)
+                                                                val sectionStr = Gson().toJson(section)
 
                                                                 navController.navigate(
                                                                     Screens.ChapterList.withArgs(

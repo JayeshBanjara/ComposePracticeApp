@@ -158,7 +158,7 @@ fun AppNavigation(
             })
         ) { entry ->
 
-            val questions =
+            val updatedSection =
                 entry.savedStateHandle.get<String>(Constants.QUESTIONS)
 
             val createQuestionViewModel = hiltViewModel<CreateQuestionViewModel>()
@@ -169,7 +169,7 @@ fun AppNavigation(
                 classId = entry.arguments?.getString("classId") ?: "",
                 subjectId = entry.arguments?.getString("subjectId") ?: "",
                 subjectName = entry.arguments?.getString("subjectName") ?: "",
-                questions = questions
+                updatedSection = updatedSection
             )
         }
 
@@ -193,11 +193,10 @@ fun AppNavigation(
             })
         ) { entry ->
 
-            val questions =
+            val updatedSection =
                 entry.savedStateHandle.get<String>(Constants.QUESTIONS)
 
             val chapterListViewModel = hiltViewModel<ChapterListViewModel>()
-
 
             ChapterList(
                 navController = navController,
@@ -205,7 +204,8 @@ fun AppNavigation(
                 subjectId = entry.arguments?.getString("subjectId") ?: "",
                 subjectName = entry.arguments?.getString("subjectName") ?: "",
                 chapterListViewModel = chapterListViewModel,
-                section = entry.arguments?.getString("section") ?: ""
+                section = entry.arguments?.getString("section") ?: "",
+                updatedSection = updatedSection ?: ""
             )
         }
 

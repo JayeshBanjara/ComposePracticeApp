@@ -57,7 +57,6 @@ import com.example.demoappcompose.ui.components.CustomTopAppBar
 import com.example.demoappcompose.ui.components.Loader
 import com.example.demoappcompose.ui.components.ScreenBackground
 import com.example.demoappcompose.ui.create_question.model.Section
-import com.example.demoappcompose.ui.create_question.model.Serializer
 import com.example.demoappcompose.ui.navigation.Screens
 import com.example.demoappcompose.ui.popUpToTop
 import com.example.demoappcompose.ui.screenPadding
@@ -69,6 +68,7 @@ import com.example.demoappcompose.ui.theme.TitleColor
 import com.example.demoappcompose.utility.Constants
 import com.example.demoappcompose.utility.UiState
 import com.example.demoappcompose.utility.toast
+import com.google.gson.Gson
 import kotlinx.coroutines.launch
 
 @Composable
@@ -78,17 +78,26 @@ fun ChapterList(
     classId: String,
     subjectId: String,
     subjectName: String,
-    section: String
+    section: String,
+    updatedSection: String?
 ) {
 
     BackHandler {
         navController.previousBackStackEntry
             ?.savedStateHandle
-            ?.set(Constants.QUESTIONS, section)
+            ?.set(Constants.QUESTIONS, updatedSection)
         navController.popBackStack()
     }
 
-    val questions = Serializer.deserialize(section)?.questions
+    var questions = mutableListOf<QuestionData>()
+
+        LaunchedEffect(updatedSection) {
+            val x = Gson().fromJson(updatedSection ?: section,  Section::class.java)
+            if(x != null) {
+                questions = x.questions!!
+            }
+    }
+
 
     Scaffold(topBar = {
         CustomTopAppBar(
@@ -97,7 +106,7 @@ fun ChapterList(
             onBackClick = {
                 navController.previousBackStackEntry
                     ?.savedStateHandle
-                    ?.set(Constants.QUESTIONS, section)
+                    ?.set(Constants.QUESTIONS, updatedSection)
                 navController.popBackStack()
             },
 
