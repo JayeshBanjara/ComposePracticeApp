@@ -309,12 +309,14 @@ fun CreateQuestion(
 
                                                                 val sectionStr = Gson().toJson(section)
 
+                                                                Log.e("Paper 1", sectionStr)
+
                                                                 navController.navigate(
                                                                     Screens.ChapterList.withArgs(
+                                                                        sectionStr,
                                                                         classId,
                                                                         subjectId,
-                                                                        subjectName,
-                                                                        sectionStr
+                                                                        subjectName
                                                                     )
                                                                 )
                                                             }

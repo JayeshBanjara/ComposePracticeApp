@@ -1,5 +1,6 @@
 package com.example.demoappcompose.ui.create_question
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -51,6 +52,8 @@ fun QuestionList(
 
     LaunchedEffect(Unit) {
 
+        Log.e("Paper 5", section)
+
         val sectionX = Gson().fromJson(section, Section::class.java)
 
         if (sectionX != null) {
@@ -65,6 +68,8 @@ fun QuestionList(
         val sectionObj = Gson().fromJson(section, Section::class.java)
         sectionObj?.questions = viewModel.selectedQuestions
         val sectionStr = Gson().toJson(sectionObj)
+
+        Log.e("Paper 6", sectionStr)
 
         navController.previousBackStackEntry
             ?.savedStateHandle

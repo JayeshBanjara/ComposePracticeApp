@@ -70,6 +70,7 @@ class CreateQuestionViewModel @Inject constructor(
         try {
             val response = userRepository.getHeadingList(headerMap = headers, request = request)
             if (response.statusCode == 200) {
+                sectionList[0].selectedHeading = response.headingListData.headingList[0]
                 _getHeadingState.value = UiState.Success(response)
             } else {
                 _getHeadingState.value = UiState.Error(response.message)

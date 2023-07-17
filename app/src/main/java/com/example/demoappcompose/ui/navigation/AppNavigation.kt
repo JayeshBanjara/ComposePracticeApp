@@ -1,5 +1,6 @@
 package com.example.demoappcompose.ui.navigation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -181,8 +182,9 @@ fun AppNavigation(
         }
 
         composable(
-            route = Screens.ChapterList.route + "/{classId}/{subjectId}/{subjectName}/{section}",
-            arguments = listOf(navArgument("classId") {
+            route = Screens.ChapterList.route + "/{section}/{classId}/{subjectId}/{subjectName}",
+            arguments = listOf(
+                navArgument("classId") {
                 type = NavType.StringType
             }, navArgument("subjectId") {
                 type = NavType.StringType
@@ -190,11 +192,14 @@ fun AppNavigation(
                 type = NavType.StringType
             }, navArgument("section") {
                 type = NavType.StringType
-            })
+            }
+            )
         ) { entry ->
 
             val updatedSection =
                 entry.savedStateHandle.get<String>(Constants.QUESTIONS)
+
+            Log.e("Paper 2", entry.arguments?.getString("section") ?: "")
 
             val chapterListViewModel = hiltViewModel<ChapterListViewModel>()
 
@@ -209,7 +214,7 @@ fun AppNavigation(
             )
         }
 
-        composable(route = Screens.QuestionList.route + "/{chapterName}/{classId}/{subjectId}/{chapterId}/{section}",
+        composable(route = Screens.QuestionList.route + "/{section}/{chapterName}/{classId}/{subjectId}/{chapterId}",
             arguments = listOf(navArgument("chapterName") {
                 type = NavType.StringType
             }, navArgument("classId") {
@@ -228,6 +233,8 @@ fun AppNavigation(
         ) { entry ->
 
             val questionListViewModel = hiltViewModel<QuestionListViewModel>()
+
+            Log.e("Paper 4", entry.arguments?.getString("section") ?: "")
 
             QuestionList(
                 navController = navController,

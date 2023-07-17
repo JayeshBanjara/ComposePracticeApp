@@ -1,5 +1,7 @@
 package com.example.demoappcompose.ui.create_question
 
+import android.annotation.SuppressLint
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
@@ -71,6 +73,7 @@ import com.example.demoappcompose.utility.toast
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun ChapterList(
     navController: NavController,
@@ -91,15 +94,15 @@ fun ChapterList(
 
     var questions = mutableListOf<QuestionData>()
 
-        LaunchedEffect(updatedSection) {
+      //  LaunchedEffect(updatedSection) {
             val x = Gson().fromJson(updatedSection ?: section,  Section::class.java)
             if(x != null) {
                 questions = x.questions!!
             }
-    }
+  //  }
 
-
-    Scaffold(topBar = {
+    Scaffold(
+        topBar = {
         CustomTopAppBar(
             title = subjectName,
             showBack = true,
@@ -188,13 +191,16 @@ fun ChapterList(
                                             .padding(10.dp)
                                             .clickable {
                                                 if (chapter.qrCodeData.isEmpty()) {
+
+                                                    Log.e("Paper 3", section)
+
                                                     navController.navigate(
                                                         Screens.QuestionList.withArgs(
+                                                            section,
                                                             chapter.chapterName,
                                                             chapter.classId,
                                                             chapter.subjectId,
-                                                            chapter.chpId,
-                                                            section
+                                                            chapter.chpId
                                                         )
                                                     )
                                                 } else {
