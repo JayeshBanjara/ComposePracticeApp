@@ -55,6 +55,23 @@ class CreateQuestionViewModel @Inject constructor(
         activeSection = section.sectionId
     }
 
+    fun isListReady(): Boolean {
+
+        //Find of any question has null heading, if found we will return
+        val heading = sectionList.find { it.selectedHeading == null }
+        if(heading != null) return false
+
+        //Find of any question has null marks, if found we will return
+        val marks = sectionList.find { it.marks.isNullOrEmpty() }
+        if(marks != null) return false
+
+        //Find of any question has null questions, if found we will return
+        val questions = sectionList.find { it.questions.isNullOrEmpty() }
+        if(questions != null) return false
+
+        return true
+    }
+
     fun prepareRequest() {
 
         val mainList = mutableListOf<DummyRequest>()

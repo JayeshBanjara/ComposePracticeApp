@@ -80,6 +80,8 @@ fun CreateQuestion(
     updatedSection: String?
 ) {
 
+    val context = LocalContext.current
+
     LaunchedEffect(key1 = updatedSection) {
         if(updatedSection != null) {
 
@@ -98,10 +100,26 @@ fun CreateQuestion(
             },
             actionIcon = painterResource(id = R.drawable.ic_print),
             onIconClick = {
-                navController.navigate(Screens.PrintSettings.route)
-                Log.e("Paper", viewModel.sectionList.toList().toString())
 
-                viewModel.prepareRequest()
+                //Find of any question has null heading, if found we will return
+                val heading = viewModel.sectionList.find { it.selectedHeading == null }
+
+                //Find of any question has null marks, if found we will return
+                val marks = viewModel.sectionList.find { it.marks.isNullOrEmpty() }
+
+                //Find of any question has null questions, if found we will return
+                val questions = viewModel.sectionList.find { it.questions.isNullOrEmpty() }
+
+                if(heading != null) {
+                    context.toast("Please add Heading")
+                } else if(marks != null) {
+                    context.toast("Please add Marks")
+                } else if(questions != null) {
+                    context.toast("Please add Questions")
+                } else {
+                    viewModel.prepareRequest()
+                    navController.navigate(Screens.PrintSettings.route)
+                }
             }
         )
     }, floatingActionButton = {
@@ -133,7 +151,6 @@ fun CreateQuestion(
     }) { innerPadding ->
 
         val localFocusManager = LocalFocusManager.current
-        val context = LocalContext.current
         val coroutineScope = rememberCoroutineScope()
 
         Box(modifier = Modifier.fillMaxSize()) {
