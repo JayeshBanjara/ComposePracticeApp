@@ -1,5 +1,7 @@
 package com.example.demoappcompose.ui.create_question
 
+import android.annotation.SuppressLint
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
@@ -57,7 +59,6 @@ import com.example.demoappcompose.ui.components.CustomTopAppBar
 import com.example.demoappcompose.ui.components.Loader
 import com.example.demoappcompose.ui.components.ScreenBackground
 import com.example.demoappcompose.ui.create_question.model.Section
-import com.example.demoappcompose.ui.create_question.model.Serializer
 import com.example.demoappcompose.ui.navigation.Screens
 import com.example.demoappcompose.ui.popUpToTop
 import com.example.demoappcompose.ui.screenPadding
@@ -69,8 +70,10 @@ import com.example.demoappcompose.ui.theme.TitleColor
 import com.example.demoappcompose.utility.Constants
 import com.example.demoappcompose.utility.UiState
 import com.example.demoappcompose.utility.toast
+import com.google.gson.Gson
 import kotlinx.coroutines.launch
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun ChapterList(
     navController: NavController,
@@ -78,26 +81,37 @@ fun ChapterList(
     classId: String,
     subjectId: String,
     subjectName: String,
-    section: String
+    section: String,
+    updatedSection: String?
 ) {
 
     BackHandler {
         navController.previousBackStackEntry
             ?.savedStateHandle
-            ?.set(Constants.QUESTIONS, section)
+            ?.set(Constants.QUESTIONS, updatedSection)
         navController.popBackStack()
     }
 
-    val questions = Serializer.deserialize(section)?.questions
+    var questions = mutableListOf<QuestionData>()
 
-    Scaffold(topBar = {
+        //LaunchedEffect(updatedSection) {
+            val x = Gson().fromJson(if(updatedSection.isNullOrEmpty()) section else updatedSection,  Section::class.java)
+            if(x != null) {
+                if(x.questions != null) {
+                    questions = x.questions!!
+                }
+            }
+   // }
+
+    Scaffold(
+        topBar = {
         CustomTopAppBar(
             title = subjectName,
             showBack = true,
             onBackClick = {
                 navController.previousBackStackEntry
                     ?.savedStateHandle
-                    ?.set(Constants.QUESTIONS, section)
+                    ?.set(Constants.QUESTIONS, updatedSection)
                 navController.popBackStack()
             },
 
@@ -179,13 +193,16 @@ fun ChapterList(
                                             .padding(10.dp)
                                             .clickable {
                                                 if (chapter.qrCodeData.isEmpty()) {
+
+
+
                                                     navController.navigate(
                                                         Screens.QuestionList.withArgs(
+                                                            section,
                                                             chapter.chapterName,
                                                             chapter.classId,
                                                             chapter.subjectId,
-                                                            chapter.chpId,
-                                                            section
+                                                            chapter.chpId
                                                         )
                                                     )
                                                 } else {

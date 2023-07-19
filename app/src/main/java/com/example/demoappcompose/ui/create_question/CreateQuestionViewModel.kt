@@ -1,5 +1,6 @@
 package com.example.demoappcompose.ui.create_question
 
+import android.util.Log
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -12,6 +13,8 @@ import com.example.demoappcompose.data.responses.questions.HeadingListResponse
 import com.example.demoappcompose.network.ApiException
 import com.example.demoappcompose.network.UnAuthorisedException
 import com.example.demoappcompose.repository.UserRepository
+import com.example.demoappcompose.ui.create_question.model.DummyRequest
+import com.example.demoappcompose.ui.create_question.model.QuestionsArr
 import com.example.demoappcompose.ui.create_question.model.Section
 import com.example.demoappcompose.utility.Constants
 import com.example.demoappcompose.utility.UiState
@@ -52,6 +55,56 @@ class CreateQuestionViewModel @Inject constructor(
         activeSection = section.sectionId
     }
 
+    fun isListReady(): Boolean {
+
+        //Find of any question has null heading, if found we will return
+        val heading = sectionList.find { it.selectedHeading == null }
+        if(heading != null) return false
+
+        //Find of any question has null marks, if found we will return
+        val marks = sectionList.find { it.marks.isNullOrEmpty() }
+        if(marks != null) return false
+
+        //Find of any question has null questions, if found we will return
+        val questions = sectionList.find { it.questions.isNullOrEmpty() }
+        if(questions != null) return false
+
+        return true
+    }
+
+    fun prepareRequest() {
+
+        val mainList = mutableListOf<DummyRequest>()
+
+        sectionList.forEach {
+
+            val qList = mutableListOf<QuestionsArr>()
+
+            it.questions?.forEach { it2 ->
+                val questionArr = QuestionsArr(
+                    qId = it2.qId,
+                    question = it2.question,
+                    options = it2.options
+                )
+
+                qList.add(questionArr)
+            }
+
+            val dummyRequest = DummyRequest(
+                isSectionName = it.hasSectionName,
+                sectionName = it.sectionName,
+                heading = it.selectedHeading?.headingName!!,
+                marks = it.marks?.toInt()!!,
+                questionsArr = qList
+            )
+
+            mainList.add(dummyRequest)
+
+        }
+
+        Log.e("main", mainList.toList().toString())
+    }
+
     suspend fun getHeadingList(classId: String, subjectId: String) = viewModelScope.launch {
 
         val userId = prefManager.getUserId.first()!!
@@ -70,6 +123,7 @@ class CreateQuestionViewModel @Inject constructor(
         try {
             val response = userRepository.getHeadingList(headerMap = headers, request = request)
             if (response.statusCode == 200) {
+                sectionList[0].selectedHeading = response.headingListData.headingList[0]
                 _getHeadingState.value = UiState.Success(response)
             } else {
                 _getHeadingState.value = UiState.Error(response.message)

@@ -1,5 +1,6 @@
 package com.example.demoappcompose.ui.create_question
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,13 +29,14 @@ import com.example.demoappcompose.ui.components.Loader
 import com.example.demoappcompose.ui.components.ScreenBackground
 import com.example.demoappcompose.ui.create_question.components.QuestionItem
 import com.example.demoappcompose.ui.create_question.components.QuestionTypeDropDown
-import com.example.demoappcompose.ui.create_question.model.Serializer
+import com.example.demoappcompose.ui.create_question.model.Section
 import com.example.demoappcompose.ui.navigation.Screens
 import com.example.demoappcompose.ui.popUpToTop
 import com.example.demoappcompose.ui.screenPadding
 import com.example.demoappcompose.utility.Constants
 import com.example.demoappcompose.utility.UiState
 import com.example.demoappcompose.utility.toast
+import com.google.gson.Gson
 import kotlinx.coroutines.launch
 
 @Composable
@@ -49,16 +51,23 @@ fun QuestionList(
 ) {
 
     LaunchedEffect(Unit) {
-        if (Serializer.deserialize(section)?.questions != null) {
-            viewModel.selectedQuestions.addAll(Serializer.deserialize(section)?.questions!!)
+
+        val sectionX = Gson().fromJson(section, Section::class.java)
+
+        if (sectionX != null) {
+            if (sectionX.questions != null) {
+                viewModel.selectedQuestions.addAll(sectionX.questions!!)
+            }
         }
     }
 
     BackHandler {
 
-        val sectionObj = Serializer.deserialize(section)
+        val sectionObj = Gson().fromJson(section, Section::class.java)
         sectionObj?.questions = viewModel.selectedQuestions
-        val sectionStr = Serializer.serialize(sectionObj!!)
+        val sectionStr = Gson().toJson(sectionObj)
+
+        Log.e("Paper 6", sectionStr)
 
         navController.previousBackStackEntry
             ?.savedStateHandle
@@ -73,9 +82,9 @@ fun QuestionList(
             title = chapterName,
             showBack = true,
             onBackClick = {
-                val sectionObj = Serializer.deserialize(section)
+                val sectionObj = Gson().fromJson(section, Section::class.java)
                 sectionObj?.questions = viewModel.selectedQuestions
-                val sectionStr = Serializer.serialize(sectionObj!!)
+                val sectionStr = Gson().toJson(sectionObj)
 
                 navController.previousBackStackEntry
                     ?.savedStateHandle
