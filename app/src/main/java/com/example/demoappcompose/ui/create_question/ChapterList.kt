@@ -94,12 +94,14 @@ fun ChapterList(
 
     var questions = mutableListOf<QuestionData>()
 
-      //  LaunchedEffect(updatedSection) {
-            val x = Gson().fromJson(updatedSection ?: section,  Section::class.java)
+        //LaunchedEffect(updatedSection) {
+            val x = Gson().fromJson(if(updatedSection.isNullOrEmpty()) section else updatedSection,  Section::class.java)
             if(x != null) {
-                questions = x.questions!!
+                if(x.questions != null) {
+                    questions = x.questions!!
+                }
             }
-  //  }
+   // }
 
     Scaffold(
         topBar = {
@@ -192,7 +194,7 @@ fun ChapterList(
                                             .clickable {
                                                 if (chapter.qrCodeData.isEmpty()) {
 
-                                                    Log.e("Paper 3", section)
+
 
                                                     navController.navigate(
                                                         Screens.QuestionList.withArgs(

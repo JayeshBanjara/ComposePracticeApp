@@ -52,8 +52,6 @@ fun QuestionList(
 
     LaunchedEffect(Unit) {
 
-        Log.e("Paper 5", section)
-
         val sectionX = Gson().fromJson(section, Section::class.java)
 
         if (sectionX != null) {

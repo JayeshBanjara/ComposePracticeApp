@@ -62,6 +62,7 @@ import com.example.demoappcompose.ui.create_question.model.Section
 import com.example.demoappcompose.ui.navigation.Screens
 import com.example.demoappcompose.ui.popUpToTop
 import com.example.demoappcompose.ui.screenPadding
+import com.example.demoappcompose.ui.theme.AppLightGreen
 import com.example.demoappcompose.ui.theme.Blue
 import com.example.demoappcompose.ui.theme.LightBlue
 import com.example.demoappcompose.ui.theme.TitleColor
@@ -83,11 +84,12 @@ fun CreateQuestion(
     val context = LocalContext.current
 
     LaunchedEffect(key1 = updatedSection) {
-        if(updatedSection != null) {
+        if (updatedSection != null) {
 
             val updatedSectionX = Gson().fromJson(updatedSection, Section::class.java)
 
-           viewModel.sectionList.find { it.sectionId == viewModel.activeSection }?.questions = updatedSectionX?.questions
+            viewModel.sectionList.find { it.sectionId == viewModel.activeSection }?.questions =
+                updatedSectionX?.questions
         }
     }
 
@@ -110,11 +112,11 @@ fun CreateQuestion(
                 //Find of any question has null questions, if found we will return
                 val questions = viewModel.sectionList.find { it.questions.isNullOrEmpty() }
 
-                if(heading != null) {
+                if (heading != null) {
                     context.toast("Please add Heading")
-                } else if(marks != null) {
+                } else if (marks != null) {
                     context.toast("Please add Marks")
-                } else if(questions != null) {
+                } else if (questions != null) {
                     context.toast("Please add Questions")
                 } else {
                     viewModel.prepareRequest()
@@ -309,6 +311,40 @@ fun CreateQuestion(
 
                                             HorizontalSpacer(size = 10)
 
+                                            if (section.questions != null) {
+                                                section.questions?.forEachIndexed { index, questionData ->
+                                                    Row(
+                                                        modifier = Modifier
+                                                            .width(100.dp)
+                                                            .background(
+                                                                color = AppLightGreen,
+                                                                shape = RoundedCornerShape(5.dp)
+                                                            )
+                                                    ) {
+                                                        Text(
+                                                            text = (index + 1).toString(),
+                                                            style = TextStyle(
+                                                                color = TitleColor,
+                                                                fontSize = 14.sp
+                                                            )
+                                                        )
+                                                        IconButton(onClick = {
+                                                            section.questions!!.removeAt(
+                                                                index
+                                                            )
+                                                        }) {
+                                                            Icon(
+                                                                painter = painterResource(id = R.drawable.ic_close),
+                                                                contentDescription = "Delete Question"
+                                                            )
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+
+                                            HorizontalSpacer(size = 10)
+
                                             Row(
                                                 verticalAlignment = Alignment.CenterVertically
                                             ) {
@@ -324,9 +360,11 @@ fun CreateQuestion(
                                                         onClick = {
                                                             coroutineScope.launch {
 
-                                                                viewModel.activeSection = viewModel.sectionList[index].sectionId
+                                                                viewModel.activeSection =
+                                                                    viewModel.sectionList[index].sectionId
 
-                                                                val sectionStr = Gson().toJson(section)
+                                                                val sectionStr =
+                                                                    Gson().toJson(section)
 
                                                                 Log.e("Paper 1", sectionStr)
 
