@@ -42,6 +42,7 @@ import com.example.demoappcompose.ui.components.CustomTopAppBar
 import com.example.demoappcompose.ui.components.Loader
 import com.example.demoappcompose.ui.components.MainButton
 import com.example.demoappcompose.ui.create_question.PDFViewerActivity
+import com.example.demoappcompose.ui.create_question.model.Section
 import com.example.demoappcompose.ui.navigation.Screens
 import com.example.demoappcompose.ui.popUpToTop
 import com.example.demoappcompose.ui.screenPadding
@@ -54,8 +55,14 @@ import java.util.Date
 @Composable
 fun PrintSettings(
     navController: NavController,
-    viewModel: PrintSettingsViewModel
+    viewModel: PrintSettingsViewModel,
+    sectionListStr: String
 ) {
+
+    LaunchedEffect(Unit) {
+        viewModel.sectionList = Gson.fromJson(sectionListStr,  Section::class.java)
+    }
+
     Scaffold(topBar = {
         CustomTopAppBar(
             title = "Print Settings",

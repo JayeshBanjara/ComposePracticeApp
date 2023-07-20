@@ -2,6 +2,7 @@ package com.example.demoappcompose.network
 
 import com.example.demoappcompose.data.requests.CommonRequest
 import com.example.demoappcompose.data.requests.ConfigRequest
+import com.example.demoappcompose.data.requests.GeneratePaperRequest
 import com.example.demoappcompose.data.requests.GeneratePaymentRequest
 import com.example.demoappcompose.data.requests.HeadingListRequest
 import com.example.demoappcompose.data.requests.LoginRequest
@@ -13,6 +14,7 @@ import com.example.demoappcompose.data.requests.QuestionListRequest
 import com.example.demoappcompose.data.requests.RegisterRequest
 import com.example.demoappcompose.data.requests.SubjectListRequest
 import com.example.demoappcompose.data.requests.UpdateProfileRequest
+import com.example.demoappcompose.data.responses.GeneratePaperResponse
 import com.example.demoappcompose.data.responses.SuccessResponse
 import com.example.demoappcompose.data.responses.about_us.AboutUsResponse
 import com.example.demoappcompose.data.responses.chapter_list.ChapterListResponse
@@ -132,5 +134,10 @@ interface ApiInterface {
     suspend fun generaTePaymentRequest(
         @HeaderMap headerMap: Map<String, String>, @Body request: GeneratePaymentRequest
     ): Response<SuccessResponse>
+
+    @POST("user/generate-paper")
+    suspend fun generatePaper(
+        @HeaderMap headerMap: Map<String, String>, @Body request: GeneratePaperRequest
+    ): Response<GeneratePaperResponse>
 
 }

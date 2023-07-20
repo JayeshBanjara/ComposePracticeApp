@@ -1,12 +1,14 @@
 package com.example.demoappcompose.repository
 
 import com.example.demoappcompose.data.requests.CommonRequest
+import com.example.demoappcompose.data.requests.GeneratePaperRequest
 import com.example.demoappcompose.data.requests.GeneratePaymentRequest
 import com.example.demoappcompose.data.requests.HeadingListRequest
 import com.example.demoappcompose.data.requests.PaymentApproveRejectRequest
 import com.example.demoappcompose.data.requests.PurchaseBookRequest
 import com.example.demoappcompose.data.requests.QuestionListRequest
 import com.example.demoappcompose.data.requests.UpdateProfileRequest
+import com.example.demoappcompose.data.responses.GeneratePaperResponse
 import com.example.demoappcompose.data.responses.SuccessResponse
 import com.example.demoappcompose.data.responses.chapter_list.ChapterListResponse
 import com.example.demoappcompose.data.responses.paper_history.PaperHistoryResponse
@@ -110,6 +112,16 @@ class UserRepository @Inject constructor(
     ): PaymentApproveRejectResponse {
         return apiRequest {
             apiInterface.approveRejectPayment(
+                headerMap = headerMap, request = request
+            )
+        }
+    }
+
+    suspend fun generatePaper(
+        headerMap: Map<String, String>, request: GeneratePaperRequest
+    ): GeneratePaperResponse {
+        return apiRequest {
+            apiInterface.generatePaper(
                 headerMap = headerMap, request = request
             )
         }
