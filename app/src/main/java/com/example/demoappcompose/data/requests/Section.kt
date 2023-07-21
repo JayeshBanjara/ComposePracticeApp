@@ -1,6 +1,5 @@
 package com.example.demoappcompose.data.requests
 
-
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 

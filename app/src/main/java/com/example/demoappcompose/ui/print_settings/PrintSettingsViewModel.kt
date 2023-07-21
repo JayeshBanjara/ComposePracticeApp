@@ -32,11 +32,31 @@ class PrintSettingsViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<UiState<ConfigResponse>>(UiState.Loading)
     val uiState: StateFlow<UiState<ConfigResponse>> get() = _uiState
 
-    private val _generatePaperState = MutableStateFlow<UiState<GeneratePaperResponse>>(UiState.Empty)
+    private val _generatePaperState =
+        MutableStateFlow<UiState<GeneratePaperResponse>>(UiState.Empty)
     val generatePaperState: StateFlow<UiState<GeneratePaperResponse>> get() = _generatePaperState
 
     var sectionList = mutableStateListOf<Section>()
 
+    lateinit var classId: String
+    lateinit var className: String
+    lateinit var subjectId: String
+    lateinit var subjectName: String
+    lateinit var mediumId: String
+    lateinit var chapterNumber: String
+    lateinit var instituteName: String
+    lateinit var examDate: String
+    lateinit var examTime: String
+    lateinit var examMarks: String
+    lateinit var examName: String
+    lateinit var isPageFooter1: String
+    lateinit var pageFooter: String
+    lateinit var isWaterMark1: String
+    lateinit var waterMark: String
+    lateinit var messageForEndOfPaper: String
+    lateinit var pageBorder: String
+    lateinit var fontSize: String
+    lateinit var generationType: String
 
     init {
         viewModelScope.launch {
@@ -47,13 +67,11 @@ class PrintSettingsViewModel @Inject constructor(
     private suspend fun getConfig() = viewModelScope.launch {
 
         val request = ConfigRequest(
-            deviceType = Constants.DEVICE_TYPE,
-            configType = "7"
+            deviceType = Constants.DEVICE_TYPE, configType = "7"
         )
 
         try {
-            val response =
-                appRepository.getConfig(request = request)
+            val response = appRepository.getConfig(request = request)
             if (response.statusCode == 200) {
                 _uiState.value = UiState.Success(response)
             } else {
@@ -69,22 +87,7 @@ class PrintSettingsViewModel @Inject constructor(
         }
     }
 
-    suspend fun generatePaper(
-        chapterNumber: String,
-        instituteName: String,
-        examDate: String,
-        examTime: String,
-        examMarks: String,
-        examName: String,
-        isPageFooter: String,
-        pageFooter: String,
-        isWaterMark: String,
-        waterMark: String,
-        messageForEndOfPaper: String,
-        pageBorder: String,
-        fontSize: String,
-        generationType: String
-    ) = viewModelScope.launch {
+    suspend fun generatePaper() = viewModelScope.launch {
 
         _generatePaperState.value = UiState.Loading
 
@@ -97,11 +100,11 @@ class PrintSettingsViewModel @Inject constructor(
         val request = GeneratePaperRequest(
             deviceType = Constants.DEVICE_TYPE,
             userId = userId,
-            classId = "",
-            className = "",
-            subjectId = "",
-            subjectName = "",
-            mediumId = "",
+            classId = classId,
+            className = className,
+            subjectId = subjectId,
+            subjectName = subjectName,
+            mediumId = mediumId,
             chapterNumber = chapterNumber,
             instituteName = instituteName,
             fontSize = fontSize,
@@ -110,8 +113,8 @@ class PrintSettingsViewModel @Inject constructor(
             examTime = examTime,
             examMarks = examMarks,
             examName = examName,
-            isPageFooter = isPageFooter,
-            isWaterMark = isWaterMark,
+            isPageFooter = isPageFooter1,
+            isWaterMark = isWaterMark1,
             waterMark = waterMark,
             messageForEndOfPaper = messageForEndOfPaper,
             pageBorder = pageBorder,
@@ -120,8 +123,7 @@ class PrintSettingsViewModel @Inject constructor(
         )
 
         try {
-            val response =
-                userRepository.generatePaper(headerMap = headers, request = request)
+            val response = userRepository.generatePaper(headerMap = headers, request = request)
             if (response.statusCode == 200) {
                 _generatePaperState.value = UiState.Success(response)
             } else {
