@@ -69,7 +69,22 @@ class PrintSettingsViewModel @Inject constructor(
         }
     }
 
-    suspend fun generatePaper() = viewModelScope.launch {
+    suspend fun generatePaper(
+        chapterNumber: String,
+        instituteName: String,
+        examDate: String,
+        examTime: String,
+        examMarks: String,
+        examName: String,
+        isPageFooter: String,
+        pageFooter: String,
+        isWaterMark: String,
+        waterMark: String,
+        messageForEndOfPaper: String,
+        pageBorder: String,
+        fontSize: String,
+        generationType: String
+    ) = viewModelScope.launch {
 
         _generatePaperState.value = UiState.Loading
 
@@ -81,27 +96,27 @@ class PrintSettingsViewModel @Inject constructor(
 
         val request = GeneratePaperRequest(
             deviceType = Constants.DEVICE_TYPE,
-            chapterNumber = "",
+            userId = userId,
             classId = "",
             className = "",
             subjectId = "",
-            userId = userId,
-            instituteName = "",
-            mediumId = "",
-            fontSize = "",
-            generationType = "",
-            examDate = "",
-            examTime = "",
-            examMarks = "",
-            examName = "",
-            isPageFooter = "",
-            isWaterMark = "",
-            messageForEndOfPaper = "",
-            pageBorder = "",
-            pageFooter = "",
             subjectName = "",
-            waterMark = "",
-            sectionList =
+            mediumId = "",
+            chapterNumber = chapterNumber,
+            instituteName = instituteName,
+            fontSize = fontSize,
+            generationType = generationType,
+            examDate = examDate,
+            examTime = examTime,
+            examMarks = examMarks,
+            examName = examName,
+            isPageFooter = isPageFooter,
+            isWaterMark = isWaterMark,
+            waterMark = waterMark,
+            messageForEndOfPaper = messageForEndOfPaper,
+            pageBorder = pageBorder,
+            pageFooter = pageFooter/*,
+            sectionList = */
         )
 
         try {

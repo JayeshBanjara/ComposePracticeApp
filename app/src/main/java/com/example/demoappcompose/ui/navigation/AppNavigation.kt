@@ -149,12 +149,16 @@ fun AppNavigation(
         }
 
         composable(
-            route = Screens.CreateQuestion.route + "/{classId}/{subjectId}/{subjectName}",
+            route = Screens.CreateQuestion.route + "/{classId}/{className}/{subjectId}/{subjectName}/{mediumId}",
             arguments = listOf(navArgument("classId") {
+                type = NavType.StringType
+            },navArgument("className") {
                 type = NavType.StringType
             }, navArgument("subjectId") {
                 type = NavType.StringType
             }, navArgument("subjectName") {
+                type = NavType.StringType
+            }, navArgument("mediumId") {
                 type = NavType.StringType
             })
         ) { entry ->
@@ -168,16 +172,27 @@ fun AppNavigation(
                 navController = navController,
                 viewModel = createQuestionViewModel,
                 classId = entry.arguments?.getString("classId") ?: "",
+                className = entry.arguments?.getString("className") ?: "",
                 subjectId = entry.arguments?.getString("subjectId") ?: "",
                 subjectName = entry.arguments?.getString("subjectName") ?: "",
+                mediumId = entry.arguments?.getString("mediumId") ?: "",
                 updatedSection = updatedSection
             )
         }
 
-        composable(route = Screens.PrintSettings.route) {
+        composable(
+            route = Screens.PrintSettings.route + "/{paperDataStr}",
+            arguments = listOf(
+                navArgument("paperDataStr") {
+                    type = NavType.StringType
+                })
+        ){ entry ->
+
             val viewModel = hiltViewModel<PrintSettingsViewModel>()
             PrintSettings(
-                navController = navController, viewModel = viewModel
+                navController = navController,
+                viewModel = viewModel,
+                paperDataStr = entry.arguments?.getString("paperDataStr") ?: ""
             )
         }
 

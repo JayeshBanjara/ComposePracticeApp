@@ -50,8 +50,10 @@ fun SubjectItem(navController: NavController, subject: Subject) {
                 navController.navigate(
                     Screens.CreateQuestion.withArgs(
                         subject.classId.toString(),
+                        subject.className,
                         subject.sId.toString(),
-                        subject.subjectName
+                        subject.subjectName,
+                        subject.mediumType.toString()
                     )
                 )
             },

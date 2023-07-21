@@ -10,10 +10,12 @@ import java.io.Serializable
 import kotlin.random.Random
 
 data class PaperData(
-    var isSectionWise: Boolean,
-    var isAddNewInSameSection: Boolean,
-    var lastSectionName: String,
-    var sectionList: List<Section>
+    var sectionList: List<Section>,
+    var classId: String,
+    var className: String,
+    var subjectId: String,
+    var subjectName: String,
+    var mediumId: String
 )
 
 data class Section(

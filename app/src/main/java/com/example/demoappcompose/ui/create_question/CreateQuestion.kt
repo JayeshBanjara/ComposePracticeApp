@@ -76,8 +76,10 @@ fun CreateQuestion(
     navController: NavController,
     viewModel: CreateQuestionViewModel,
     classId: String,
+    className: String,
     subjectId: String,
     subjectName: String,
+    mediumId: String,
     updatedSection: String?
 ) {
 
@@ -119,8 +121,14 @@ fun CreateQuestion(
                 } else if (questions != null) {
                     context.toast("Please add Questions")
                 } else {
-                    viewModel.prepareRequest()
-                    navController.navigate(Screens.PrintSettings.route)
+                    val paperDataStr = viewModel.prepareRequest(
+                        classId = classId,
+                        className = className,
+                        subjectId = subjectId,
+                        subjectName = subjectName,
+                        mediumId = mediumId
+                    )
+                    navController.navigate(Screens.PrintSettings.withArgs(paperDataStr))
                 }
             }
         )

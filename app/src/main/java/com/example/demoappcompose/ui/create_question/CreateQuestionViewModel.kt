@@ -1,6 +1,5 @@
 package com.example.demoappcompose.ui.create_question
 
-import android.util.Log
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -14,10 +13,12 @@ import com.example.demoappcompose.network.ApiException
 import com.example.demoappcompose.network.UnAuthorisedException
 import com.example.demoappcompose.repository.UserRepository
 import com.example.demoappcompose.ui.create_question.model.DummyRequest
+import com.example.demoappcompose.ui.create_question.model.PaperData
 import com.example.demoappcompose.ui.create_question.model.QuestionsArr
 import com.example.demoappcompose.ui.create_question.model.Section
 import com.example.demoappcompose.utility.Constants
 import com.example.demoappcompose.utility.UiState
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,8 +28,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreateQuestionViewModel @Inject constructor(
-    private val userRepository: UserRepository,
-    private val prefManager: PreferencesManager
+    private val userRepository: UserRepository, private val prefManager: PreferencesManager
 ) : ViewModel() {
 
     private val _getHeadingState = MutableStateFlow<UiState<HeadingListResponse>>(UiState.Empty)
@@ -59,20 +59,22 @@ class CreateQuestionViewModel @Inject constructor(
 
         //Find of any question has null heading, if found we will return
         val heading = sectionList.find { it.selectedHeading == null }
-        if(heading != null) return false
+        if (heading != null) return false
 
         //Find of any question has null marks, if found we will return
         val marks = sectionList.find { it.marks.isNullOrEmpty() }
-        if(marks != null) return false
+        if (marks != null) return false
 
         //Find of any question has null questions, if found we will return
         val questions = sectionList.find { it.questions.isNullOrEmpty() }
-        if(questions != null) return false
+        if (questions != null) return false
 
         return true
     }
 
-    fun prepareRequest() {
+    fun prepareRequest(
+        classId: String, className: String, subjectId: String, subjectName: String, mediumId: String
+    ): String {
 
         val mainList = mutableListOf<DummyRequest>()
 
@@ -82,9 +84,7 @@ class CreateQuestionViewModel @Inject constructor(
 
             it.questions?.forEach { it2 ->
                 val questionArr = QuestionsArr(
-                    qId = it2.qId,
-                    question = it2.question,
-                    options = it2.options
+                    qId = it2.qId, question = it2.question, options = it2.options
                 )
 
                 qList.add(questionArr)
@@ -102,7 +102,16 @@ class CreateQuestionViewModel @Inject constructor(
 
         }
 
-        Log.e("main", mainList.toList().toString())
+        val paperData = PaperData(
+            sectionList = sectionList,
+            classId = classId,
+            className = className,
+            subjectId = subjectId,
+            subjectName = subjectName,
+            mediumId = mediumId
+        )
+
+        return Gson().toJson(paperData)
     }
 
     suspend fun getHeadingList(classId: String, subjectId: String) = viewModelScope.launch {
@@ -147,7 +156,7 @@ class CreateQuestionViewModel @Inject constructor(
             if (deletedSections.isNotEmpty()) {
                 sectionName = (deletedSections.min()).toChar().toString()
                 val isExist = sectionList.find { it.sectionName == sectionName }
-                if(isExist != null) {
+                if (isExist != null) {
                     sectionName = (lastSectionName.value + 1).toChar().toString()
                 }
             } else {
