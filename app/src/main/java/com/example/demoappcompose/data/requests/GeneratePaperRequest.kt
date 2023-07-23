@@ -41,7 +41,7 @@ data class GeneratePaperRequest(
     @Json(name = "page_footer")
     val pageFooter: String,
     @Json(name = "question_paper")
-    val sectionList: List<Section>? = null,
+    val sectionList: List<SectionNew>? = null,
     @Json(name = "subject_id")
     val subjectId: String,
     @Json(name = "subject_name")

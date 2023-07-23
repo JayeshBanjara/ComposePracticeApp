@@ -1,5 +1,6 @@
 package com.example.demoappcompose.ui.print_settings
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.widget.DatePicker
@@ -23,6 +24,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,6 +37,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.demoappcompose.R
+import com.example.demoappcompose.data.requests.QuestionData
+import com.example.demoappcompose.data.requests.SectionNew
 import com.example.demoappcompose.ui.VerticalSpacer
 import com.example.demoappcompose.ui.components.CustomDropDown
 import com.example.demoappcompose.ui.components.CustomTextField
@@ -43,29 +47,120 @@ import com.example.demoappcompose.ui.components.Loader
 import com.example.demoappcompose.ui.components.MainButton
 import com.example.demoappcompose.ui.create_question.PDFViewerActivity
 import com.example.demoappcompose.ui.create_question.model.PaperData
-import com.example.demoappcompose.ui.create_question.model.Section
 import com.example.demoappcompose.ui.navigation.Screens
 import com.example.demoappcompose.ui.popUpToTop
 import com.example.demoappcompose.ui.screenPadding
 import com.example.demoappcompose.ui.theme.Blue
 import com.example.demoappcompose.utility.UiState
 import com.example.demoappcompose.utility.toast
-import com.google.gson.Gson
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun PrintSettings(
+    paperDataStr: String,
     navController: NavController,
-    viewModel: PrintSettingsViewModel,
-    paperDataStr: String
+    viewModel: PrintSettingsViewModel
 ) {
 
-    LaunchedEffect(Unit) {
+    var instituteName by remember { mutableStateOf("") }
+    var instituteNameError by remember { mutableStateOf(false) }
+    var examName by remember { mutableStateOf("") }
+    var examNameError by remember { mutableStateOf(false) }
+    var chapterNumber by remember { mutableStateOf("") }
+    var chapterNumberError by remember { mutableStateOf(false) }
+    var examTime by remember { mutableStateOf("") }
+    var examTimeError by remember { mutableStateOf(false) }
+    var examMarks by remember { mutableStateOf("") }
+    var examMarksError by remember { mutableStateOf(false) }
+    var examDate by remember { mutableStateOf("") }
+    var examDateError by remember { mutableStateOf(false) }
+    val waterMarkTypes = listOf("Text", "Institute Logo")
+    var waterMarkError by remember { mutableStateOf(false) }
+    val (selectedWaterMarkType, setSelectedWaterMark) = remember { mutableStateOf(waterMarkTypes[0]) }
+    var waterMarkText by remember { mutableStateOf("") }
+    val logoSizes = listOf("25%", "50%", "75%", "100%")
+    val (selectedLogoSize, setSelectedLogoSize) = remember { mutableStateOf(logoSizes[0]) }
+    var endPaperMsg by remember { mutableStateOf("") }
+    var endPaperMsgError by remember { mutableStateOf(false) }
+    var pageFooter by remember { mutableStateOf("") }
+    var pageFooterError by remember { mutableStateOf(false) }
+    var pageFooterCheckedState by remember { mutableStateOf(false) }
+    var isFontSizeExpanded by remember { mutableStateOf(false) }
+    val items = listOf("12", "14", "16", "18", "20")
+    var selectedFontSize by remember { mutableStateOf(items[2]) }
+    var pageBorderCheckedState by remember { mutableStateOf(false) }
+    val paperTypes = listOf(
+        "PDF Only Exam Paper",
+        "PDF Exam Paper & Solution with only Answer",
+        "Material"
+        /*"Worksheet"*/
+    )
+    var paperTypesError by remember { mutableStateOf(false) }
+    val (selectedPaperTypes, setSelectedPaperTypes) = remember { mutableStateOf(paperTypes[0]) }
+
+
+    // Declaring integer values
+    // for year, month and day
+    val mYear: Int
+    val mMonth: Int
+    val mDay: Int
+
+    // Initializing a Calendar
+    val mCalendar = Calendar.getInstance()
+
+    // Fetching current year, month and day
+    mYear = mCalendar.get(Calendar.YEAR)
+    mMonth = mCalendar.get(Calendar.MONTH)
+    mDay = mCalendar.get(Calendar.DAY_OF_MONTH)
+
+    mCalendar.time = Date()
+
+    // Fetching the Local Context
+    val mContext = LocalContext.current
+
+    // Declaring DatePickerDialog and setting
+    // initial values as current values (present year, month and day)
+    val mDatePickerDialog = DatePickerDialog(
+        mContext,
+        { _: DatePicker, selectedYear: Int, selectedMonth: Int, selectedDay: Int ->
+
+            val tempSelectedDay = if (selectedDay < 10) {
+                "0$selectedDay"
+            } else {
+                selectedDay
+            }
+
+            val tempSelectedMonth = if (selectedMonth < 10) {
+                "0${selectedMonth + 1}"
+            } else {
+                "${selectedMonth + 1}"
+            }
+
+            examDate = "$tempSelectedDay/$tempSelectedMonth/$selectedYear"
+
+        }, mYear, mMonth, mDay
+    )
+
+    /*val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = { uri ->
+            if (uri != null) {
+                imgName = uri.toString()
+            }
+        }
+    )*/
+
+    /*LaunchedEffect(Unit) {
         val x = Gson().fromJson(paperDataStr,  PaperData::class.java)
         viewModel.sectionList.clear()
         viewModel.sectionList.addAll(x.sectionList)
-    }
+    }*/
 
     Scaffold(topBar = {
         CustomTopAppBar(
@@ -80,95 +175,10 @@ fun PrintSettings(
         val context = LocalContext.current
         val localFocusManager = LocalFocusManager.current
         val scrollState = rememberScrollState()
+        val coroutineScope = rememberCoroutineScope()
         /*var imgName by remember { mutableStateOf("") }
         var imgError by remember { mutableStateOf(false) }*/
-        var instituteName by remember { mutableStateOf("") }
-        var instituteNameError by remember { mutableStateOf(false) }
-        var examName by remember { mutableStateOf("") }
-        var examNameError by remember { mutableStateOf(false) }
-        var chapterNumber by remember { mutableStateOf("") }
-        var chapterNumberError by remember { mutableStateOf(false) }
-        var examTime by remember { mutableStateOf("") }
-        var examTimeError by remember { mutableStateOf(false) }
-        var examMarks by remember { mutableStateOf("") }
-        var examMarksError by remember { mutableStateOf(false) }
-        var examDate by remember { mutableStateOf("") }
-        var examDateError by remember { mutableStateOf(false) }
-        val waterMarkTypes = listOf("Text", "Institute Logo")
-        var waterMarkError by remember { mutableStateOf(false) }
-        val (selectedWaterMarkType, setSelectedWaterMark) = remember { mutableStateOf(waterMarkTypes[0]) }
-        var waterMarkText by remember { mutableStateOf("") }
-        val logoSizes = listOf("25%", "50%", "75%", "100%")
-        val (selectedLogoSize, setSelectedLogoSize) = remember { mutableStateOf(logoSizes[0]) }
-        var endPaperMsg by remember { mutableStateOf("") }
-        var endPaperMsgError by remember { mutableStateOf(false) }
-        var pageFooter by remember { mutableStateOf("") }
-        var pageFooterError by remember { mutableStateOf(false) }
-        var pageFooterCheckedState by remember { mutableStateOf(false) }
-        var isFontSizeExpanded by remember { mutableStateOf(false) }
-        val items = listOf("12", "14", "16", "18", "20")
-        var selectedFontSize by remember { mutableStateOf(items[2]) }
-        var pageBorderCheckedState by remember { mutableStateOf(false) }
-        val paperTypes = listOf(
-            "PDF Only Exam Paper",
-            "PDF Exam Paper & Solution with only Answer",
-            "Material"
-            /*"Worksheet"*/
-        )
-        var paperTypesError by remember { mutableStateOf(false) }
-        val (selectedPaperTypes, setSelectedPaperTypes) = remember { mutableStateOf(paperTypes[0]) }
 
-
-        // Declaring integer values
-        // for year, month and day
-        val mYear: Int
-        val mMonth: Int
-        val mDay: Int
-
-        // Initializing a Calendar
-        val mCalendar = Calendar.getInstance()
-
-        // Fetching current year, month and day
-        mYear = mCalendar.get(Calendar.YEAR)
-        mMonth = mCalendar.get(Calendar.MONTH)
-        mDay = mCalendar.get(Calendar.DAY_OF_MONTH)
-
-        mCalendar.time = Date()
-
-        // Fetching the Local Context
-        val mContext = LocalContext.current
-
-        // Declaring DatePickerDialog and setting
-        // initial values as current values (present year, month and day)
-        val mDatePickerDialog = DatePickerDialog(
-            mContext,
-            { _: DatePicker, selectedYear: Int, selectedMonth: Int, selectedDay: Int ->
-
-                val tempSelectedDay = if (selectedDay < 10) {
-                    "0$selectedDay"
-                } else {
-                    selectedDay
-                }
-
-                val tempSelectedMonth = if (selectedMonth < 10) {
-                    "0${selectedMonth + 1}"
-                } else {
-                    "${selectedMonth + 1}"
-                }
-
-                examDate = "$tempSelectedDay/$tempSelectedMonth/$selectedYear"
-
-            }, mYear, mMonth, mDay
-        )
-
-        /*val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.PickVisualMedia(),
-            onResult = { uri ->
-                if (uri != null) {
-                    imgName = uri.toString()
-                }
-            }
-        )*/
 
         val state by remember { viewModel.uiState }.collectAsStateWithLifecycle()
         when(state) {
@@ -511,7 +521,105 @@ fun PrintSettings(
                             modifier = Modifier.fillMaxWidth(),
                             text = "Preview Exam Paper"
                         ) {
-                            context.startActivity(Intent(context, PDFViewerActivity::class.java))
+
+                            coroutineScope.launch {
+                               // val paperData = Gson().fromJson(paperDataStr, PaperData::class.java)
+                               // val paperData = Json.decodeFromString<PaperData>(paperDataStr)
+
+                                val moshi: Moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+                                val adapter: JsonAdapter<PaperData> = moshi.adapter(PaperData::class.java)
+                                val paperData = adapter.fromJson(paperDataStr)
+
+                                // Now you have the complete data object retrieved from the JSON string
+                                // Use 'data' as needed in your destination screen
+
+
+                            val list = mutableListOf<SectionNew>()
+
+                                paperData?.sectionList?.forEach {
+
+                                    val qList = mutableListOf<QuestionData>()
+
+                                    it.questions!!.forEach { queDta ->
+                                        val qDta = QuestionData(
+                                            qId = queDta.qId,
+                                            question = queDta.question,
+                                            options = queDta.options
+                                        )
+
+                                        qList.add(qDta)
+                                    }
+
+                                    val x = SectionNew(
+                                        heading = it.selectedHeading!!.headingName,
+                                        isSectionName = it.hasSectionName,
+                                        sectionName = it.sectionName,
+                                        marks = it.marks!!.toInt(),
+                                        questionsArr = qList,
+                                    )
+
+                                    list.add(x)
+                                }
+
+                                viewModel.generatePaper(
+                                    classId = paperData?.classId!!,
+                                    className = paperData.className,
+                                    subjectId = paperData.subjectId,
+                                    subjectName = paperData.subjectName,
+                                    mediumId = paperData.mediumId,
+                                    chapterNumber = chapterNumber,
+                                    instituteName = instituteName,
+                                    fontSize = selectedFontSize,
+                                    generationType = selectedPaperTypes,
+                                    examDate = examDate,
+                                    examTime = examTime,
+                                    examMarks = examMarks,
+                                    examName = examName,
+                                    isPageFooter1 = if (pageFooterCheckedState) "1" else "0",
+                                    isWaterMark1 = if (pageFooterCheckedState) "1" else "0",
+                                    waterMark = waterMarkText,
+                                    messageForEndOfPaper = endPaperMsg,
+                                    pageBorder = if(pageBorderCheckedState) "1" else "0",
+                                    pageFooter = pageFooter,
+                                    sectionList = list
+                                )
+                            }
+
+                        }
+                    }
+
+                    val stateGeneratePaper by remember { viewModel.generatePaperState }.collectAsStateWithLifecycle()
+                    when(stateGeneratePaper) {
+                        is UiState.Empty -> {}
+                        is UiState.UnAuthorised -> {
+                            LaunchedEffect(Unit) {
+                                val errorMessage = (stateGeneratePaper as UiState.UnAuthorised).errorMessage
+                                context.toast(message = errorMessage)
+                                navController.navigate(Screens.LoginScreen.route) {
+                                    popUpToTop(navController)
+                                }
+                            }
+                        }
+
+                        is UiState.Error -> {
+                            val errorMessage = (stateGeneratePaper as UiState.Error).errorMessage
+                            context.toast(message = errorMessage)
+                        }
+
+                        is UiState.Loading -> {
+                            Loader()
+                        }
+
+                        is UiState.Success -> {
+                            LaunchedEffect(Unit) {
+
+                                val paperUrl = (stateGeneratePaper as UiState.Success).data.paperUrl
+
+                                context.startActivity(
+                                    Intent(context, PDFViewerActivity::class.java)
+                                        .putExtra("paperUrl", paperUrl)
+                                )
+                            }
                         }
                     }
                 }

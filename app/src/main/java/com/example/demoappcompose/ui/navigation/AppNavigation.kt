@@ -190,9 +190,9 @@ fun AppNavigation(
 
             val viewModel = hiltViewModel<PrintSettingsViewModel>()
             PrintSettings(
+                paperDataStr = entry.arguments?.getString("paperDataStr") ?: "",
                 navController = navController,
-                viewModel = viewModel,
-                paperDataStr = entry.arguments?.getString("paperDataStr") ?: ""
+                viewModel = viewModel
             )
         }
 

@@ -121,6 +121,9 @@ fun CreateQuestion(
                 } else if (questions != null) {
                     context.toast("Please add Questions")
                 } else {
+
+
+
                     val paperDataStr = viewModel.prepareRequest(
                         classId = classId,
                         className = className,
@@ -337,7 +340,7 @@ fun CreateQuestion(
                                                             )
                                                         )
                                                         IconButton(onClick = {
-                                                            section.questions!!.removeAt(
+                                                            updatedSection.questions!!.removeAt(
                                                                 index
                                                             )
                                                         }) {

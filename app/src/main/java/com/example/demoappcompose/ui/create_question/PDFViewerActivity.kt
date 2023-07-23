@@ -37,7 +37,8 @@ class PDFViewerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pdfviewer)
 
-        pdfUrl = "https://ravieducation.com/public/paper_history/1689177716_paper.pdf"
+        //pdfUrl = "https://ravieducation.com/public/paper_history/1689177716_paper.pdf"
+        pdfUrl = intent.getStringExtra("paperUrl")!!
 
         idPDFView = findViewById(R.id.idPDFView)
         progressBar = findViewById(R.id.progress_bar)

@@ -18,12 +18,15 @@ import com.example.demoappcompose.ui.create_question.model.QuestionsArr
 import com.example.demoappcompose.ui.create_question.model.Section
 import com.example.demoappcompose.utility.Constants
 import com.example.demoappcompose.utility.UiState
-import com.google.gson.Gson
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.net.URLEncoder
 import javax.inject.Inject
 
 @HiltViewModel
@@ -111,7 +114,15 @@ class CreateQuestionViewModel @Inject constructor(
             mediumId = mediumId
         )
 
-        return Gson().toJson(paperData)
+//        val x = Json.encodeToString(paperData)
+
+        val moshi: Moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+        val adapter: JsonAdapter<PaperData> = moshi.adapter(PaperData::class.java)
+        val jsonString = adapter.toJson(paperData)
+        val encodedJsonString = URLEncoder.encode(jsonString, "utf-8")
+
+        //return Gson().toJson(x)
+        return encodedJsonString
     }
 
     suspend fun getHeadingList(classId: String, subjectId: String) = viewModelScope.launch {

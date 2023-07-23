@@ -1,18 +1,17 @@
 package com.example.demoappcompose.ui.print_settings
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.demoappcompose.data.PreferencesManager
 import com.example.demoappcompose.data.requests.ConfigRequest
 import com.example.demoappcompose.data.requests.GeneratePaperRequest
+import com.example.demoappcompose.data.requests.SectionNew
 import com.example.demoappcompose.data.responses.GeneratePaperResponse
 import com.example.demoappcompose.data.responses.config.ConfigResponse
 import com.example.demoappcompose.network.ApiException
 import com.example.demoappcompose.network.UnAuthorisedException
 import com.example.demoappcompose.repository.AppRepository
 import com.example.demoappcompose.repository.UserRepository
-import com.example.demoappcompose.ui.create_question.model.Section
 import com.example.demoappcompose.utility.Constants
 import com.example.demoappcompose.utility.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,27 +35,27 @@ class PrintSettingsViewModel @Inject constructor(
         MutableStateFlow<UiState<GeneratePaperResponse>>(UiState.Empty)
     val generatePaperState: StateFlow<UiState<GeneratePaperResponse>> get() = _generatePaperState
 
-    var sectionList = mutableStateListOf<Section>()
+    //var sectionList = mutableStateListOf<SectionNew>()
 
-    lateinit var classId: String
-    lateinit var className: String
-    lateinit var subjectId: String
-    lateinit var subjectName: String
-    lateinit var mediumId: String
-    lateinit var chapterNumber: String
-    lateinit var instituteName: String
-    lateinit var examDate: String
-    lateinit var examTime: String
-    lateinit var examMarks: String
-    lateinit var examName: String
-    lateinit var isPageFooter1: String
-    lateinit var pageFooter: String
-    lateinit var isWaterMark1: String
-    lateinit var waterMark: String
-    lateinit var messageForEndOfPaper: String
-    lateinit var pageBorder: String
-    lateinit var fontSize: String
-    lateinit var generationType: String
+    /* lateinit var classId: String
+     lateinit var className: String
+     lateinit var subjectId: String
+     lateinit var subjectName: String
+     lateinit var mediumId: String
+     lateinit var chapterNumber: String
+     lateinit var instituteName: String
+     lateinit var examDate: String
+     lateinit var examTime: String
+     lateinit var examMarks: String
+     lateinit var examName: String
+     lateinit var isPageFooter1: String
+     lateinit var pageFooter: String
+     lateinit var isWaterMark1: String
+     lateinit var waterMark: String
+     lateinit var messageForEndOfPaper: String
+     lateinit var pageBorder: String
+     lateinit var fontSize: String
+     lateinit var generationType: String*/
 
     init {
         viewModelScope.launch {
@@ -87,7 +86,28 @@ class PrintSettingsViewModel @Inject constructor(
         }
     }
 
-    suspend fun generatePaper() = viewModelScope.launch {
+    suspend fun generatePaper(
+        classId: String,
+        className: String,
+        subjectId: String,
+        subjectName: String,
+        mediumId: String,
+        chapterNumber: String,
+        instituteName: String,
+        examDate: String,
+        examTime: String,
+        examMarks: String,
+        examName: String,
+        isPageFooter1: String,
+        pageFooter: String,
+        isWaterMark1: String,
+        waterMark: String,
+        messageForEndOfPaper: String,
+        pageBorder: String,
+        fontSize: String,
+        generationType: String,
+        sectionList: List<SectionNew>
+    ) = viewModelScope.launch {
 
         _generatePaperState.value = UiState.Loading
 
@@ -118,8 +138,8 @@ class PrintSettingsViewModel @Inject constructor(
             waterMark = waterMark,
             messageForEndOfPaper = messageForEndOfPaper,
             pageBorder = pageBorder,
-            pageFooter = pageFooter/*,
-            sectionList = */
+            pageFooter = pageFooter,
+            sectionList = sectionList
         )
 
         try {
