@@ -346,13 +346,12 @@ fun CreateQuestion(
 
                                                             viewModel.removeQuestion(index, index1)
 
-                                                            /*val x = viewModel.sectionList[index].questions!!
-                                                            x.removeAt(index1)
+                                                            val tempSection = viewModel.sectionList[index].questions!!
+                                                            tempSection.removeAt(index1)
 
                                                             viewModel.sectionList[index] = section.copy(
-                                                                questions = x
+                                                                questions = tempSection
                                                             )
-                                                            viewModel.sectionList[index] = section.copy()*/
                                                         }) {
                                                             Icon(
                                                                 painter = painterResource(id = R.drawable.ic_close),
