@@ -40,10 +40,15 @@ class CreateQuestionViewModel @Inject constructor(
     val sectionWiseCheckedState = mutableStateOf(false)
     val newQueSameSectionCheckedState = mutableStateOf(false)
     val lastSectionName = mutableIntStateOf(65)
-    val sectionList = mutableStateListOf<Section>()
+    var sectionList = mutableStateListOf<Section>()
     var headingList = mutableListOf<HeadingData>()
     val deletedSections = mutableListOf<Int>()
     var activeSection = 0
+
+    fun removeQuestion(sectionIndex: Int, questionIndex: Int) {
+        sectionList[sectionIndex].questions?.removeAt(questionIndex)
+        sectionList[sectionIndex] = sectionList[sectionIndex]
+    }
 
     init {
         val section = Section(

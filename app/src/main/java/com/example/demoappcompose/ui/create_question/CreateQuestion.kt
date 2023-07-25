@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -69,6 +70,7 @@ import com.example.demoappcompose.ui.theme.TitleColor
 import com.example.demoappcompose.utility.UiState
 import com.example.demoappcompose.utility.toast
 import com.google.gson.Gson
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 @Composable
@@ -237,6 +239,7 @@ fun CreateQuestion(
 
                         VerticalSpacer(size = 25)
 
+
                         LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp), content = {
 
                             itemsIndexed(viewModel.sectionList) { index, section ->
@@ -322,8 +325,8 @@ fun CreateQuestion(
 
                                             HorizontalSpacer(size = 10)
 
-                                            if (section.questions != null) {
-                                                section.questions?.forEachIndexed { index, questionData ->
+                                            if (!section.questions.isNullOrEmpty()) {
+                                                section.questions?.forEachIndexed { index1, questionData ->
                                                     Row(
                                                         modifier = Modifier
                                                             .width(100.dp)
@@ -340,9 +343,16 @@ fun CreateQuestion(
                                                             )
                                                         )
                                                         IconButton(onClick = {
-                                                            updatedSection.questions!!.removeAt(
-                                                                index
+
+                                                            viewModel.removeQuestion(index, index1)
+
+                                                            /*val x = viewModel.sectionList[index].questions!!
+                                                            x.removeAt(index1)
+
+                                                            viewModel.sectionList[index] = section.copy(
+                                                                questions = x
                                                             )
+                                                            viewModel.sectionList[index] = section.copy()*/
                                                         }) {
                                                             Icon(
                                                                 painter = painterResource(id = R.drawable.ic_close),
