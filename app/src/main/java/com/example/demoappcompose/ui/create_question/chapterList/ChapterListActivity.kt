@@ -1,10 +1,12 @@
 package com.example.demoappcompose.ui.create_question.chapterList
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -49,7 +51,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.demoappcompose.R
 import com.example.demoappcompose.R.id.txt_title
@@ -58,7 +63,9 @@ import com.example.demoappcompose.ui.VerticalSpacer
 import com.example.demoappcompose.ui.components.Loader
 import com.example.demoappcompose.ui.components.ScreenBackground
 import com.example.demoappcompose.ui.create_question.ChapterList
+import com.example.demoappcompose.ui.create_question.ChapterListViewModel
 import com.example.demoappcompose.ui.create_question.PaymentInstructionText
+import com.example.demoappcompose.ui.create_question.QuestionListActivity
 import com.example.demoappcompose.ui.navigation.Screens
 import com.example.demoappcompose.ui.popUpToTop
 import com.example.demoappcompose.ui.screenPadding
@@ -68,19 +75,32 @@ import com.example.demoappcompose.ui.theme.NoRippleTheme
 import com.example.demoappcompose.ui.theme.TitleColor
 import com.example.demoappcompose.utility.UiState
 import com.example.demoappcompose.utility.toast
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ChapterListActivity : AppCompatActivity() {
 
-    lateinit var txtTitle: TextView
-    lateinit var txtCount: TextView
-    lateinit var imgBack: ImageView
-    lateinit var composeView: ComposeView
+    private lateinit var txtTitle: TextView
+    private lateinit var txtCount: TextView
+    private lateinit var imgBack: ImageView
+    private lateinit var composeView: ComposeView
+
+    private lateinit var classId: String
+    private lateinit var subjectId: String
+    private lateinit var subjectName: String
+
+    private val chapterListViewModel by viewModels<ChapterListViewModel>()
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chapter_list)
+
+        classId = intent.getStringExtra("classId") ?: ""
+        subjectId = intent.getStringExtra("subjectId") ?: ""
+        subjectName = intent.getStringExtra("subjectName") ?: ""
 
         txtTitle = findViewById(txt_title)
         txtCount = findViewById(R.id.txt_count)
@@ -88,15 +108,17 @@ class ChapterListActivity : AppCompatActivity() {
         composeView = findViewById(R.id.compose_view)
 
         imgBack.setOnClickListener { finish() }
+        txtTitle.text = subjectName
 
         composeView.setContent {
+
             var showQRView by remember { mutableStateOf(false) }
             var clickedPos by remember { mutableIntStateOf(0) }
 
             val context = LocalContext.current
             val coroutineScope = rememberCoroutineScope()
 
-            /*CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
+            CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
                 Box(modifier = Modifier.fillMaxSize()) {
 
                     ScreenBackground()
@@ -116,9 +138,9 @@ class ChapterListActivity : AppCompatActivity() {
                             LaunchedEffect(Unit) {
                                 val errorMessage = (state as UiState.UnAuthorised).errorMessage
                                 context.toast(message = errorMessage)
-                                navController.navigate(Screens.LoginScreen.route) {
+                                /*navController.navigate(Screens.LoginScreen.route) {
                                     popUpToTop(navController)
-                                }
+                                }*/
                             }
                         }
 
@@ -138,12 +160,13 @@ class ChapterListActivity : AppCompatActivity() {
                             val chapterList = (state as UiState.Success).data.chapterData.chapterList
 
                             Column(
-                                modifier = Modifier.padding(
+                                /*modifier = Modifier.padding(
                                     start = screenPadding(),
                                     top = innerPadding.calculateTopPadding(),
                                     end = screenPadding(),
                                     bottom = screenPadding()
-                                )
+                                )*/
+                            modifier = Modifier.padding(screenPadding())
                             ) {
 
                                 VerticalSpacer(size = 10)
@@ -164,10 +187,7 @@ class ChapterListActivity : AppCompatActivity() {
                                                 .padding(10.dp)
                                                 .clickable {
                                                     if (chapter.qrCodeData.isEmpty()) {
-
-
-
-                                                        navController.navigate(
+                                                        /*navController.navigate(
                                                             Screens.QuestionList.withArgs(
                                                                 section,
                                                                 chapter.chapterName,
@@ -175,7 +195,16 @@ class ChapterListActivity : AppCompatActivity() {
                                                                 chapter.subjectId,
                                                                 chapter.chpId
                                                             )
-                                                        )
+                                                        )*/
+
+                                                        val i = Intent(context, QuestionListActivity::class.java)
+                                                        i.apply {
+                                                            putExtra("classId", chapter.classId.toString())
+                                                            putExtra("subjectId", chapter.subjectId.toString())
+                                                            putExtra("chapterId", chapter.chpId.toString())
+                                                            putExtra("chapterName", chapter.chapterName)
+                                                        }
+                                                        context.startActivity(i)
                                                     } else {
                                                         showQRView = showQRView.not()
                                                         clickedPos = index
@@ -386,7 +415,7 @@ class ChapterListActivity : AppCompatActivity() {
                         }
                     }
                 }
-            }*/
+            }
         }
     }
 }

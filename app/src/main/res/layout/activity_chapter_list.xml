@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/screen_bg"
     tools:context=".ui.create_question.chapterList.ChapterListActivity">
 
     <RelativeLayout
@@ -11,6 +12,7 @@
         android:layout_width="0dp"
         android:layout_height="?actionBarSize"
         android:background="#FF6C5CFF"
+        android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -21,7 +23,7 @@
             android:layout_height="24dp"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:background="@android:drawable/ic_delete" />
+            android:background="@drawable/ic_back" />
 
         <TextView
             android:id="@+id/txt_title"
