@@ -17,9 +17,14 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".ui.create_question.PDFViewerActivity"
+            android:name=".ui.create_question.CreateQuestionActivity"
             android:exported="false" />
-        <!-- Trigger Google Play services to install the backported photo picker module. -->
+        <activity
+            android:name=".ui.create_question.chapterList.ChapterListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.create_question.PDFViewerActivity"
+            android:exported="false" /> <!-- Trigger Google Play services to install the backported photo picker module. -->
         <!--
 <service android:name="com.google.android.gms.metadata.ModuleDependencies"
             android:enabled="false"

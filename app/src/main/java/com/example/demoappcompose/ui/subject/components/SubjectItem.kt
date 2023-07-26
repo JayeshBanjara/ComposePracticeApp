@@ -1,5 +1,7 @@
 package com.example.demoappcompose.ui.subject.components
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -29,13 +31,14 @@ import androidx.navigation.NavController
 import com.example.demoappcompose.R
 import com.example.demoappcompose.data.responses.subjects.Subject
 import com.example.demoappcompose.ui.VerticalSpacer
+import com.example.demoappcompose.ui.create_question.CreateQuestionActivity
 import com.example.demoappcompose.ui.navigation.Screens
 import com.example.demoappcompose.ui.theme.Blue
 import com.example.demoappcompose.ui.theme.LightBlue
 import com.example.demoappcompose.ui.theme.TitleColor
 
 @Composable
-fun SubjectItem(navController: NavController, subject: Subject) {
+fun SubjectItem(context: Context, subject: Subject) {
     Box(
         modifier = Modifier
             .padding(10.dp)
@@ -47,7 +50,17 @@ fun SubjectItem(navController: NavController, subject: Subject) {
             )
             .background(color = LightBlue, shape = RoundedCornerShape(10.dp))
             .clickable {
-                navController.navigate(
+
+                val intent = Intent(context, CreateQuestionActivity::class.java)
+                intent.putExtra("classId", subject.classId.toString())
+                intent.putExtra("className", subject.className)
+                intent.putExtra("subjectId", subject.sId.toString())
+                intent.putExtra("subjectName", subject.subjectName)
+                intent.putExtra("mediumType", subject.mediumType.toString())
+
+                context.startActivity(intent)
+
+                /*navController.navigate(
                     Screens.CreateQuestion.withArgs(
                         subject.classId.toString(),
                         subject.className,
@@ -55,7 +68,7 @@ fun SubjectItem(navController: NavController, subject: Subject) {
                         subject.subjectName,
                         subject.mediumType.toString()
                     )
-                )
+                )*/
             },
         contentAlignment = Alignment.Center
     ) {
