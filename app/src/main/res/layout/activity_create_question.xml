@@ -78,6 +78,7 @@
 
             <CheckBox
                 android:id="@+id/cb1"
+                android:paddingBottom="0dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:buttonTint="#FF6C5CFF" />
