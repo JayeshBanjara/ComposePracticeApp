@@ -3,11 +3,11 @@ package com.example.demoappcompose.ui.print_settings
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.DatePicker
 import android.widget.ImageView
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -47,18 +47,12 @@ import com.example.demoappcompose.ui.components.CustomTextField
 import com.example.demoappcompose.ui.components.Loader
 import com.example.demoappcompose.ui.components.MainButton
 import com.example.demoappcompose.ui.create_question.PDFViewerActivity
-import com.example.demoappcompose.ui.create_question.QuestionListViewModel
 import com.example.demoappcompose.ui.create_question.model.PaperData
-import com.example.demoappcompose.ui.navigation.Screens
-import com.example.demoappcompose.ui.popUpToTop
 import com.example.demoappcompose.ui.screenPadding
 import com.example.demoappcompose.ui.theme.Blue
 import com.example.demoappcompose.utility.UiState
 import com.example.demoappcompose.utility.getSerializable
 import com.example.demoappcompose.utility.toast
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -101,7 +95,11 @@ class PrintSettingsActivity : AppCompatActivity() {
             var examDateError by remember { mutableStateOf(false) }
             val waterMarkTypes = listOf("Text", "Institute Logo")
             var waterMarkError by remember { mutableStateOf(false) }
-            val (selectedWaterMarkType, setSelectedWaterMark) = remember { mutableStateOf(waterMarkTypes[0]) }
+            val (selectedWaterMarkType, setSelectedWaterMark) = remember {
+                mutableStateOf(
+                    waterMarkTypes[0]
+                )
+            }
             var waterMarkText by remember { mutableStateOf("") }
             val logoSizes = listOf("25%", "50%", "75%", "100%")
             val (selectedLogoSize, setSelectedLogoSize) = remember { mutableStateOf(logoSizes[0]) }
@@ -114,15 +112,15 @@ class PrintSettingsActivity : AppCompatActivity() {
             val items = listOf("12", "14", "16", "18", "20")
             var selectedFontSize by remember { mutableStateOf(items[2]) }
             var pageBorderCheckedState by remember { mutableStateOf(false) }
-            val paperTypes = listOf(
+            val paperTypes = if (viewModel.roleId == "3") listOf(
                 "PDF Only Exam Paper",
                 "PDF Exam Paper & Solution with only Answer",
                 "Material"
-                /*"Worksheet"*/
+            ) else listOf(
+                "Material"
             )
             var paperTypesError by remember { mutableStateOf(false) }
             val (selectedPaperTypes, setSelectedPaperTypes) = remember { mutableStateOf(paperTypes[0]) }
-
 
             // Declaring integer values
             // for year, month and day
@@ -175,7 +173,7 @@ class PrintSettingsActivity : AppCompatActivity() {
 
 
             val state by remember { viewModel.uiState }.collectAsStateWithLifecycle()
-            when(state) {
+            when (state) {
                 is UiState.Empty -> {}
                 is UiState.UnAuthorised -> {
                     LaunchedEffect(Unit) {
@@ -574,7 +572,7 @@ class PrintSettingsActivity : AppCompatActivity() {
                                         isWaterMark1 = if (pageFooterCheckedState) "1" else "0",
                                         waterMark = waterMarkText,
                                         messageForEndOfPaper = endPaperMsg,
-                                        pageBorder = if(pageBorderCheckedState) "1" else "0",
+                                        pageBorder = if (pageBorderCheckedState) "1" else "0",
                                         pageFooter = pageFooter,
                                         sectionList = list
                                     )
@@ -584,11 +582,12 @@ class PrintSettingsActivity : AppCompatActivity() {
                         }
 
                         val stateGeneratePaper by remember { viewModel.generatePaperState }.collectAsStateWithLifecycle()
-                        when(stateGeneratePaper) {
+                        when (stateGeneratePaper) {
                             is UiState.Empty -> {}
                             is UiState.UnAuthorised -> {
                                 LaunchedEffect(Unit) {
-                                    val errorMessage = (stateGeneratePaper as UiState.UnAuthorised).errorMessage
+                                    val errorMessage =
+                                        (stateGeneratePaper as UiState.UnAuthorised).errorMessage
                                     context.toast(message = errorMessage)
                                     /*navController.navigate(Screens.LoginScreen.route) {
                                         popUpToTop(navController)
@@ -598,7 +597,8 @@ class PrintSettingsActivity : AppCompatActivity() {
 
                             is UiState.Error -> {
                                 LaunchedEffect(Unit) {
-                                    val errorMessage = (stateGeneratePaper as UiState.Error).errorMessage
+                                    val errorMessage =
+                                        (stateGeneratePaper as UiState.Error).errorMessage
                                     context.toast(message = errorMessage)
                                 }
                             }
@@ -610,7 +610,8 @@ class PrintSettingsActivity : AppCompatActivity() {
                             is UiState.Success -> {
                                 LaunchedEffect(Unit) {
 
-                                    val paperUrl = (stateGeneratePaper as UiState.Success).data.paperUrl
+                                    val paperUrl =
+                                        (stateGeneratePaper as UiState.Success).data.paperUrl
 
                                     context.startActivity(
                                         Intent(context, PDFViewerActivity::class.java)

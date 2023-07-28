@@ -35,6 +35,8 @@ class PrintSettingsViewModel @Inject constructor(
         MutableStateFlow<UiState<GeneratePaperResponse>>(UiState.Empty)
     val generatePaperState: StateFlow<UiState<GeneratePaperResponse>> get() = _generatePaperState
 
+    lateinit var roleId: String
+
     //var sectionList = mutableStateListOf<SectionNew>()
 
     /* lateinit var classId: String
@@ -59,8 +61,19 @@ class PrintSettingsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            roleId = prefManager.getRoleId.first() ?: "2"
             getConfig()
         }
+    }
+
+    private fun getGenTypeId(genType: String): String {
+        var str = "2"
+        when(genType) {
+            "PDF Only Exam Paper" -> str = "0"
+            "PDF Exam Paper & Solution with only Answer" -> str = "1"
+            "Material" -> str = "2"
+        }
+        return str
     }
 
     private suspend fun getConfig() = viewModelScope.launch {
@@ -128,7 +141,7 @@ class PrintSettingsViewModel @Inject constructor(
             chapterNumber = chapterNumber,
             instituteName = instituteName,
             fontSize = fontSize,
-            generationType = generationType,
+            generationType = getGenTypeId(genType = generationType),
             examDate = examDate,
             examTime = examTime,
             examMarks = examMarks,
