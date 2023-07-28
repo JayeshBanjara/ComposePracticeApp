@@ -239,7 +239,6 @@ fun CreateQuestion(
 
                         VerticalSpacer(size = 25)
 
-
                         LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp), content = {
 
                             itemsIndexed(viewModel.sectionList) { index, section ->

@@ -38,7 +38,7 @@ import com.example.demoappcompose.ui.theme.LightBlue
 import com.example.demoappcompose.ui.theme.TitleColor
 
 @Composable
-fun SubjectItem(context: Context, subject: Subject) {
+fun SubjectItem(context: Context, subject: Subject, navController: NavController) {
     Box(
         modifier = Modifier
             .padding(10.dp)

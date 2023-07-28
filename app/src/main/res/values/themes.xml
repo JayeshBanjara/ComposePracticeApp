@@ -2,4 +2,7 @@
 <resources>
 
     <style name="Theme.DemoAppCompose" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <!-- For a descendant of Theme.MaterialComponents -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar" />
 </resources>

@@ -89,7 +89,7 @@ fun SubjectList(
                     contentPadding = PaddingValues(10.dp),
                     content = {
                         items(subjects) {
-                            SubjectItem(context = context, subject = it)
+                            SubjectItem(context = context, subject = it, navController = navController)
                         }
                     }
                 )
