@@ -8,7 +8,7 @@ import android.view.View
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.LinearLayout
-import androidx.activity.result.ActivityResult
+import android.widget.ProgressBar
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -20,7 +20,9 @@ import com.example.demoappcompose.data.responses.questions.HeadingData
 import com.example.demoappcompose.data.responses.questions.HeadingListResponse
 import com.example.demoappcompose.ui.create_question.chapterList.ChapterListActivity
 import com.example.demoappcompose.ui.create_question.model.Section
+import com.example.demoappcompose.ui.print_settings.PrintSettingsActivity
 import com.example.demoappcompose.utility.getSerializable
+import com.example.demoappcompose.utility.toast
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -33,8 +35,9 @@ class CreateQuestionActivity : AppCompatActivity(), CreateQuestionInterface,
     private lateinit var className: String
     private lateinit var subjectId: String
     private lateinit var subjectName: String
-    private lateinit var mediumType: String
+    private lateinit var mediumId: String
 
+    private lateinit var progressBar: ProgressBar
     private lateinit var imgBack: ImageView
     private lateinit var imgPrint: ImageView
     private lateinit var cbIsSection: CheckBox
@@ -68,8 +71,9 @@ class CreateQuestionActivity : AppCompatActivity(), CreateQuestionInterface,
         className = intent.getStringExtra("className") ?: ""
         subjectId = intent.getStringExtra("subjectId") ?: ""
         subjectName = intent.getStringExtra("subjectName") ?: ""
-        mediumType = intent.getStringExtra("mediumType") ?: ""
+        mediumId = intent.getStringExtra("mediumId") ?: ""
 
+        progressBar = findViewById(R.id.progress_bar)
         imgBack = findViewById(R.id.img_back)
         imgPrint = findViewById(R.id.img_print)
         cbIsSection = findViewById(R.id.cb1)
@@ -77,7 +81,6 @@ class CreateQuestionActivity : AppCompatActivity(), CreateQuestionInterface,
         cbInSameSectionLayout = findViewById(R.id.layout_cb2)
         rcvSection = findViewById(R.id.rcv_section)
         fabAddSection = findViewById(R.id.fab_add_section)
-
 
         fabAddSection.setOnClickListener {
 
@@ -119,18 +122,42 @@ class CreateQuestionActivity : AppCompatActivity(), CreateQuestionInterface,
             finish()
         }
 
-        imgPrint.setOnClickListener {
-            /*val i = Intent(this, ChapterListActivity::class.java)
-            i.apply {
-                putExtra("classId", classId)
-                putExtra("subjectId", subjectId)
-                putExtra("subjectName", subjectName)
-            }
-            startActivity(i)*/
-        }
-
         lifecycleScope.launch {
             viewModel.getHeadingList(classId = classId, subjectId = subjectId)
+        }
+
+        imgPrint.setOnClickListener {
+
+            //Find of any question has null heading, if found we will return
+            val heading = sectionList.find { it.selectedHeading == null }
+
+            //Find of any question has null marks, if found we will return
+            val marks = sectionList.find { it.marks.isNullOrEmpty() }
+
+            //Find of any question has null questions, if found we will return
+            val questions = sectionList.find { it.questions.isNullOrEmpty() }
+
+            if (heading != null) {
+                toast("Please add Heading")
+            } else if (marks != null) {
+                toast("Please add Marks")
+            } else if (questions != null) {
+                toast("Please add Questions")
+            } else {
+
+                val paperData = viewModel.prepareRequest(
+                    classId = classId,
+                    className = className,
+                    subjectId = subjectId,
+                    subjectName = subjectName,
+                    mediumId = mediumId,
+                    sectionList
+                )
+                //navController.navigate(Screens.PrintSettings.withArgs(paperDataStr))
+                val i = Intent(this, PrintSettingsActivity::class.java)
+                i.putExtra("paperData", paperData)
+                startActivity(i)
+            }
         }
     }
 
@@ -162,6 +189,8 @@ class CreateQuestionActivity : AppCompatActivity(), CreateQuestionInterface,
 
     override fun onSuccess(headingListResponse: HeadingListResponse) {
 
+        progressBar.visibility = View.GONE
+
         var questions = mutableListOf<QuestionData>()
 
         headingList.clear()
@@ -191,15 +220,17 @@ class CreateQuestionActivity : AppCompatActivity(), CreateQuestionInterface,
     }
 
     override fun onFailure(message: String) {
-
+        progressBar.visibility = View.GONE
+        toast(message)
     }
 
     override fun onStarted() {
-
+        progressBar.visibility = View.VISIBLE
     }
 
     override fun onSessionExpire(message: String) {
-
+        progressBar.visibility = View.GONE
+        toast(message)
     }
 
     private var chapterActivityLauncher =

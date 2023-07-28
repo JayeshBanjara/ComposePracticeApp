@@ -12,7 +12,7 @@ data class PaperData(
     var subjectId: String,
     var subjectName: String,
     var mediumId: String
-)
+): Serializable
 
 data class Section(
     var sectionId: Int = Random.nextInt(10000),

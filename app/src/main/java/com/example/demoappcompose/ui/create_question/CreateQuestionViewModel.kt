@@ -1,14 +1,9 @@
 package com.example.demoappcompose.ui.create_question
 
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.demoappcompose.data.PreferencesManager
 import com.example.demoappcompose.data.requests.HeadingListRequest
-import com.example.demoappcompose.data.responses.questions.HeadingData
-import com.example.demoappcompose.data.responses.questions.HeadingListResponse
 import com.example.demoappcompose.network.ApiException
 import com.example.demoappcompose.network.UnAuthorisedException
 import com.example.demoappcompose.repository.UserRepository
@@ -17,16 +12,9 @@ import com.example.demoappcompose.ui.create_question.model.PaperData
 import com.example.demoappcompose.ui.create_question.model.QuestionsArr
 import com.example.demoappcompose.ui.create_question.model.Section
 import com.example.demoappcompose.utility.Constants
-import com.example.demoappcompose.utility.UiState
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import java.net.URLEncoder
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,7 +22,9 @@ class CreateQuestionViewModel @Inject constructor(
     private val userRepository: UserRepository, private val prefManager: PreferencesManager
 ) : ViewModel() {
 
-    private val _getHeadingState = MutableStateFlow<UiState<HeadingListResponse>>(UiState.Empty)
+    var createQueInterface: CreateQuestionInterface? = null
+
+    /*private val _getHeadingState = MutableStateFlow<UiState<HeadingListResponse>>(UiState.Empty)
     val getHeadingState: StateFlow<UiState<HeadingListResponse>> get() = _getHeadingState
 
     val sectionWiseCheckedState = mutableStateOf(false)
@@ -45,7 +35,7 @@ class CreateQuestionViewModel @Inject constructor(
     val deletedSections = mutableListOf<Int>()
     var activeSection = 0
 
-    var createQueInterface: CreateQuestionInterface? = null
+
 
     fun removeQuestion(sectionIndex: Int, questionIndex: Int) {
         sectionList[sectionIndex].questions?.removeAt(questionIndex)
@@ -63,11 +53,16 @@ class CreateQuestionViewModel @Inject constructor(
 
         sectionList.add(section)
         activeSection = section.sectionId
-    }
+    }*/
 
     fun prepareRequest(
-        classId: String, className: String, subjectId: String, subjectName: String, mediumId: String
-    ): String {
+        classId: String,
+        className: String,
+        subjectId: String,
+        subjectName: String,
+        mediumId: String,
+        sectionList: MutableList<Section>
+    ): PaperData {
 
         val mainList = mutableListOf<DummyRequest>()
 
@@ -106,16 +101,19 @@ class CreateQuestionViewModel @Inject constructor(
 
 //        val x = Json.encodeToString(paperData)
 
-        val moshi: Moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+       /* val moshi: Moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
         val adapter: JsonAdapter<PaperData> = moshi.adapter(PaperData::class.java)
         val jsonString = adapter.toJson(paperData)
-        val encodedJsonString = URLEncoder.encode(jsonString, "utf-8")
+        val encodedJsonString = URLEncoder.encode(jsonString, "utf-8")*/
 
         //return Gson().toJson(x)
-        return encodedJsonString
+        //return encodedJsonString
+        return paperData
     }
 
     suspend fun getHeadingList(classId: String, subjectId: String) = viewModelScope.launch {
+
+        createQueInterface?.onStarted()
 
         val userId = prefManager.getUserId.first()!!
         val token = prefManager.getToken.first()!!
@@ -153,7 +151,7 @@ class CreateQuestionViewModel @Inject constructor(
         }
     }
 
-    fun getSectionName(): String {
+    /*fun getSectionName(): String {
 
         var sectionName = ""
 
@@ -177,5 +175,5 @@ class CreateQuestionViewModel @Inject constructor(
         }
 
         return sectionName
-    }
+    }*/
 }

@@ -1,6 +1,8 @@
 package com.example.demoappcompose.ui.create_question
 
 import android.content.Context
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +11,7 @@ import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
 import com.example.demoappcompose.R
 import com.example.demoappcompose.ui.create_question.SectionAdapter.SectionViewHolder
@@ -61,10 +64,33 @@ class SectionAdapter(
         holder.rcvQuestions.layoutManager = flowLayoutManager
         holder.rcvQuestions.adapter = QuestionsAdapter(section.questions!!)
 
+        if(sectionList.size > 1) {
+            holder.imgBtnDeleteSection.visibility = View.VISIBLE
+        } else {
+            holder.imgBtnDeleteSection.visibility = View.GONE
+        }
         holder.imgBtnDeleteSection.setOnClickListener {
             sectionList.removeAt(holder.adapterPosition)
             notifyItemRemoved(holder.adapterPosition)
         }
+
+        if (!section.marks.isNullOrEmpty()) {
+            holder.edtMarks.setText(section.marks)
+        }
+
+        holder.edtMarks.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun afterTextChanged(text: Editable?) {
+                section.marks = text.toString()
+            }
+        })
     }
 
     fun update(isShowSection: Boolean) {

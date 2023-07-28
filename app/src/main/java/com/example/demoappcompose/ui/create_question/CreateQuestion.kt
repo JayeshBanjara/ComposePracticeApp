@@ -70,7 +70,6 @@ import com.example.demoappcompose.ui.theme.TitleColor
 import com.example.demoappcompose.utility.UiState
 import com.example.demoappcompose.utility.toast
 import com.google.gson.Gson
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 @Composable
@@ -85,7 +84,7 @@ fun CreateQuestion(
     updatedSection: String?
 ) {
 
-    val context = LocalContext.current
+    /*val context = LocalContext.current
 
     LaunchedEffect(key1 = updatedSection) {
         if (updatedSection != null) {
@@ -131,7 +130,8 @@ fun CreateQuestion(
                         className = className,
                         subjectId = subjectId,
                         subjectName = subjectName,
-                        mediumId = mediumId
+                        mediumId = mediumId,
+                        sectionList = sectionList
                     )
                     navController.navigate(Screens.PrintSettings.withArgs(paperDataStr))
                 }
@@ -450,5 +450,5 @@ fun CreateQuestion(
                 }
             }
         }
-    }
+    }*/
 }

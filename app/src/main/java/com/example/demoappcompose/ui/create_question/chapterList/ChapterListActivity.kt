@@ -7,6 +7,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -88,6 +89,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class ChapterListActivity : AppCompatActivity() {
 
+    private lateinit var progressBar: ProgressBar
     private lateinit var txtTitle: TextView
     private lateinit var txtCount: TextView
     private lateinit var imgBack: ImageView
@@ -119,6 +121,7 @@ class ChapterListActivity : AppCompatActivity() {
         subjectName = intent.getStringExtra("subjectName") ?: ""
         section = intent.getSerializable("section", Section::class.java)
 
+        progressBar = findViewById(R.id.progress_bar)
         txtTitle = findViewById(txt_title)
         txtCount = findViewById(R.id.txt_count)
         imgBack = findViewById(R.id.img_back)

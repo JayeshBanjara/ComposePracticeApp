@@ -6,6 +6,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
@@ -46,6 +47,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class QuestionListActivity : AppCompatActivity() {
 
+    private lateinit var progressBar: ProgressBar
     private lateinit var txtTitle: TextView
     private lateinit var txtCount: TextView
     private lateinit var imgBack: ImageView
@@ -77,6 +79,7 @@ class QuestionListActivity : AppCompatActivity() {
         viewModel.subjectId = subjectId
         viewModel.chapterId = chapterId
 
+        progressBar = findViewById(R.id.progress_bar)
         txtTitle = findViewById(R.id.txt_title)
         txtCount = findViewById(R.id.txt_count)
         imgBack = findViewById(R.id.img_back)

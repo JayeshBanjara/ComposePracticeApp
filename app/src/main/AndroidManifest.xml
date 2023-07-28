@@ -17,6 +17,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.print_settings.PrintSettingsActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.create_question.QuestionListActivity"
             android:exported="false" />
         <activity

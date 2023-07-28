@@ -56,7 +56,7 @@ fun SubjectItem(context: Context, subject: Subject, navController: NavController
                 intent.putExtra("className", subject.className)
                 intent.putExtra("subjectId", subject.sId.toString())
                 intent.putExtra("subjectName", subject.subjectName)
-                intent.putExtra("mediumType", subject.mediumType.toString())
+                intent.putExtra("mediumId", subject.mediumType.toString())
 
                 context.startActivity(intent)
 
