@@ -45,6 +45,8 @@ class CreateQuestionViewModel @Inject constructor(
     val deletedSections = mutableListOf<Int>()
     var activeSection = 0
 
+    var createQueInterface: CreateQuestionInterface? = null
+
     fun removeQuestion(sectionIndex: Int, questionIndex: Int) {
         sectionList[sectionIndex].questions?.removeAt(questionIndex)
         sectionList[sectionIndex] = sectionList[sectionIndex]
@@ -131,18 +133,23 @@ class CreateQuestionViewModel @Inject constructor(
         try {
             val response = userRepository.getHeadingList(headerMap = headers, request = request)
             if (response.statusCode == 200) {
-                sectionList[0].selectedHeading = response.headingListData.headingList[0]
-                _getHeadingState.value = UiState.Success(response)
+                //sectionList[0].selectedHeading = response.headingListData.headingList[0]
+                //_getHeadingState.value = UiState.Success(response)
+                createQueInterface?.onSuccess(headingListResponse = response)
             } else {
-                _getHeadingState.value = UiState.Error(response.message)
+                //_getHeadingState.value = UiState.Error(response.message)
+                createQueInterface?.onFailure(response.message)
             }
         } catch (e: UnAuthorisedException) {
             prefManager.clearData()
-            _getHeadingState.value = UiState.UnAuthorised(e.message)
+            //_getHeadingState.value = UiState.UnAuthorised(e.message)
+            createQueInterface?.onFailure(e.message.toString())
         } catch (e: ApiException) {
-            _getHeadingState.value = UiState.Error(e.message)
+           // _getHeadingState.value = UiState.Error(e.message)
+            createQueInterface?.onFailure(e.message.toString())
         } catch (e: Exception) {
-            _getHeadingState.value = UiState.Error(e.message)
+           // _getHeadingState.value = UiState.Error(e.message)
+            createQueInterface?.onFailure(e.message.toString())
         }
     }
 

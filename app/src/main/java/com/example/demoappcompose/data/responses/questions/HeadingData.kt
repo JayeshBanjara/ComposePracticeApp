@@ -3,6 +3,7 @@ package com.example.demoappcompose.data.responses.questions
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import java.io.Serializable
 
 @JsonClass(generateAdapter = true)
 data class HeadingData(
@@ -18,4 +19,8 @@ data class HeadingData(
     val subjectId: Int,
     @Json(name = "subject_name")
     val subjectName: String
-)
+): Serializable {
+    override fun toString(): String {
+        return headingName
+    }
+}

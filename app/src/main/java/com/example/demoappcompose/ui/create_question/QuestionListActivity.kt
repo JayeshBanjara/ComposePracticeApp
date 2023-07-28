@@ -1,6 +1,8 @@
 package com.example.demoappcompose.ui.create_question
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
@@ -31,10 +33,12 @@ import com.example.demoappcompose.ui.components.Loader
 import com.example.demoappcompose.ui.components.ScreenBackground
 import com.example.demoappcompose.ui.create_question.components.QuestionItem
 import com.example.demoappcompose.ui.create_question.components.QuestionTypeDropDown
+import com.example.demoappcompose.ui.create_question.model.Section
 import com.example.demoappcompose.ui.navigation.Screens
 import com.example.demoappcompose.ui.popUpToTop
 import com.example.demoappcompose.ui.screenPadding
 import com.example.demoappcompose.utility.UiState
+import com.example.demoappcompose.utility.getSerializable
 import com.example.demoappcompose.utility.toast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -51,6 +55,7 @@ class QuestionListActivity : AppCompatActivity() {
     private lateinit var subjectId: String
     private lateinit var chapterId: String
     private lateinit var chapterName: String
+    private var section: Section? = null
 
     private val viewModel by viewModels<QuestionListViewModel>()
 
@@ -63,6 +68,10 @@ class QuestionListActivity : AppCompatActivity() {
         subjectId = intent.getStringExtra("subjectId") ?: ""
         chapterId = intent.getStringExtra("chapterId") ?: ""
         chapterName = intent.getStringExtra("chapterName") ?: ""
+        section = intent.getSerializable("section", Section::class.java)
+
+        viewModel.selectedQuestions.clear()
+        viewModel.selectedQuestions.addAll(section!!.questions!!)
 
         viewModel.classId = classId
         viewModel.subjectId = subjectId
@@ -73,8 +82,9 @@ class QuestionListActivity : AppCompatActivity() {
         imgBack = findViewById(R.id.img_back)
         composeView = findViewById(R.id.compose_view)
 
-        imgBack.setOnClickListener { finish() }
+        imgBack.setOnClickListener { handleBackClick() }
         txtTitle.text = chapterName
+        txtCount.text = "(${section!!.questions?.size})"
 
         composeView.setContent {
             var mExpanded by remember { mutableStateOf(false) }
@@ -131,7 +141,7 @@ class QuestionListActivity : AppCompatActivity() {
                                     top = innerPadding.calculateTopPadding(),
                                     end = screenPadding(),
                                     bottom = screenPadding()*/
-                                screenPadding()
+                                    screenPadding()
                                 )
                                 .fillMaxWidth()
                         ) {
@@ -162,12 +172,21 @@ class QuestionListActivity : AppCompatActivity() {
                                             questionData = questionData,
                                             isSelected = questionData.isSelected,
                                             onSelect = {
+
+                                                //section!!.questions?.find { it.qId == questionData.qId } != null
+
                                                 if (questionData.isSelected) {
                                                     viewModel.removeQuestionSelection(
                                                         index = index,
                                                         questionData = questionData
                                                     )
+                                                    section!!.questions?.remove(questionData)
+
+                                                    txtCount.text = "(${section!!.questions?.size})"
+
                                                 } else {
+                                                    section!!.questions?.add(questionData)
+                                                    txtCount.text = "(${section!!.questions?.size})"
                                                     viewModel.setQuestionSelection(
                                                         index = index,
                                                         questionData = questionData
@@ -182,5 +201,19 @@ class QuestionListActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onBackPressed() {
+        handleBackClick()
+    }
+
+    private fun handleBackClick() {
+
+        section!!.questions = viewModel.selectedQuestions
+
+        val i = Intent()
+        i.putExtra("section", section)
+        setResult(Activity.RESULT_OK, i)
+        finish()
     }
 }

@@ -1,12 +1,16 @@
 package com.example.demoappcompose.ui.create_question.chapterList
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -66,6 +70,7 @@ import com.example.demoappcompose.ui.create_question.ChapterList
 import com.example.demoappcompose.ui.create_question.ChapterListViewModel
 import com.example.demoappcompose.ui.create_question.PaymentInstructionText
 import com.example.demoappcompose.ui.create_question.QuestionListActivity
+import com.example.demoappcompose.ui.create_question.model.Section
 import com.example.demoappcompose.ui.navigation.Screens
 import com.example.demoappcompose.ui.popUpToTop
 import com.example.demoappcompose.ui.screenPadding
@@ -74,6 +79,7 @@ import com.example.demoappcompose.ui.theme.LightBlue
 import com.example.demoappcompose.ui.theme.NoRippleTheme
 import com.example.demoappcompose.ui.theme.TitleColor
 import com.example.demoappcompose.utility.UiState
+import com.example.demoappcompose.utility.getSerializable
 import com.example.demoappcompose.utility.toast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -90,8 +96,18 @@ class ChapterListActivity : AppCompatActivity() {
     private lateinit var classId: String
     private lateinit var subjectId: String
     private lateinit var subjectName: String
+    private var section: Section? = null
 
     private val chapterListViewModel by viewModels<ChapterListViewModel>()
+
+    private var questionActivityLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val updatedSection = result.data?.getSerializable("section", Section::class.java)
+                section!!.questions = updatedSection?.questions
+                txtCount.text = "(${section!!.questions?.size})"
+            }
+        }
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -101,14 +117,16 @@ class ChapterListActivity : AppCompatActivity() {
         classId = intent.getStringExtra("classId") ?: ""
         subjectId = intent.getStringExtra("subjectId") ?: ""
         subjectName = intent.getStringExtra("subjectName") ?: ""
+        section = intent.getSerializable("section", Section::class.java)
 
         txtTitle = findViewById(txt_title)
         txtCount = findViewById(R.id.txt_count)
         imgBack = findViewById(R.id.img_back)
         composeView = findViewById(R.id.compose_view)
 
-        imgBack.setOnClickListener { finish() }
+        imgBack.setOnClickListener { handleBackClick() }
         txtTitle.text = subjectName
+        txtCount.text = "(${section!!.questions?.size})"
 
         composeView.setContent {
 
@@ -203,8 +221,9 @@ class ChapterListActivity : AppCompatActivity() {
                                                             putExtra("subjectId", chapter.subjectId.toString())
                                                             putExtra("chapterId", chapter.chpId.toString())
                                                             putExtra("chapterName", chapter.chapterName)
+                                                            putExtra("section", section)
                                                         }
-                                                        context.startActivity(i)
+                                                        questionActivityLauncher.launch(i)
                                                     } else {
                                                         showQRView = showQRView.not()
                                                         clickedPos = index
@@ -417,5 +436,16 @@ class ChapterListActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onBackPressed() {
+        handleBackClick()
+    }
+
+    private fun handleBackClick() {
+        val i = Intent()
+        i.putExtra("section", section)
+        setResult(Activity.RESULT_OK, i)
+        finish()
     }
 }

@@ -2,6 +2,7 @@ package com.example.demoappcompose.ui.create_question.model
 
 import com.example.demoappcompose.data.responses.question_list.QuestionData
 import com.example.demoappcompose.data.responses.questions.HeadingData
+import java.io.Serializable
 import kotlin.random.Random
 
 data class PaperData(
@@ -21,7 +22,7 @@ data class Section(
     var selectedHeading: HeadingData?,
     var marks: String?,
     var questions: MutableList<QuestionData>? = null
-)
+): Serializable
 
 /*
 object Serializer {
