@@ -7,9 +7,11 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class QuestionData(
     @Json(name = "options")
-    val options: String?,
+    val options: String,
     @Json(name = "qId")
     val qId: Int,
     @Json(name = "question")
-    val question: String
+    val question: String,
+    @Json(name = "answer")
+    val answer: String
 )

@@ -113,10 +113,10 @@ class PrintSettingsActivity : AppCompatActivity() {
             var selectedFontSize by remember { mutableStateOf(items[2]) }
             var pageBorderCheckedState by remember { mutableStateOf(false) }
             val paperTypes = if (viewModel.roleId == "3") listOf(
-                "PDF Only Exam Paper",
-                "PDF Exam Paper & Solution with only Answer",
                 "Material"
             ) else listOf(
+                "PDF Only Exam Paper",
+                "PDF Exam Paper & Solution with only Answer",
                 "Material"
             )
             var paperTypesError by remember { mutableStateOf(false) }
@@ -537,7 +537,8 @@ class PrintSettingsActivity : AppCompatActivity() {
                                             val qDta = QuestionData(
                                                 qId = queDta.qId,
                                                 question = queDta.question,
-                                                options = queDta.options
+                                                options = queDta.options ?: "",
+                                                answer = queDta.answer
                                             )
 
                                             qList.add(qDta)
