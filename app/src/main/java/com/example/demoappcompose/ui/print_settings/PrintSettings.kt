@@ -546,7 +546,8 @@ fun PrintSettings(
                                         val qDta = QuestionData(
                                             qId = queDta.qId,
                                             question = queDta.question,
-                                            options = queDta.options
+                                            options = queDta.options ?: "",
+                                            answer = queDta.answer ?: ""
                                         )
 
                                         qList.add(qDta)
