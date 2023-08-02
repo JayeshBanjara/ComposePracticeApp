@@ -37,31 +37,9 @@ class PrintSettingsViewModel @Inject constructor(
 
     lateinit var roleId: String
 
-    //var sectionList = mutableStateListOf<SectionNew>()
-
-    /* lateinit var classId: String
-     lateinit var className: String
-     lateinit var subjectId: String
-     lateinit var subjectName: String
-     lateinit var mediumId: String
-     lateinit var chapterNumber: String
-     lateinit var instituteName: String
-     lateinit var examDate: String
-     lateinit var examTime: String
-     lateinit var examMarks: String
-     lateinit var examName: String
-     lateinit var isPageFooter1: String
-     lateinit var pageFooter: String
-     lateinit var isWaterMark1: String
-     lateinit var waterMark: String
-     lateinit var messageForEndOfPaper: String
-     lateinit var pageBorder: String
-     lateinit var fontSize: String
-     lateinit var generationType: String*/
-
     init {
         viewModelScope.launch {
-            roleId = prefManager.getRoleId.first() ?: "2"
+            roleId = prefManager.getRoleId.first() ?: "3"
             getConfig()
         }
     }
@@ -79,7 +57,8 @@ class PrintSettingsViewModel @Inject constructor(
     private suspend fun getConfig() = viewModelScope.launch {
 
         val request = ConfigRequest(
-            deviceType = Constants.DEVICE_TYPE, configType = "7"
+            deviceType = Constants.DEVICE_TYPE,
+            configType = "1"
         )
 
         try {

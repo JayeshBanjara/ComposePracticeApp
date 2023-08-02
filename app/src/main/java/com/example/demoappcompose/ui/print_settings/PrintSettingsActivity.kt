@@ -55,8 +55,10 @@ import com.example.demoappcompose.utility.getSerializable
 import com.example.demoappcompose.utility.toast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
+import java.util.Locale
 
 @AndroidEntryPoint
 class PrintSettingsActivity : AppCompatActivity() {
@@ -91,7 +93,8 @@ class PrintSettingsActivity : AppCompatActivity() {
             var examTimeError by remember { mutableStateOf(false) }
             var examMarks by remember { mutableStateOf("") }
             var examMarksError by remember { mutableStateOf(false) }
-            var examDate by remember { mutableStateOf("") }
+            val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
+            var examDate by remember { mutableStateOf(sdf.format(Date())) }
             var examDateError by remember { mutableStateOf(false) }
             val waterMarkTypes = listOf("Text", "Institute Logo")
             var waterMarkError by remember { mutableStateOf(false) }
@@ -200,7 +203,17 @@ class PrintSettingsActivity : AppCompatActivity() {
 
                         val configList = (state as UiState.Success).data.configList
 
-                        instituteName = configList.first { it.name == "ACCOUNT_HOLDER_NAME" }.value
+                        chapterNumber = configList.find { it.name == "CHAPTER_NUMBER" }?.value ?: ""
+                        examMarks = configList.find { it.name == "EXAM_MARKS" }?.value ?: ""
+                        examName = configList.find { it.name == "EXAM_NAME" }?.value ?: ""
+                        examTime = configList.find { it.name == "EXAM_TIME" }?.value ?: ""
+                        instituteName = configList.find { it.name == "INSTITUTE_NAME" }?.value
+                            ?: "Ravi Education"
+                        waterMarkText = configList.find { it.name == "INSTITUTE_LOGO_TITLE" }?.value
+                            ?: instituteName
+                        endPaperMsg =
+                            configList.find { it.name == "MESSAGE_FOR_END_OF_THE_PAPER" }?.value
+                                ?: ""
                     }
 
                     Box(

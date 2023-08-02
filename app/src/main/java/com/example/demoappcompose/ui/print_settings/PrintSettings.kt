@@ -181,7 +181,7 @@ fun PrintSettings(
 
 
         val state by remember { viewModel.uiState }.collectAsStateWithLifecycle()
-        when(state) {
+        when (state) {
             is UiState.Empty -> {}
             is UiState.UnAuthorised -> {
                 LaunchedEffect(Unit) {
@@ -523,18 +523,20 @@ fun PrintSettings(
                         ) {
 
                             coroutineScope.launch {
-                               // val paperData = Gson().fromJson(paperDataStr, PaperData::class.java)
-                               // val paperData = Json.decodeFromString<PaperData>(paperDataStr)
+                                // val paperData = Gson().fromJson(paperDataStr, PaperData::class.java)
+                                // val paperData = Json.decodeFromString<PaperData>(paperDataStr)
 
-                                val moshi: Moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
-                                val adapter: JsonAdapter<PaperData> = moshi.adapter(PaperData::class.java)
+                                val moshi: Moshi =
+                                    Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+                                val adapter: JsonAdapter<PaperData> =
+                                    moshi.adapter(PaperData::class.java)
                                 val paperData = adapter.fromJson(paperDataStr)
 
                                 // Now you have the complete data object retrieved from the JSON string
                                 // Use 'data' as needed in your destination screen
 
 
-                            val list = mutableListOf<SectionNew>()
+                                val list = mutableListOf<SectionNew>()
 
                                 paperData?.sectionList?.forEach {
 
@@ -576,24 +578,24 @@ fun PrintSettings(
                                     examMarks = examMarks,
                                     examName = examName,
                                     isPageFooter1 = if (pageFooterCheckedState) "1" else "0",
-                                    isWaterMark1 = if (pageFooterCheckedState) "1" else "0",
-                                    waterMark = waterMarkText,
+                                    isWaterMark1 = if (selectedWaterMarkType == waterMarkTypes[0]) "0" else "1",
+                                    waterMark = if (selectedWaterMarkType == waterMarkTypes[0]) waterMarkText else selectedLogoSize,
                                     messageForEndOfPaper = endPaperMsg,
-                                    pageBorder = if(pageBorderCheckedState) "1" else "0",
+                                    pageBorder = if (pageBorderCheckedState) "1" else "0",
                                     pageFooter = pageFooter,
                                     sectionList = list
                                 )
                             }
-
                         }
                     }
 
                     val stateGeneratePaper by remember { viewModel.generatePaperState }.collectAsStateWithLifecycle()
-                    when(stateGeneratePaper) {
+                    when (stateGeneratePaper) {
                         is UiState.Empty -> {}
                         is UiState.UnAuthorised -> {
                             LaunchedEffect(Unit) {
-                                val errorMessage = (stateGeneratePaper as UiState.UnAuthorised).errorMessage
+                                val errorMessage =
+                                    (stateGeneratePaper as UiState.UnAuthorised).errorMessage
                                 context.toast(message = errorMessage)
                                 navController.navigate(Screens.LoginScreen.route) {
                                     popUpToTop(navController)
