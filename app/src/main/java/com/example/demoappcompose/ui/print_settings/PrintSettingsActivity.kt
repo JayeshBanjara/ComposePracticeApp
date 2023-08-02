@@ -387,7 +387,7 @@ class PrintSettingsActivity : AppCompatActivity() {
                                 selected = selectedWaterMarkType,
                                 setSelected = setSelectedWaterMark
                             )
-                            if (selectedWaterMarkType == "Institute Logo") {
+                            /*if (selectedWaterMarkType == "Institute Logo") {
                                 Column(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalAlignment = Alignment.Start
@@ -399,7 +399,7 @@ class PrintSettingsActivity : AppCompatActivity() {
                                     )
                                     VerticalSpacer(size = 5)
                                 }
-                            }
+                            }*/
                             if (selectedWaterMarkType == "Text") {
                                 CustomTextField(
                                     modifier = Modifier.fillMaxWidth(),
@@ -583,7 +583,7 @@ class PrintSettingsActivity : AppCompatActivity() {
                                         examMarks = examMarks,
                                         examName = examName,
                                         isPageFooter1 = if (pageFooterCheckedState) "1" else "0",
-                                        isWaterMark1 = if (pageFooterCheckedState) "1" else "0",
+                                        isWaterMark1 = if (selectedWaterMarkType == waterMarkTypes[0]) "0" else "1",
                                         waterMark = waterMarkText,
                                         messageForEndOfPaper = endPaperMsg,
                                         pageBorder = if (pageBorderCheckedState) "1" else "0",
@@ -591,7 +591,6 @@ class PrintSettingsActivity : AppCompatActivity() {
                                         sectionList = list
                                     )
                                 }
-
                             }
                         }
 
