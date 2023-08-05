@@ -51,11 +51,10 @@ class SectionAdapter(
         holder.autocompleteTV.setText(section.selectedHeading?.headingName, false)
         holder.autocompleteTV.setOnItemClickListener { adapterView, view, pos, l ->
             section.selectedHeading = section.headingList[pos]
-            holder.autocompleteTV.setText(section.headingList[pos].headingName)
+            //holder.autocompleteTV.setText(section.headingList[pos].headingName)
         }
 
         holder.imgBtnAddQuestion.setOnClickListener {
-
             clickListener.onAddClick(section = section, pos = position)
         }
 
