@@ -99,7 +99,7 @@ class CreateQuestionActivity : AppCompatActivity(), CreateQuestionInterface,
             sectionList.sortBy { it.sectionName[0].code }
             lastSectionName = newSection.sectionName[0].code
 
-            sectionAdapter.notifyDataSetChanged()
+            sectionAdapter.notifyItemInserted(sectionList.size - 1)
         }
 
         cbIsSection.setOnCheckedChangeListener { _, isChecked ->

@@ -24,7 +24,8 @@
             android:exported="false" />
         <activity
             android:name=".ui.create_question.CreateQuestionActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".ui.create_question.chapterList.ChapterListActivity"
             android:exported="false" />

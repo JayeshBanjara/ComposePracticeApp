@@ -71,7 +71,13 @@ class SectionAdapter(
         }
         holder.imgBtnDeleteSection.setOnClickListener {
             sectionList.removeAt(holder.adapterPosition)
-            notifyItemRemoved(holder.adapterPosition)
+
+            if(sectionList.size == 2) {
+                //to remove delete button from item 1
+                notifyDataSetChanged()
+            } else {
+                notifyItemRemoved(holder.adapterPosition)
+            }
         }
 
         if (!section.marks.isNullOrEmpty()) {
@@ -84,11 +90,11 @@ class SectionAdapter(
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
+                section.marks = p0.toString()
             }
 
             override fun afterTextChanged(text: Editable?) {
-                section.marks = text.toString()
+
             }
         })
     }
