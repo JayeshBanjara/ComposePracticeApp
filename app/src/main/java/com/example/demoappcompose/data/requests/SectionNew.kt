@@ -7,6 +7,8 @@ import com.squareup.moshi.JsonClass
 data class SectionNew(
     @Json(name = "heading")
     val heading: String,
+    @Json(name = "heading_name")
+    val headingKey: Int,
     @Json(name = "isSectionName")
     val isSectionName: Boolean,
     @Json(name = "marks")

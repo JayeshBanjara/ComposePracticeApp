@@ -124,6 +124,8 @@
             android:orientation="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="2"
+            android:paddingBottom="70dp"
+            android:clipToPadding="false"
             tools:listitem="@layout/item_section"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

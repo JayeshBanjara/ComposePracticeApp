@@ -1,5 +1,6 @@
 package com.example.demoappcompose.ui.paper_history
 
+import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,9 +30,10 @@ import com.example.demoappcompose.ui.HorizontalSpacer
 import com.example.demoappcompose.ui.VerticalSpacer
 import com.example.demoappcompose.ui.theme.Blue
 import com.example.demoappcompose.ui.theme.TitleColor
+import com.example.demoappcompose.utility.openUrl
 
 @Composable
-fun PaperHistoryItem(paperHistory: PaperHistory) {
+fun PaperHistoryItem(paperHistory: PaperHistory, context: Context) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -83,13 +86,17 @@ fun PaperHistoryItem(paperHistory: PaperHistory) {
                     VerticalSpacer(size = 5)
                 }
                 HorizontalSpacer(size = 10)
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_print),
-                    contentDescription = null,
-                    tint = Blue,
-                    modifier = Modifier
-                        .size(40.dp)
-                )
+                IconButton(onClick = {
+                    context.openUrl(paperHistory.fileUrl)
+                }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_print),
+                        contentDescription = null,
+                        tint = Blue,
+                        modifier = Modifier
+                            .size(40.dp)
+                    )
+                }
             }
         }
         VerticalSpacer(size = 15)

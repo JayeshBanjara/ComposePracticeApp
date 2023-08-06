@@ -559,6 +559,7 @@ fun PrintSettings(
                                         sectionName = it.sectionName,
                                         marks = it.marks!!.toInt(),
                                         questionsArr = qList,
+                                        headingKey = 1
                                     )
 
                                     list.add(x)

@@ -87,7 +87,7 @@ fun PaperHistory(
                     LazyColumn(content = {
                         item { Spacer(modifier = Modifier.height(10.dp)) }
                         items(paperHistoryList) {
-                            PaperHistoryItem(it)
+                            PaperHistoryItem(paperHistory = it, context = context)
                         }
                     })
                 }

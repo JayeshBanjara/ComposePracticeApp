@@ -40,6 +40,7 @@ class SectionAdapter(
         val section = sectionList[position]
         holder.itemNameTextView.text = "Section ${section.sectionName}"
 
+        section.hasSectionName = showSection
         if (showSection) {
             holder.itemNameTextView.visibility = View.VISIBLE
         } else {

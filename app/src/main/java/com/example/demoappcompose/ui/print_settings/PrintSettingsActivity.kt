@@ -542,7 +542,7 @@ class PrintSettingsActivity : AppCompatActivity() {
 
                                     val list = mutableListOf<SectionNew>()
 
-                                    paperData.sectionList?.forEach {
+                                    paperData.sectionList?.forEachIndexed { index, it ->
 
                                         val qList = mutableListOf<QuestionData>()
 
@@ -559,6 +559,7 @@ class PrintSettingsActivity : AppCompatActivity() {
 
                                         val x = SectionNew(
                                             heading = it.selectedHeading!!.headingName,
+                                            headingKey = index + 1,
                                             isSectionName = it.hasSectionName,
                                             sectionName = it.sectionName,
                                             marks = it.marks!!.toInt(),

@@ -5,8 +5,22 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import android.widget.Toast
 import java.io.Serializable
+
+
+fun printLongJson(jsonString: String, tag: String) {
+    val maxLength = 4000 // Maximum length for Logcat message
+    var offset = 0
+
+    while (offset < jsonString.length) {
+        val end = (offset + maxLength).coerceAtMost(jsonString.length)
+        val part = jsonString.substring(offset, end)
+        Log.d(tag, part)
+        offset = end
+    }
+}
 
 fun <T : Serializable?> Intent.getSerializable(key: String, m_class: Class<T>): T {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)

@@ -196,7 +196,7 @@ class CreateQuestionActivity : AppCompatActivity(), CreateQuestionInterface,
         headingList.clear()
         headingList.addAll(headingListResponse.headingListData.headingList)
         val section = Section(
-            hasSectionName = true,
+            hasSectionName = cbIsSection.isChecked,
             sectionName = lastSectionName.toChar().toString(),
             headingList = headingList,
             selectedHeading = null,

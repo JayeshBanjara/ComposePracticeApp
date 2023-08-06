@@ -14,6 +14,8 @@ import com.example.demoappcompose.repository.AppRepository
 import com.example.demoappcompose.repository.UserRepository
 import com.example.demoappcompose.utility.Constants
 import com.example.demoappcompose.utility.UiState
+import com.example.demoappcompose.utility.printLongJson
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -135,6 +137,9 @@ class PrintSettingsViewModel @Inject constructor(
         )
 
         try {
+
+            printLongJson(Gson().toJson(request), "TAGG")
+
             val response = userRepository.generatePaper(headerMap = headers, request = request)
             if (response.statusCode == 200) {
                 _generatePaperState.value = UiState.Success(response)
